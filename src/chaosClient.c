@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #define MAX 80
-#define PORT 1234
+#define PORT 11000
 #define SA struct sockaddr
 
 void func(int sockfd)

@@ -11,16 +11,11 @@ import sys
 import random
 from ctypes import *
 
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+print('socket created')
+PORT = 11000
+IP_ADDR = '0.0.0.0'
 
-""" This class defines a C-like struct """
-class Payload(Structure):
-    _fields_ = [("id", c_uint32),
-                ("counter", c_uint32),
-                ("temp", c_float)]
-
-HOST = '0.0.0.0'
-PORT = 1234
-RECV = 'NULL'
 
 app = dash.Dash(__name__)
 
@@ -28,10 +23,12 @@ app.layout = html.Div([
 
     html.Button('Connect', id='connect-button', n_clicks=0),
 
+    html.Div(id='textarea-example-output', style={'whiteSpace': 'pre-line'}),
+
     html.Div(children=[
         dcc.Textarea(
             id='textarea-example',
-            value=RECV,
+            value="",
             style={'width': '100%', 'height': 300, 'display': 'none'},
         ),
         # html.Button('Submit', id='textarea-state-example-button', n_clicks=0),
@@ -47,50 +44,43 @@ app.layout = html.Div([
 
 @app.callback(
     Output('textarea-example', component_property='style'),
-    [Input('connect-button', component_property='n_clicks')]
+    Output('textarea-example-output', 'children'),
+    Input('connect-button', component_property='n_clicks')
 )
 def connect_to_chaos(n_clicks):
+    status = "Normal"
+
     if n_clicks > 0:
-        connected = False
 
-        server_addr = ('localhost', 1234)
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        connected = s.connect((IP_ADDR, PORT))
 
-        try:
-            s.connect(server_addr)
-            print("Connected to {:s}".format(repr(server_addr)))
-            connected = True
-
-            for i in range(5):
-                print("")
-                payload_out = Payload(1, i, random.uniform(-10, 30))
-                print("Sending id={:d}, counter={:d}, temp={:f}".format(payload_out.id,
-                                                                payload_out.counter,
-                                                                payload_out.temp))
-                nsent = s.send(payload_out)
-                # Alternative: s.sendall(...): coontinues to send data until either
-                # all data has been sent or an error occurs. No return value.
-                print("Sent {:d} bytes".format(nsent))
-
-                buff = s.recv(sizeof(Payload))
-                payload_in = Payload.from_buffer_copy(buff)
-                print("Received id={:d}, counter={:d}, temp={:f}".format(payload_in.id,
-                                                                payload_in.counter,
-                                                                payload_in.temp))
-        except AttributeError as ae:
-            print("Error creating the socket: {}".format(ae))
-        except socket.error as se:
-            print("Exception on socket: {}".format(se))
-        finally:
-            print("Closing socket")
-            s.close()
+        status += " maybe"
 
         if connected:
-            return {'width': '100%', 'height': 300, 'display': 'block'}
+            return {'width': '100%', 'height': 300, 'display': 'block'}, status
         else:
-            return {'width': '100%', 'height': 300, 'display': 'none'}
+            return {'width': '100%', 'height': 300, 'display': 'none'}, status
+
+        # connected = False
+
+        # status += " n_click"
+
+        # server_addr = ('0.0.0.0', 11000)
+
+        # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        #     try:
+        #         s.connect(server_addr)
+        #         status += " Connected to {:s}".format(repr(server_addr))
+        #         connected = True
+        #     except AttributeError as ae:
+        #         status += " Error creating the socket: {}".format(ae)
+        #     except socket.error as se:
+        #         status += " Exception on socket: {}".format(se)
+        #     finally:
+        #         status += " Closing socket"
+        #         s.close()
     
-    return {'width': '100%', 'height': 300, 'display': 'none'}
+    return {'width': '100%', 'height': 300, 'display': 'none'}, status
 
 # @app.route('/')
 # def hello_world():
