@@ -7,7 +7,7 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#define MAX 80
+#define MAX 1024
 #define PORT 11000
 #define SA struct sockaddr
 
@@ -26,7 +26,7 @@ void func(int sockfd)
         printf("From client: %s", buff);
         bzero(buff, MAX);
 
-        strcpy(buff, "Copy that!\n");
+        strcpy(buff, "COPY THAT!");
   
         // and send that buffer to client
         write(sockfd, buff, sizeof(buff));
@@ -56,7 +56,7 @@ int main()
   struct sockaddr_in saddr;
   memset(&saddr, 0, sizeof(saddr));          /* clear the bytes */
   saddr.sin_family = AF_INET;                /* versus AF_LOCAL */
-  saddr.sin_addr.s_addr = htonl(INADDR_ANY); /* host-to-network endian */
+  saddr.sin_addr.s_addr = inet_addr("127.0.200.1"); //htonl(INADDR_ANY); /* host-to-network endian */
   saddr.sin_port = htons(11000);        /* for listening */
 
   if (bind(fd, (struct sockaddr *) &saddr, sizeof(saddr)) < 0)
@@ -78,17 +78,38 @@ int main()
       continue;
     }
 
+    char buff[MAX];
+    bzero(buff, MAX);
+    
+    strcpy(buff, "HTTP/1.1 101 \nAccept-Ranges: bytes\nAccess-Control-Allow-Origin: *\nConnection: Keep-Alive\nKeep-Alive: timeout=5\r\n\r\n IDFK");
+    
+    
+//     "HTTP/1.1 200 OK\n"
+// "Accept-Ranges: bytes\n"
+// "charset=UTF-8\n"
+// "Content-Encoding: gzip\n"
+// "Connection: keep-alive\n"
+// "Keep-Alive: timeout=5\n"
+// "Transfer-Encoding: chunked\r\n\r\n");
+    
+    
+    
+    //"HTTP/1.1 200 OK\nAccess-Control-Allow-Origin: *\nConnection: Keep-Alive\r\n\r\n IDFK");
+    write(client_fd, buff, sizeof(buff)); /* echo as confirmation */
+
     /* read from client */
-    int i;
-    for (i = 0; i < 1000; i++) {
-      char buffer[1024 + 1];
-      memset(buffer, '\0', sizeof(buffer));
-      int count = read(client_fd, buffer, sizeof(buffer));
-      if (count > 0) {
-        puts(buffer);
-        write(client_fd, buffer, sizeof(buffer)); /* echo as confirmation */
-      }
-    }
+    func(client_fd);
+
+    // int i;
+    // for (i = 0; i < 1000; i++) {
+    //   char buffer[1024 + 1];
+    //   bzero(buff, MAX);
+    //   memset(buffer, '\0', sizeof(buffer));
+    //   int count = read(client_fd, buffer, sizeof(buffer));
+    //   if (count > 0) {
+    //     puts(buffer);
+    //   }
+    // }
     close(client_fd); /* break connection */
   }  /* while(1) */
   return 0;
