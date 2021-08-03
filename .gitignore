@@ -1,0 +1,9 @@
+ .vscode/
+
+ build/
+
+ package-lock.json
+ package.json
+ 
+src/.idea/
+src/.vscode/
