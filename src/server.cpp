@@ -1,322 +1,170 @@
-#pragma region Include/Imports
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <signal.h>
-#include <string.h>
-#include <strings.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <syslog.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <unistd.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <sys/types.h>
-#include <sys/time.h>
-#include <errno.h> 
+#include "server.hpp"
 
-#include <iostream>
-#include <map>
-#include <string>
-#include <list>
+Server::Server() {
+    setup(DEFAULT_PORT);
+}
 
-typedef char Int8;
-typedef short int Int16;
-typedef int Int32;
+Server::Server(int port) {
+    setup(port);
+}
 
-typedef unsigned char UInt8;
-typedef unsigned short int UInt16;
-typedef unsigned int UInt32;
-#define SA struct sockaddr
+Server::~Server() {
+    std::cout << "Destroying Server... \n";
+    close(serversocket_fd);
+}
 
-const std::string NOT_A_STRING = "";
-#pragma endregion
+void Server::setup(int port) {
+    serversocket_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (serversocket_fd < 0) {
+        perror("Server Socket Creation Failed!");
+    }
 
-#pragma region Utility Methods
-// This assumes buffer is at least x bytes long,
-// and that the socket is blocking.
-void ReadXBytes(int socket, unsigned int x, void* buffer)
-{
-    int bytesRead = 0;
-    int result;
-    while (bytesRead < x)
-    {
-        result = read(socket, buffer, x - bytesRead);
-        if (result < 1)
-        {
-            continue;
-        }
+    FD_ZERO(&serverfds); //Initializes the file descriptor set fdset to have zero bits for all file descriptors. 
+    FD_ZERO(&tempfds);
 
-        bytesRead += result;
+    memset(&servaddr, 0, sizeof(servaddr)); //bzero
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_addr.s_addr = htons(INADDR_ANY);
+    servaddr.sin_port = htons(port);
 
-        printf("Received value: %s\n", (char*)buffer);
+    bzero(input_buffer, BUFFER_SIZE);
+}
+
+void Server::initializeSocket() {
+    std::cout << "Initializing server socket\n";
+
+    int opt_value = 1;
+    int ret = setsockopt(serversocket_fd, SOL_SOCKET, SO_REUSEADDR, (char*)&opt_value, sizeof(int));
+
+    printf("Server setsockopt() ret %d\n", ret);
+
+    if (ret < 0) {
+        perror("Server error: setsockopt() failed");
+        shutdown();
     }
 }
 
-std::map<std::string, std::string> DisectHeader(std::string header) {
-    std::map<std::string, std::string> header_values;
-    std::string word = "";
-    std::string prevWord = "";
-    for (auto x = std::begin(header); x != std::end(header); ++x) 
-    {
-        if (*x != ' ') {
-            word.push_back(*x);
+void Server::bindSocket() { 
+    std::cout << "Binding server socket\n";
+
+    int ret = bind(serversocket_fd, (struct sockaddr *)&servaddr, sizeof(servaddr));
+
+    if (ret < 0) {
+        perror("Server error: bind() failed");
+    }
+
+    FD_SET(serversocket_fd, &serverfds); //Sets the bit for the file descriptor fd in the file descriptor set fdset. 
+    maxfd = serversocket_fd; // set the current known maximum file descriptor count
+}
+
+void Server::startListen() { 
+    std::cout << "Server starting to listen for clients... \n";
+
+    int ret = listen(serversocket_fd, MAX_CLIENTS);
+
+    printf("Server listen() ret %d\n", ret);
+
+    if (ret < 0) {
+        perror("Server error: listen() failed");
+    }
+}
+
+void Server::shutdown() {
+    int ret = close(serversocket_fd);
+    isactive = 0;
+    printf("Server shutdown closing serversocketfd.. ret '%d'.\n", ret);
+}
+
+void Server::handleNewConnection() {
+    std::cout << "Server handling a new connection\n";
+
+    socklen_t addrlen = sizeof(client_addr);
+    tempsocket_fd = accept(serversocket_fd, (struct sockaddr *)&client_addr, &addrlen);
+
+    if (tempsocket_fd < 0) {
+        perror("Server error: accept() failed");
+    } else {
+        FD_SET(tempsocket_fd, &serverfds);
+        // increment the maximum known file descriptor (select() needs it)
+        if (tempsocket_fd > maxfd) {
+            maxfd = tempsocket_fd;
+            std::cout << "Server incrementing maxfd to " << maxfd << std::endl;
+        }
+        printf("New connection , socket fd is %d , ip is : %s , port : %d\n", 
+            tempsocket_fd, 
+            inet_ntoa(client_addr.sin_addr), 
+            ntohs(client_addr.sin_port));
+    }
+    newConnectionCallback(tempsocket_fd);
+ }
+
+void Server::recvInputFromExisting(int fd) {
+    int bytesrecv = recv(fd, input_buffer, BUFFER_SIZE, 0);
+    if (bytesrecv <= 0) {
+        if (0 == bytesrecv) {
+            disconnectCallback((uint16_t)fd);
         } else {
-            if (prevWord != NOT_A_STRING) {
-                if (prevWord == "ClientID:") {
-                    header_values["ClientID"] = word;
-                } else if (prevWord == "Request:") {
-                    header_values["Request"] = word;
-                } else {
-                    fprintf(stderr, "No match for header key and value: %s - %s\n", prevWord.c_str(), word.c_str());
-                }
-                prevWord = "";
+            perror("Server error: recv() failed");
+        }
+        close(fd);
+        FD_CLR(fd, &serverfds); //Clears the bit for the file descriptor fd in the file descriptor set fdset.
+        return;
+    }
+    printf("Server Received '%s' from client!\n", input_buffer);
+    receiveCallback(fd, input_buffer);
+    bzero(&input_buffer, BUFFER_SIZE);
+ }
+
+ void Server::loop() {
+    tempfds = serverfds;
+    std::cout << "Server calling select()\n";
+
+    /*Indicates which of the specified file descriptors
+    is ready for reading, ready for writing, 
+    or has an error condition pending. */
+    int sel = select(maxfd + 1, &tempfds, NULL, NULL, NULL); // blocks until activity
+
+    if (sel < 0) {
+        perror("Server error: select() failed");
+        shutdown();
+    }
+
+    for (int i = 0; i <= maxfd; i++) {
+        if (FD_ISSET(i, &tempfds)) { //Returns a non-zero value if the bit for the file descriptor fd is set in the file descriptor set pointed to by fdset, and 0 otherwise.
+            if (serversocket_fd == i) {
+                // new connection on master socket
+                handleNewConnection();
             } else {
-                prevWord = word;
+                //existing connection has new data
+                recvInputFromExisting(i);
             }
-
-            word = "";
         }
-
     }
-    return header_values;
+ }
+
+void Server::init() {
+    initializeSocket();
+    bindSocket();
+    startListen();
+    isactive = 1;
 }
-#pragma endregion
 
-#pragma region Process Commands
-// void process_commands(int sockfd, std::map<std::string, int>& clients) {
-//   UInt16      length = 0;
-//   char*       buffer = 0;
-//   ssize_t     n;
-//   char        command[1024];
-//   int         messageLength;
-//   again:
-    
-//     for (;;) {
-
-//         ReadXBytes(sockfd, sizeof(length), (void*)(&length));
-//         buffer = new char[length];
-
-//         try {
-//             messageLength = std::stoi(std::string((char*)(void*)(&length)));
-//         } catch(std::exception e) {
-//             printf("There was an error trying to process command length %s", (char*)(void*)(&length));
-//             goto again;
-//         }
-
-//         ReadXBytes(sockfd, std::stoi(std::string((char*)(void*)(&length))), (void*)buffer);
-
-//         auto header_values = DisectHeader(std::string(buffer));
-
-//         if (header_values["ClientID"] == "Flutter") {
-//             if (header_values["Request"] == "Command") {
-//                 if (clients.find("Chaos") != clients.end()) {
-//                     bzero(command, sizeof(command));
-//                     n = read(sockfd, command, 1024);
-//                     write(clients["Chaos"], command, n); 
-//                     bzero(command, sizeof(command));
-
-//                     if (n < 0) {
-//                         break;
-//                     }
-//                 } else {
-//                     fprintf(stderr, "The following client '%s' does not exist!\n", "Chaos");
-//                 }
-//             } else if (header_values["Request"] == "Exit") {
-//                 printf("Exiting");
-//                 break;
-//             }
-//         }
-  
-
-//         // bzero(buf, sizeof(buf));
-//         // n = read(sockfd, buf, 1024);
-//         // printf("%s\n", buf);
-//         // write(sockfd, buf, n);
-//         // bzero(buf, sizeof(buf));
-
-//         // if (n < 0) {
-//         //   break;
-//         // }
-//     }
-// };
-#pragma endregion
-
-int main(int argc, char **argv) {
-    int                 listenfd, connfd, max_sd, sd, client_socket[5];
-    std::string         client_names[5];
-    int                 opt = 1;  
-    pid_t               childpid;
-    socklen_t           clilen;
-    struct sockaddr_in  cliaddr, servaddr;
-    UInt16              length = 0;
-    char*               buffer = 0;
-    std::map<std::string, int> connectedclients;
-
-    std::string greeting = "You are connected to Chaos Daemon v1.0 \r\n"; 
-
-    //set of socket descriptors 
-    fd_set readfds;
-
-    listenfd = socket(AF_INET, SOCK_STREAM, 0);
-    
-    if( setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, 
-          sizeof(opt)) < 0 )  
-    {  
-        perror("setsockopt");  
-        exit(EXIT_FAILURE);  
-    }  
-
-    bzero(&servaddr, sizeof(servaddr));
-    servaddr.sin_family      = AF_INET;
-    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    servaddr.sin_port        = htons(3000);
-
-    bind(listenfd, (SA*) &servaddr, sizeof(servaddr));
-
-    listen(listenfd, 5);
-
-    clilen = sizeof(cliaddr);
-
-    for ( ; ; ) {
-
-        //clear the socket set 
-        FD_ZERO(&readfds);  
-     
-        //add master socket to set 
-        FD_SET(listenfd, &readfds);  
-        max_sd = listenfd; 
-
-        // adding child sockets
-        for (int i = 0; i < 5; ++i)  
-        {  
-            //socket descriptor 
-            sd = client_socket[i];  
-                 
-            //if valid socket descriptor then add to read list 
-            if(sd > 0)  
-                FD_SET( sd , &readfds);  
-                 
-            //highest file descriptor number, need it for the select function 
-            if(sd > max_sd)  
-                max_sd = sd;  
-        } 
-
-        int activity = select( max_sd + 1 , &readfds , NULL , NULL , NULL); 
-
-        if ((activity < 0) && (errno != EINTR)) {
-            fprintf(stderr, "Selection Error!");
-        }
-
-        if (FD_ISSET(listenfd, &readfds)) {
-            connfd = accept(listenfd, (SA *) &cliaddr, &clilen);
-
-            //inform user of socket number - used in send and receive commands 
-            printf("New connection , socket fd is %d , ip is : %s , port : %d\n", 
-                connfd , inet_ntoa(cliaddr.sin_addr) , ntohs
-                (cliaddr.sin_port));
-
-            /* Read the number of bytes in the header */
-            ReadXBytes(connfd, sizeof(length), (void*)(&length));
-
-            /* Read the Header of size Length in bytes */
-            printf("The length is %d\n", std::stoi(std::string((char*)(void*)(&length))));
-            buffer = new char[length];
-            ReadXBytes(connfd, std::stoi(std::string((char*)(void*)(&length))), (void*)buffer);
-
-            /* Process the Header request */
-            auto header_values = DisectHeader(std::string(buffer));
-
-            printf("ClientID '%s' connected!\n", header_values["ClientID"].c_str());
-            std::string clientid = header_values["ClientID"];
-
-            // if (clientid == "Chaos") {
-            //     printf("Does flutter still exist? %d\n", connectedclients["Flutter"]);
-            // }
-
-            if (send(connfd, greeting.c_str(), strlen(greeting.c_str()), 0) != strlen(greeting.c_str())) {
-                perror("Send Error");
-            }
-
-            puts("Welcome message sent successfully!");
-
-            //add new socket to array of sockets 
-            for (int i = 0; i < 5; i++)  
-            {  
-                //if position is empty 
-                if( client_socket[i] == 0 )  
-                {  
-                    // connectedclients[clientid] = i;
-                    // client_names->append(clientid);
-                    client_socket[i] = connfd;  
-                    printf("Adding to list of sockets as %d\n" , i);  
-                         
-                    break;  
-                }  
-            }  
-        }
-
-        for (int i = 0; i < 5; ++i) {
-            // std::string name = client_names[i];
-            sd = client_socket[i];//connectedclients[name]];
-            int result;
-            char incoming[1024];
-
-            bzero(incoming, sizeof(incoming));
-
-            if (FD_ISSET(sd, &readfds)) {
-                if ((result = read(sd, incoming, 1024)) == 0) {
-                    // getpeername(sd, (SA*)&cliaddr, (socklen_t*)&clilen);
-
-                    // printf("Host disconnected , ip %s , port %d \n" ,
-                    //       inet_ntoa(cliaddr.sin_addr) , ntohs(cliaddr.sin_port));
-
-                    close(sd);
-                    client_socket[i] = 0;
-                    // client_names[i] = "\0";
-                    // connectedclients.erase(name);
-                } else {
-
-                }
-            }
-        }
-
-
-        // if ( (childpid = fork()) == 0) {    /* child process */
-        //     printf("Connecting a client now . . . \n");
-        //     close(listenfd);    /* close listening socket */
-
-        //     /* Read the number of bytes in the header */
-        //     ReadXBytes(connfd, sizeof(length), (void*)(&length));
-
-        //     /* Read the Header of size Length in bytes */
-        //     printf("The length is %d\n", std::stoi(std::string((char*)(void*)(&length))));
-        //     buffer = new char[length];
-        //     ReadXBytes(connfd, std::stoi(std::string((char*)(void*)(&length))), (void*)buffer);
-
-        //     /* Process the Header request */
-        //     auto header_values = DisectHeader(std::string(buffer));
-
-        //     printf("ClientID '%s' connected!\n", header_values["ClientID"].c_str());
-        //     std::string clientid = header_values["ClientID"];
-        //     connectedclients[clientid] = connfd;
-
-        //     if (clientid == "Chaos") {
-        //         printf("Does flutter still exist? %d\n", connectedclients["Flutter"]);
-        //     }
-
-        //     process_commands(connfd, connectedclients);   /* Process the daemon command */
-        //     exit(0);
-        // }
-
-        // close(connfd);          /* parent closes connected socket */
-    }
-
-    delete [] buffer;
-
-    FD_CLR(listenfd, &readfds);
-
-    close(listenfd);
+void Server::onInput(void (*rc)(uint16_t fd, char* buffer)) {
+    receiveCallback = rc;
 }
+
+void Server::onConnect(void (*ncc)(uint16_t)) {
+    newConnectionCallback = ncc;
+}
+
+void Server::onDisconnect(void (*dc)(uint16_t)) {
+    disconnectCallback = dc;
+}
+
+uint16_t Server::sendMessage(Connector conn, const char* messageBuffer) {
+    return send(conn.source_fd, messageBuffer, strlen(messageBuffer), 0);
+}
+
+uint16_t Server::sendMessage(Connector conn, char* messageBuffer) {
+    return send(conn.source_fd, messageBuffer, strlen(messageBuffer), 0);
+}   
