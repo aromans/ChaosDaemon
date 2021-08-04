@@ -110,8 +110,25 @@ void Server::recvInputFromExisting(int fd) {
         FD_CLR(fd, &serverfds); //Clears the bit for the file descriptor fd in the file descriptor set fdset.
         return;
     }
+
     printf("Server Received '%s' from client!\n", input_buffer);
-    receiveCallback(fd, input_buffer);
+
+    if (connectedclients.find(fd) != connectedclients.end()) {
+        if (client_ids["Flutter"] == fd) {
+            this->sendMessage(client_ids["Chaos"], input_buffer);
+        }
+
+        receiveCallback(connectedclients[fd].c_str(), input_buffer);
+    } else {
+        DisectHeader(fd, input_buffer);
+
+        if (connectedclients.find(fd) != connectedclients.end()) {
+            receiveCallback(connectedclients[fd].c_str(), input_buffer);
+        } else {
+            perror("Server error: a client id wasn't fully recorded!");
+        }
+    }
+
     bzero(&input_buffer, BUFFER_SIZE);
  }
 
@@ -149,8 +166,41 @@ void Server::init() {
     isactive = 1;
 }
 
-void Server::onInput(void (*rc)(uint16_t fd, char* buffer)) {
-    receiveCallback = rc;
+
+void Server::readXBytes(int socket, unsigned int x, void* buffer) {
+    int bytesRead = 0;
+    int result;
+}
+
+void Server::DisectHeader(int fd, std::string header) {
+    std::map<std::string, std::string> header_values;
+    std::string word = "";
+    std::string prevWord = "";
+    for (auto x = std::begin(header); x != std::end(header); ++x) 
+    {
+        if (*x != ' ') {
+            word.push_back(*x);
+        } else {
+            if (prevWord != "") {
+                if (prevWord == "ClientID:") {
+                    header_values["ClientID"] = word;
+                } else if (prevWord == "Request:") {
+                    header_values["Request"] = word;
+                }
+                prevWord = "";
+            } else {
+                prevWord = word;
+            }
+
+            word = "";
+        }
+    }
+
+    if (header_values["Request"] == "Connection" ||
+        header_values["Request"] == "Connection\r\n\r\n") {
+        connectedclients[fd] = header_values["ClientID"];
+        client_ids[header_values["ClientID"]] = fd;
+    }
 }
 
 void Server::onConnect(void (*ncc)(uint16_t)) {
@@ -159,6 +209,14 @@ void Server::onConnect(void (*ncc)(uint16_t)) {
 
 void Server::onDisconnect(void (*dc)(uint16_t)) {
     disconnectCallback = dc;
+}
+
+uint16_t Server::sendMessage(int sock_fd, const char* messageBuffer) {
+    return send(sock_fd, messageBuffer, strlen(messageBuffer), 0);
+}
+
+uint16_t Server::sendMessage(int sock_fd, char* messageBuffer) {
+    return send(sock_fd, messageBuffer, strlen(messageBuffer), 0);
 }
 
 uint16_t Server::sendMessage(Connector conn, const char* messageBuffer) {

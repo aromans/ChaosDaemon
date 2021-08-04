@@ -17,7 +17,7 @@
 #include <string>
 #include <list>
 
-#define BUFFER_SIZE 500 // 100 bytes buffer
+#define BUFFER_SIZE 500 // 500 bytes buffer
 #define MAX_CLIENTS 5
 #define DEFAULT_PORT 3000
 
@@ -39,22 +39,30 @@ public:
 
     //callback setters
     void onConnect(void (*ncc)(uint16_t fd));
-    void onInput(void (*rc)(uint16_t fd, char *buffer));
     void onDisconnect(void (*dc)(uint16_t fd));
 
+    template <typename T>
+    void onInput(void (*rc)(T fd, char *buffer)) {
+        receiveCallback = rc;
+    }
+
+
+    uint16_t sendMessage(int sock_fd, const char* messageBuffer);
+    uint16_t sendMessage(int sock_fd, char* messageBuffer);
     uint16_t sendMessage(Connector conn, const char* messageBuffer);
     uint16_t sendMessage(Connector conn, char* messageBuffer);
 public:
     int isactive;
+
+    std::map<int, std::string> connectedclients;
 
 private:
     fd_set serverfds;
     fd_set tempfds;
 
     uint16_t maxfd;
-
-    std::map<std::string, int> connectedclients;
-    std::string                client_names[5];
+    
+    std::map<std::string, int> client_ids;
 
     int serversocket_fd;
     int tempsocket_fd;
@@ -67,7 +75,7 @@ private:
     char remote_ip[INET6_ADDRSTRLEN];
 
     void (*newConnectionCallback) (uint16_t fd);
-    void (*receiveCallback) (uint16_t fd, char *buffer);
+    void (*receiveCallback) (const char* fd, char *buffer);
     void (*disconnectCallback) (uint16_t fd);
 
     //function prototypes
@@ -77,6 +85,10 @@ private:
     void startListen();
     void handleNewConnection();
     void recvInputFromExisting(int fd);
+
+    //message handler methods
+    void readXBytes(int socket, uint32_t x, void* buffer);
+    void DisectHeader(int fd, std::string header);
 };
 
 #endif // SERVER_HPP

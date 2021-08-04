@@ -12,17 +12,19 @@ void handleServerConnection(uint16_t fd) {
 }
 
 void handleServerDisconnect(uint16_t fd) {
-    std::cout << "Got disconnect from " << fd << std::endl;
+    std::cout << "Got disconnect from " << server.connectedclients[fd] << std::endl;
 }
 
-void handleServerInput(uint16_t fd, char* buffer) {
+template <typename T>
+void handleServerInput(T fd, char* buffer) {
     std::cout << "Got input '" << buffer << "' from " << fd << std::endl;
 }
+
 
 int main(int argc, char** argv) {
     server.onConnect(handleServerConnection);
     server.onDisconnect(handleServerDisconnect);
-    server.onInput(handleServerInput);
+    server.onInput(handleServerInput<const char*>);
     server.init();
 
     while(server.isactive) {

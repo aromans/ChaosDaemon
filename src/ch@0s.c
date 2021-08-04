@@ -85,10 +85,11 @@ int main()
 {
     skeleton_daemon();
 
-    char connectionRequest[1024];
-    char* connectionHeader = "ClientID: Chaos Request: Connection\r\n\r\n";
-    snprintf(connectionRequest, 10, "%ld", strlen(connectionHeader));
-    strcat(connectionRequest, connectionHeader);    
+    // char connectionRequest[1024];
+    char connectionRequest[100];
+    strcpy(connectionRequest, "ClientID: Chaos Request: Connection ");
+    // snprintf(connectionRequest, 10, "", strlen(connectionHeader));
+    // strcat(connectionRequest, connectionHeader);    
 
     int sockfd, connfd;
     struct sockaddr_in servaddr, cli;
@@ -132,12 +133,10 @@ int main()
         // bzero(buff, sizeof(buff));
 
         // n = read(sockfd, buff, sizeof(buff));
+        n = recv(sockfd, buff, 1024, 0);
 
         if (buff != NULL && buff != "") {
-            syslog (LOG_NOTICE, "Printing to log:");
-
-            printf("%s\n", buff);
-
+            syslog (LOG_NOTICE, "The command sent from front end: '%s'", buff);
             bzero(buff, sizeof(buff));
         }
 

@@ -1,9 +1,10 @@
- .vscode/
+ .vscode/*
 
- build/
+ build/*
 
  package-lock.json
  package.json
  
 src/.idea/
 src/.vscode/
+src/cmake-build-debug/

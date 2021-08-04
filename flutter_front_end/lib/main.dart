@@ -41,13 +41,13 @@ void _sendConnectionHeader(Socket? socket) {
 String _compileHeader(String request) {
   String clientID = "ClientID: Flutter ";
   String requestType = "Request: " + request + " ";
-  String header = clientID + requestType + "\r\n\r\n";
-  Uint8List headerUnits = Uint8List.fromList(header.codeUnits);
+  String header = clientID + requestType;
+  // Uint8List headerUnits = Uint8List.fromList(header.codeUnits);
 
-  print(headerUnits.lengthInBytes);
+  // print(headerUnits.lengthInBytes);
 
-  int headerBytes = headerUnits.lengthInBytes;
-  header = headerBytes.toString() + header;
+  // int headerBytes = headerUnits.lengthInBytes;
+  // header = headerBytes.toString() + header;
 
   return header;
 }
@@ -122,8 +122,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _sendMessage() {
-    String header = _compileHeader("Command");
-    String message = header + (this.command ?? "");
+    String message = this.command ?? "";
     print("Message: " + message);
     widget.channel?.write(message);
     this.command = "";
