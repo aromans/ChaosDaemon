@@ -130,9 +130,6 @@ int main()
     {
         sleep (1);
 
-        // bzero(buff, sizeof(buff));
-
-        // n = read(sockfd, buff, sizeof(buff));
         n = recv(sockfd, buff, 1024, 0);
 
         if (buff != NULL && buff != "") {

@@ -20,7 +20,6 @@ void handleServerInput(T fd, char* buffer) {
     std::cout << "Got input '" << buffer << "' from " << fd << std::endl;
 }
 
-
 int main(int argc, char** argv) {
     server.onConnect(handleServerConnection);
     server.onDisconnect(handleServerDisconnect);

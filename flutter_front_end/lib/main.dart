@@ -1,9 +1,14 @@
-// import 'package:web_socket_channel/web_socket_channel.dart';
-import 'dart:ffi';
-import 'dart:typed_data';
-import 'package:flutter/foundation.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+
+// Custom files
+import 'package:flutter_front_end/screens/SecondScreen.dart';
+import 'package:flutter_front_end/components/logWindow.dart';
+import 'package:flutter_front_end/components/scenarioWindow.dart';
+import 'package:flutter_front_end/components/chatMessage.dart';
+import 'package:flutter_front_end/components/statusBar.dart';
 
 void main() async {
   // modify with your true address/port
@@ -28,7 +33,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page', channel: socket),
+      routes: <String, WidgetBuilder>{
+        '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
+        '/scenarioCreator': (context) => SecondScreen(),
+      },
     );
   }
 }
@@ -42,13 +50,6 @@ String _compileHeader(String request) {
   String clientID = "ClientID: Flutter ";
   String requestType = "Request: " + request + " ";
   String header = clientID + requestType;
-  // Uint8List headerUnits = Uint8List.fromList(header.codeUnits);
-
-  // print(headerUnits.lengthInBytes);
-
-  // int headerBytes = headerUnits.lengthInBytes;
-  // header = headerBytes.toString() + header;
-
   return header;
 }
 
@@ -75,9 +76,18 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? command = "";
-  // final _socket = WebSocketChannel.connect(
-  //   Uri.parse('ws://127.0.0.1:3000'),
-  // );
+
+  List<ChatMessage> messages = [
+    ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a second log #2", messageType: "Solr"),
+    ChatMessage(
+        messageContent:
+            "This is a very slightly ever so slightly longer log #3",
+        messageType: "FMV"),
+    ChatMessage(
+        messageContent: "This is another short log #4", messageType: "HAProxy"),
+    ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
+  ];
 
   void _incrementCounter() {
     setState(() {
@@ -90,34 +100,62 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
+        backgroundColor: Color.fromARGB(255, 11, 213, 163),
+        foregroundColor: Color.fromARGB(255, 11, 213, 163),
+        toolbarHeight: 35,
       ),
       body: Center(
-        child: Column(
+        child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+            /* SCENARIO WINDOW (LEFT SIDE) */
+            Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                height: MediaQuery.of(context).size.height,
+                child: scenarioWindow()),
+            /* SOA-ESB STATUS WINDOW (MIDDLE) */
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: MediaQuery.of(context).size.height,
+              color: Colors.amber,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-            TextFormField(
-                onChanged: (String? value) {
-                  this.command = value;
-                },
-                decoration: InputDecoration(
-                  border: UnderlineInputBorder(),
-                  labelText: 'Send your command!',
-                )),
+            /* LOG VIEW WINDOW (RIGHT SIDE) */
+            Container(
+                width: MediaQuery.of(context).size.width * 0.25,
+                height: MediaQuery.of(context).size.height,
+                child: logWindow(messages: messages)),
+            // TextFormField(
+            //     onChanged: (String? value) {
+            //       this.command = value;
+            //     },
+            //     decoration: InputDecoration(
+            //       border: UnderlineInputBorder(),
+            //       labelText: 'Send your command!',
+            //     )),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _sendMessage,
-        tooltip: 'Send Message',
-        child: Icon(Icons.send),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      bottomNavigationBar: statusBar(),
+      // floatingActionButton: Row(
+      //   children: [
+      //     FloatingActionButton(
+      //       onPressed: _sendMessage,
+      //       tooltip: 'Send Message',
+      //       child: Icon(Icons.send),
+      //     ),
+      //     FloatingActionButton(
+      //       onPressed: () {
+      //         Navigator.push(
+      //           context,
+      //           new MaterialPageRoute(
+      //               builder: (context) => new SecondScreen()),
+      //         );
+      //       },
+      //       tooltip: 'Go to next screen',
+      //       child: Icon(Icons.access_alarm),
+      //     ),
+      //   ],
+      // ) // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 
