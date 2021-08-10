@@ -9,6 +9,7 @@ import 'package:flutter_front_end/components/logWindow.dart';
 import 'package:flutter_front_end/components/scenarioWindow.dart';
 import 'package:flutter_front_end/components/chatMessage.dart';
 import 'package:flutter_front_end/components/statusBar.dart';
+import 'package:flutter_front_end/components/systemStatusWindow.dart';
 
 void main() async {
   // modify with your true address/port
@@ -118,6 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
               width: MediaQuery.of(context).size.width * 0.5,
               height: MediaQuery.of(context).size.height,
               color: Colors.amber,
+              child: systemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
             Container(

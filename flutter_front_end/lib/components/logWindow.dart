@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_front_end/chatMessage.dart';
+import 'package:flutter_front_end/components/chatMessage.dart';
 
 class logWindow extends StatelessWidget {
   logWindow({required this.messages});

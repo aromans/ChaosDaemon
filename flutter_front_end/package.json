@@ -1,0 +1,7 @@
+{
+  "type": "module",
+  "dependencies": {
+    "gojs": "^2.1.47",
+    "jquery-confirm": "^3.3.4"
+  }
+}
