@@ -2,6 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:touchable/touchable.dart';
+
+import 'Vector.dart';
+import 'systemContainer.dart';
 
 var load = '''
 import go from 'gojs';
@@ -64,8 +68,10 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
-            child: CustomPaint(
-              painter: OpenPainter(context, 100, 50),
+            child: CanvasTouchDetector(
+              builder: (context) => CustomPaint(
+                painter: OpenPainter(context, 100, 50),
+              ),
             ),
           ),
         ],
@@ -88,7 +94,10 @@ class OpenPainter extends CustomPainter {
   }
 
   @override
-  void paint(Canvas canvas, Size size) {
+  void paint(Canvas ogCanvas, Size size) {
+    // var canvas = ogCanvas;
+    var canvas = TouchyCanvas(context, ogCanvas);
+
     var paint1 = Paint()
       ..color = Colors.orange
       ..style = PaintingStyle.fill;
@@ -102,20 +111,33 @@ class OpenPainter extends CustomPainter {
       ..color = Colors.green
       ..style = PaintingStyle.fill;
 
-    canvas.drawRect(
-        Offset((MediaQuery.of(context).size.width * 0.25) - half_width,
-                -half_height) &
-            Size(width, height),
-        paint3);
+    ParagraphBuilder pb = new ParagraphBuilder(ParagraphStyle(
+        fontSize: 20,
+        textAlign: TextAlign.center,
+        textDirection: TextDirection.ltr));
 
-    canvas.drawRect(
-        Offset(10, -half_height + 100) & Size(width, height), paint2);
+    SystemContainer box_1 = new SystemContainer(
+        paint3,
+        new Vector((MediaQuery.of(context).size.width * 0.25) - half_width,
+            -half_height),
+        new Vector(width, height),
+        "Main");
 
-    canvas.drawRect(
-        Offset((MediaQuery.of(context).size.width * 0.415),
-                (-half_height + 100)) &
-            Size(width, height),
-        paint1);
+    SystemContainer box_2 = new SystemContainer(paint2,
+        new Vector(10, -half_height + 100), new Vector(width, height), "Solr");
+
+    SystemContainer box_3 = new SystemContainer(
+        paint1,
+        new Vector(
+            (MediaQuery.of(context).size.width * 0.415), -half_height + 100),
+        new Vector(width, height),
+        "CORE SOA");
+
+    // box_1.Draw(canvas, pb);
+    // box_2.Draw(canvas, pb);
+    // box_3.Draw(canvas, pb);
+
+    canvas.drawLine(box_1.position, box_2.position, paint2);
 
     canvas.drawRect(
         Offset((MediaQuery.of(context).size.width * 0.415),
@@ -143,7 +165,7 @@ class OpenPainter extends CustomPainter {
     canvas.drawLine(
         Offset((MediaQuery.of(context).size.width * 0.25) + half_width, 0),
         Offset((MediaQuery.of(context).size.width * 0.415), 0 + 100),
-        paint3);
+        paint4);
 
     canvas.drawLine(
         Offset((MediaQuery.of(context).size.width * 0.25) + half_width, 0),
@@ -162,34 +184,13 @@ class OpenPainter extends CustomPainter {
         Offset((MediaQuery.of(context).size.width * 0.415), 0 + -100),
         paint3);
 
-    ParagraphBuilder pb = new ParagraphBuilder(ParagraphStyle(
-        fontSize: 20,
-        textAlign: TextAlign.center,
-        textDirection: TextDirection.ltr));
+    Paragraph p;
 
-    pb.addText("Main");
-    Paragraph p = pb.build();
-    p.layout(ParagraphConstraints(width: width));
+    // pb.addText("Solr");
+    // Paragraph p = pb.build();
+    // p.layout(ParagraphConstraints(width: width));
 
-    canvas.drawParagraph(
-        p,
-        Offset((MediaQuery.of(context).size.width * 0.25) - half_width,
-            -half_height * 0.5));
-
-    pb.addText("Solr");
-    p = pb.build();
-    p.layout(ParagraphConstraints(width: width));
-
-    canvas.drawParagraph(p, Offset(10, (-half_height * 0.5) + 100));
-
-    pb.addText("CORE SOA");
-    p = pb.build();
-    p.layout(ParagraphConstraints(width: width));
-
-    canvas.drawParagraph(
-        p,
-        Offset((MediaQuery.of(context).size.width * 0.415),
-            ((-half_height * 0.5) + 100)));
+    // canvas.drawParagraph(p, Offset(10, (-half_height * 0.5) + 100));
 
     pb.addText("CORE SOA");
     p = pb.build();

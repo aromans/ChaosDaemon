@@ -39,6 +39,7 @@ dependencies:
   html: ^0.15.0
   simple_html_css: ^3.0.1
   graphview: ^0.7.0
+  touchable: ^1.0.0
 
 dev_dependencies:
   flutter_test:
