@@ -18,7 +18,14 @@ class SystemContainer {
     this.label = label;
   }
 
-  void Draw(Canvas canvas, ParagraphBuilder pb) {
+  SystemContainer.override(Paint paint, Vector pos, Size size, String label) {
+    this.paint = paint;
+    this.position = Offset(pos.x, pos.y);
+    this.size = size;
+    this.label = label;
+  }
+
+  void Draw(TouchyCanvas canvas, ParagraphBuilder pb) {
     canvas.drawRect(
       position & size,
       paint,
