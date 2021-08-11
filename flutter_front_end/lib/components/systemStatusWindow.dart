@@ -25,45 +25,6 @@ Paint AnalyzeStatus(String value) {
   }
 }
 
-var load = '''
-import go from 'gojs';
-
-var \$ = go.GraphObject.make;
-
-var myDiagram =
-  \$(go.Diagram, "myDiagramDiv",
-    { // enable Ctrl-Z to undo and Ctrl-Y to redo
-      "undoManager.isEnabled": true
-    });
-
-myDiagram.model = new go.Model(
-  [ // for each object in this Array, the Diagram creates a Node to represent it
-    { key: "Alpha" },
-    { key: "Beta" },
-    { key: "Gamma" }
-  ]);
-''';
-
-// var load = ''''
-//     <textarea id="mySavedModel" style="width:100%;height:400px">
-// { "class": "go.TreeModel",
-//   "nodeDataArray": [
-// {"key":0, "text":"Main", "loc":"0 0"},
-// {"key":1, "parent":0, "text":"Core SOA", "brush":"yellow", "dir":"right", "loc":"75 -50"},
-// {"key":2, "parent":0, "text":"Core SOA", "brush":"yellow", "dir":"right", "loc":"75 -30"},
-// {"key":3, "parent":0, "text":"Core SOA", "brush":"yellow", "dir":"right", "loc":"75 -10"},
-// {"key":4, "parent":0, "text":"Solr", "brush":"red", "dir":"right", "loc":"75 50"},
-// {"key":5, "parent":0, "text":"HA Proxy", "brush":"green", "dir":"left", "loc":"-50 -50"},
-// {"key":6, "parent":0, "text":"HA Proxy", "brush":"green", "dir":"left", "loc":"-50 -30"},
-// {"key":7, "parent":0, "text":"HA Proxy", "brush":"green", "dir":"left", "loc":"-50 -10"},
-// {"key":8, "parent":0, "text":"Log Stash", "brush":"green", "dir":"left", "loc":"-50 50"},
-// {"key":9, "parent":0, "text":"Log Stash", "brush":"green", "dir":"left", "loc":"-50 70"},
-// {"key":10, "parent":0, "text":"Log Stash", "brush":"green", "dir":"left", "loc":"-50 90"}
-// ]
-// }
-//     </textarea>
-//   ''';
-
 class systemStatusWindow extends StatefulWidget {
   systemStatusWindow({Key? key}) : super(key: key);
 
@@ -144,9 +105,8 @@ class OpenPainter extends CustomPainter {
   }
 
   void AssignContainers() {
-    double xPos, yPos;
-
     int counter = 0;
+    int num = 0;
 
     // Add main container
     containers.add(new SystemContainer(
@@ -155,21 +115,40 @@ class OpenPainter extends CustomPainter {
     for (int i = 0; i < existing_Containers.length; ++i) {
       Map curr = existing_Containers[i];
 
-      // if (names.containsKey((curr['name']))) {
-      // } else {
-      //   names[curr["name"]] = true;
-      // }
-
       Paint paint_pick = AnalyzeStatus(curr["status"]);
 
       Vector pos;
 
-      if (counter > 0 && counter <= 3) {
+      if (counter >= 0 && counter < 3) {
         pos = new Vector(
-            LEFT + PADDING, (0 + SPACING) + (i * (height + PADDING)));
+            LEFT + PADDING, -(height * 2) - (num++ * (height + PADDING)));
+
+        if (num == 3) {
+          num = 0;
+        }
+      } else if (counter >= 3 && counter < 6) {
+        pos =
+            new Vector(LEFT + PADDING, (height) + (num++ * (height + PADDING)));
+
+        if (num == 3) {
+          num = 0;
+        }
+      } else if (counter >= 6 && counter <= 9) {
+        pos = new Vector(
+            RIGHT - PADDING, -(height * 2) - (num++ * (height + PADDING)));
+
+        if (num == 3) {
+          num = 0;
+        }
+
+        print(pos.x.toString() + " -- " + pos.y.toString());
       } else {
         pos = new Vector(
-            RIGHT - PADDING, (0 + SPACING) + (i * (height + PADDING)));
+            RIGHT - PADDING, (height) + (num++ * (height + PADDING)));
+
+        if (num == 3) {
+          num = 0;
+        }
       }
 
       containers.add(new SystemContainer(paint_pick, pos, size, curr["name"]));
@@ -192,102 +171,17 @@ class OpenPainter extends CustomPainter {
       containers[i].Draw(canvas, pb);
     }
 
-    // SystemContainer box_1 = new SystemContainer(
-    //     black(), new Vector(MIDDLE, -half_height), this.size, "Main");
+    SystemContainer main = containers[0];
+    Offset mainL = main.middleLeft;
+    Offset mainR = main.middleRight;
+    for (int i = 1; i < containers.length; ++i) {
+      SystemContainer tempContainer = containers[i];
 
-    // SystemContainer box_2 = new SystemContainer(
-    //     red(), new Vector(10, -half_height + 100), this.size, "Solr");
-
-    // SystemContainer box_3 = new SystemContainer(
-    //     orange(),
-    //     new Vector(
-    //         (MediaQuery.of(context).size.width * 0.415), -half_height + 100),
-    //     this.size,
-    //     "CORE SOA");
-
-    // box_1.Draw(canvas, pb);
-    // box_2.Draw(canvas, pb);
-    // box_3.Draw(canvas, pb);
-
-    // canvas.drawRect(
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //             (-half_height + 100) + (1 * (height + 10))) &
-    //         Size(width, height),
-    //     orange());
-
-    // canvas.drawRect(
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //             (-half_height + 100) + (2 * (height + 10))) &
-    //         Size(width, height),
-    //     orange());
-
-    // canvas.drawRect(
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //             (-half_height - 100)) &
-    //         Size(width, height),
-    //     green());
-
-    // canvas.drawLine(
-    //     Offset((MediaQuery.of(context).size.width * 0.25) - half_width, 0),
-    //     Offset(width + 10, 0 + 100),
-    //     black());
-
-    // canvas.drawLine(
-    //     Offset((MediaQuery.of(context).size.width * 0.25) + half_width, 0),
-    //     Offset((MediaQuery.of(context).size.width * 0.415), 0 + 100),
-    //     black());
-
-    // canvas.drawLine(
-    //     Offset((MediaQuery.of(context).size.width * 0.25) + half_width, 0),
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //         0 + 100 + (1 * (height + 10))),
-    //     black());
-
-    // canvas.drawLine(
-    //     Offset((MediaQuery.of(context).size.width * 0.25) + half_width, 0),
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //         0 + 100 + (2 * (height + 10))),
-    //     black());
-
-    // canvas.drawLine(
-    //     Offset((MediaQuery.of(context).size.width * 0.25) + half_width, 0),
-    //     Offset((MediaQuery.of(context).size.width * 0.415), 0 + -100),
-    //     black());
-
-    // Paragraph p;
-
-    // // pb.addText("Solr");
-    // // Paragraph p = pb.build();
-    // // p.layout(ParagraphConstraints(width: width));
-
-    // // canvas.drawParagraph(p, Offset(10, (-half_height * 0.5) + 100));
-
-    // pb.addText("CORE SOA");
-    // p = pb.build();
-    // p.layout(ParagraphConstraints(width: width));
-
-    // canvas.drawParagraph(
-    //     p,
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //         ((-half_height * 0.5) + 100) + (1 * (height + 10))));
-
-    // pb.addText("CORE SOA");
-    // p = pb.build();
-    // p.layout(ParagraphConstraints(width: width));
-
-    // canvas.drawParagraph(
-    //     p,
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //         ((-half_height * 0.5) + 100) + (2 * (height + 10))));
-
-    // pb.addText("HA PROXY");
-    // p = pb.build();
-    // p.layout(ParagraphConstraints(width: width));
-
-    // canvas.drawParagraph(
-    //     p,
-    //     Offset((MediaQuery.of(context).size.width * 0.415),
-    //         ((-half_height * 0.5) - 100)));
+      if (tempContainer.position.dx < MIDDLE)
+        canvas.drawLine(mainL, containers[i].middleRight, black());
+      else
+        canvas.drawLine(mainR, containers[i].middleLeft, black());
+    }
   }
 
   @override
