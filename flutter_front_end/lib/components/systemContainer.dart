@@ -31,7 +31,7 @@ class SystemContainer {
     this.label = label;
   }
 
-  void Draw(TouchyCanvas canvas, ParagraphBuilder pb) {
+  void Draw(Canvas canvas, ParagraphBuilder pb) {
     canvas.drawRect(
       position & size,
       paint,
@@ -43,6 +43,13 @@ class SystemContainer {
 
     canvas.drawParagraph(
         p, Offset(position.dx, position.dy + (size.height * 0.25)));
+  }
+
+  bool Selected(Offset pos) {
+    return position.dx + size.width > pos.dx &&
+        position.dx < pos.dx &&
+        position.dy + size.height > pos.dy &&
+        position.dy < pos.dy;
   }
 
   void SetPosition(Vector pos) {

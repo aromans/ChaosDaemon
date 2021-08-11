@@ -7,6 +7,8 @@ import 'package:touchable/touchable.dart';
 import 'Vector.dart';
 import 'systemContainer.dart';
 
+List<SystemContainer> containers = <SystemContainer>[];
+
 Paint orange() => Paint()..color = Colors.orange;
 Paint black() => Paint()..color = Colors.black;
 Paint red() => Paint()..color = Colors.red;
@@ -23,6 +25,15 @@ Paint AnalyzeStatus(String value) {
     default:
       return black();
   }
+}
+
+String SelectContainer(Offset screenPos) {
+  for (int i = 0; i < containers.length; i++) {
+    if (containers[i].Selected(screenPos)) {
+      return containers[i].label;
+    }
+  }
+  return "";
 }
 
 class systemStatusWindow extends StatefulWidget {
@@ -43,26 +54,47 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            child: CanvasTouchDetector(
-              builder: (context) => CustomPaint(
-                painter: OpenPainter(context, 100, 50),
+      body: Container(
+        child: Stack(
+          alignment: AlignmentDirectional.centerStart,
+          children: [
+            GestureDetector(
+              onTapUp: (TapUpDetails d) {
+                Offset transformedPos = Offset(
+                    d.localPosition.dx,
+                    d.localPosition.dy -
+                        ((MediaQuery.of(context).size.height - 35) * 0.5));
+
+                String selected = SelectContainer(transformedPos);
+
+                if (selected != "") {
+                  print("You selected " + selected);
+                }
+              },
+              child: new SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                height: MediaQuery.of(context).size.height,
+                child: Container(color: Colors.white),
               ),
             ),
-          ),
-        ],
+            CanvasTouchDetector(
+                builder: (BuildContext ctx) =>
+                    CustomPaint(painter: OpenPainter(ctx, 100, 50))),
+            // CustomPaint(
+            //   painter: OpenPainter(context, 100, 50),
+            // ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class OpenPainter extends CustomPainter {
-  late BuildContext context;
+  final BuildContext context;
+  final double height, width;
+
   late Vector size;
-  late double height, width;
   late double half_height, half_width;
 
   late final double LEFT;
@@ -70,8 +102,6 @@ class OpenPainter extends CustomPainter {
   late final double MIDDLE;
   late final double SPACING;
   late final double PADDING;
-
-  List<SystemContainer> containers = <SystemContainer>[];
 
   List<Map> existing_Containers = [
     {"name": "Solr", "status": "down"},
@@ -86,11 +116,8 @@ class OpenPainter extends CustomPainter {
   ];
   // late Map names;
 
-  OpenPainter(BuildContext context, double width, double height) {
-    this.context = context;
+  OpenPainter(this.context, this.width, this.height) {
     this.size = Vector(width, height);
-    this.height = height;
-    this.width = width;
     this.half_height = height * 0.5;
     this.half_width = width * 0.5;
 
@@ -108,9 +135,11 @@ class OpenPainter extends CustomPainter {
     int counter = 0;
     int num = 0;
 
+    double screenHeight = MediaQuery.of(context).size.height - 35;
+
     // Add main container
-    containers.add(new SystemContainer(
-        black(), Vector(MIDDLE, -half_height), size, "Main"));
+    containers
+        .add(new SystemContainer(black(), Vector(MIDDLE, 0), size, "Main"));
 
     for (int i = 0; i < existing_Containers.length; ++i) {
       Map curr = existing_Containers[i];
@@ -120,31 +149,33 @@ class OpenPainter extends CustomPainter {
       Vector pos;
 
       if (counter >= 0 && counter < 3) {
-        pos = new Vector(
-            LEFT + PADDING, -(height * 2) - (num++ * (height + PADDING)));
+        pos = new Vector(LEFT + PADDING,
+            -((screenHeight * 0.5) - PADDING) + (num++ * (height + PADDING)));
 
         if (num == 3) {
           num = 0;
         }
       } else if (counter >= 3 && counter < 6) {
-        pos =
-            new Vector(LEFT + PADDING, (height) + (num++ * (height + PADDING)));
+        pos = new Vector(
+            LEFT + PADDING,
+            ((screenHeight * 0.5) - (height + PADDING)) -
+                (num++ * (height + PADDING)));
 
         if (num == 3) {
           num = 0;
         }
       } else if (counter >= 6 && counter <= 9) {
-        pos = new Vector(
-            RIGHT - PADDING, -(height * 2) - (num++ * (height + PADDING)));
+        pos = new Vector(RIGHT - PADDING,
+            -((screenHeight * 0.5) - PADDING) + (num++ * (height + PADDING)));
 
         if (num == 3) {
           num = 0;
         }
-
-        print(pos.x.toString() + " -- " + pos.y.toString());
       } else {
         pos = new Vector(
-            RIGHT - PADDING, (height) + (num++ * (height + PADDING)));
+            RIGHT - PADDING,
+            ((screenHeight * 0.5) - (height + PADDING)) -
+                (num++ * (height + PADDING)));
 
         if (num == 3) {
           num = 0;
@@ -158,10 +189,7 @@ class OpenPainter extends CustomPainter {
   }
 
   @override
-  void paint(Canvas ogCanvas, Size size) {
-    // var canvas = ogCanvas;
-    var canvas = TouchyCanvas(context, ogCanvas);
-
+  void paint(Canvas canvas, Size size) {
     ParagraphBuilder pb = new ParagraphBuilder(ParagraphStyle(
         fontSize: 20,
         textAlign: TextAlign.center,

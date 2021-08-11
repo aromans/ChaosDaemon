@@ -99,12 +99,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Color.fromARGB(255, 11, 213, 163),
-        foregroundColor: Color.fromARGB(255, 11, 213, 163),
-        toolbarHeight: 35,
-      ),
+      // appBar: AppBar(
+      //   title: Text(widget.title),
+      //   backgroundColor: Color.fromARGB(255, 11, 213, 163),
+      //   foregroundColor: Color.fromARGB(255, 11, 213, 163),
+      //   toolbarHeight: MediaQuery.of(context).size.height * 0.05,
+      // ),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
