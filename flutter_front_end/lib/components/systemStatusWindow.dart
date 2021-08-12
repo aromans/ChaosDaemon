@@ -79,7 +79,7 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
             ),
             CanvasTouchDetector(
                 builder: (BuildContext ctx) =>
-                    CustomPaint(painter: OpenPainter(ctx, 100, 50))),
+                    CustomPaint(painter: OpenPainter(ctx, 100, 100))),
             // CustomPaint(
             //   painter: OpenPainter(context, 100, 50),
             // ),
@@ -117,6 +117,10 @@ class OpenPainter extends CustomPainter {
   // late Map names;
 
   OpenPainter(this.context, this.width, this.height) {
+    if (containers.length > 0) {
+      containers.clear();
+    }
+
     this.size = Vector(width, height);
     this.half_height = height * 0.5;
     this.half_width = width * 0.5;

@@ -1,6 +1,23 @@
 import 'package:flutter/material.dart';
 
 class statusBar extends StatelessWidget {
+  String serverStatus = "OK";
+  String daemonStatus = "OK";
+
+  statusBar(this.serverStatus, this.daemonStatus) {}
+
+  TextStyle labelStyle =
+      TextStyle(color: Colors.white, fontStyle: FontStyle.italic);
+
+  TextStyle statusStyle(String status) {
+    switch (status) {
+      case "OK":
+        return TextStyle(color: Colors.green);
+      default:
+        return TextStyle(color: Colors.red);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -11,6 +28,11 @@ class statusBar extends StatelessWidget {
             data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
             child: Row(
               children: <Widget>[
+                Text("Server Connection Status: ", style: labelStyle),
+                Text("${serverStatus}", style: statusStyle(serverStatus)),
+                Text("\t\t\t|\t\t\t", style: labelStyle),
+                Text("\tDaemon Connection Status: ", style: labelStyle),
+                Text("${daemonStatus}", style: statusStyle(daemonStatus)),
                 const Spacer(),
                 IconButton(
                   onPressed: () {},

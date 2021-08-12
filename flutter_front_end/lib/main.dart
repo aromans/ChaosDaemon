@@ -71,12 +71,15 @@ class MyHomePage extends StatefulWidget {
   final Socket? channel;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _MyHomePageState createState() => _MyHomePageState(channel);
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? command = "";
+  Socket? serverSocket;
+
+  _MyHomePageState(this.serverSocket) {}
 
   List<ChatMessage> messages = [
     ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
@@ -96,15 +99,16 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  String serverConnection() {
+    if (serverSocket?.isEmpty == false) {
+      return "OK";
+    }
+    return "NOT CONNECTED";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Text(widget.title),
-      //   backgroundColor: Color.fromARGB(255, 11, 213, 163),
-      //   foregroundColor: Color.fromARGB(255, 11, 213, 163),
-      //   toolbarHeight: MediaQuery.of(context).size.height * 0.05,
-      // ),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -137,7 +141,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: statusBar(),
+      bottomNavigationBar: statusBar(serverConnection(), "OK"),
       // floatingActionButton: Row(
       //   children: [
       //     FloatingActionButton(
