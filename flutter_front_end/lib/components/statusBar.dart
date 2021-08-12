@@ -6,15 +6,14 @@ class statusBar extends StatelessWidget {
 
   statusBar(this.serverStatus, this.daemonStatus) {}
 
-  TextStyle labelStyle =
-      TextStyle(color: Colors.white, fontStyle: FontStyle.italic);
+  TextStyle labelStyle = TextStyle(color: Colors.white);
 
   TextStyle statusStyle(String status) {
     switch (status) {
       case "OK":
-        return TextStyle(color: Colors.green);
+        return TextStyle(color: Colors.green, fontWeight: FontWeight.bold);
       default:
-        return TextStyle(color: Colors.red);
+        return TextStyle(color: Colors.red, fontWeight: FontWeight.bold);
     }
   }
 
