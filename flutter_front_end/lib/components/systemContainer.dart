@@ -1,8 +1,6 @@
 import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:touchable/touchable.dart';
-
+import 'package:flutter/material.dart' as fm;
+import 'package:flutter/widgets.dart' as fw;
 import 'Vector.dart';
 
 class SystemContainer {
@@ -32,13 +30,36 @@ class SystemContainer {
   }
 
   void Draw(Canvas canvas, ParagraphBuilder pb) {
-    canvas.drawRect(
+    const Radius r = Radius.circular(10.0);
+    RRect roundedRect = RRect.fromRectAndRadius(
       position & size,
-      paint,
+      r,
     );
+
+    /*canvas.drawPath(
+        new Path()
+          ..fillType=PathFillType.evenOdd
+          ..addPath(new Path()..addRRect(BorderRadius.all(r)
+              .resolve(TextDirection.ltr)
+              .toRRect(position & size)
+              .deflate(5.0)), Offset.zero),
+        new Paint()
+          ..style = PaintingStyle.stroke
+          ..color = Colors.green
+          ..strokeWidth = 5.0);*/
+
+    canvas.drawRRect(
+        fw.BorderRadius.all(r)
+            .resolve(TextDirection.ltr)
+            .toRRect(position & size),
+        new Paint()
+          ..style = PaintingStyle.stroke
+          ..color = fm.Colors.green.withOpacity(0.25)
+          ..strokeWidth = 5.0);
 
     pb.addText(label);
     Paragraph p = pb.build();
+    pb.pushStyle(new TextStyle(color: Color.fromARGB(255, 0, 0, 0)));
     p.layout(ParagraphConstraints(width: size.width));
 
     canvas.drawParagraph(

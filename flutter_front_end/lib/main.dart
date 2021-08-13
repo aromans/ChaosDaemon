@@ -71,15 +71,15 @@ class MyHomePage extends StatefulWidget {
   final Socket? channel;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState(channel);
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
   String? command = "";
-  Socket? serverSocket;
+  //Socket? serverSocket;
 
-  _MyHomePageState(this.serverSocket) {}
+  //_MyHomePageState(this.serverSocket) {}
 
   List<ChatMessage> messages = [
     ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
@@ -100,10 +100,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   String serverConnection() {
-    if (serverSocket?.isEmpty == false) {
+   // if (serverSocket?.isEmpty == false) {
       return "OK";
-    }
-    return "NOT CONNECTED";
+    //}
+    //return "NOT CONNECTED";
   }
 
   @override
