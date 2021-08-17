@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:provider/provider.dart';
 
 // Custom files
 import 'package:flutter_front_end/screens/SecondScreen.dart';

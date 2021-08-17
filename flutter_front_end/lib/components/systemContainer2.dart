@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'Vector.dart';
-import 'dart:math';
 
 class SystemContainer2 extends StatefulWidget {
   const SystemContainer2({Key? key}) : super(key: key);
@@ -16,12 +15,12 @@ class SystemContainer2 extends StatefulWidget {
 }
 
 class SystemContainer2State extends State<SystemContainer2> {
-  Color? backgroundColor;
-  Color borderColor = Colors.green.shade400;
+  Color backgroundColor = Colors.blue;
+  Color borderColor = Colors.blue;
   Color currentBorderColor = Colors.red.shade900;
-  Color currentColor = Colors.red.shade200;
+  Color currentColor = Colors.red.shade900;
   Color nextBorderColor = Colors.yellow.shade800;
-  Color nextColor = Colors.yellow.shade300;
+  Color nextColor = Colors.yellow.shade800;
   int numberOfClicks = 0;
 
   @override
@@ -50,10 +49,10 @@ class SystemContainer2State extends State<SystemContainer2> {
           },
           child: Container(
             decoration: BoxDecoration(
-                color: Colors.white,
+                color: Colors.blue,
                 shape: BoxShape.rectangle,
                 borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                border: Border.all(width: 5.0, color: this.borderColor)),
+                border: Border.all(width: 5.0, color: Colors.blue)),
             margin: const EdgeInsets.all(0.0),
             width: 175.0,
             height: 175.0,
@@ -65,7 +64,7 @@ class SystemContainer2State extends State<SystemContainer2> {
                     child: Text(
                       'SOLR 2',
                       style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.bold),
                     ),
@@ -87,14 +86,14 @@ class SystemContainer2State extends State<SystemContainer2> {
                                 TextSpan(
                                     text: 'Memory: ',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 12.0,
                                     )),
                                 TextSpan(
                                     text: '75%',
                                     style: TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     )),
                               ],
@@ -106,14 +105,14 @@ class SystemContainer2State extends State<SystemContainer2> {
                                 TextSpan(
                                     text: 'Packets S/R: ',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 12.0,
                                     )),
                                 TextSpan(
                                     text: '456/87',
                                     style: TextStyle(
                                         fontSize: 14.0,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -124,14 +123,14 @@ class SystemContainer2State extends State<SystemContainer2> {
                                 TextSpan(
                                     text: 'Packet Loss: ',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 12.0,
                                     )),
                                 TextSpan(
                                     text: '4%',
                                     style: TextStyle(
                                         fontSize: 14.0,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -142,14 +141,14 @@ class SystemContainer2State extends State<SystemContainer2> {
                                 TextSpan(
                                     text: 'CPU: ',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 12.0,
                                     )),
                                 TextSpan(
                                     text: '1.2 Ghz',
                                     style: TextStyle(
                                         fontSize: 14.0,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -160,14 +159,14 @@ class SystemContainer2State extends State<SystemContainer2> {
                                 TextSpan(
                                     text: 'Uptime: ',
                                     style: TextStyle(
-                                      color: Colors.black,
+                                      color: Colors.white,
                                       fontSize: 12.0,
                                     )),
                                 TextSpan(
                                     text: '3.2 hrs',
                                     style: TextStyle(
                                         fontSize: 14.0,
-                                        color: Colors.black,
+                                        color: Colors.white,
                                         fontWeight: FontWeight.bold)),
                               ],
                             ),
@@ -199,9 +198,9 @@ class SystemContainer2State extends State<SystemContainer2> {
                     child: Text(
                       'Current Scenario',
                       style: TextStyle(
-                          color: this.currentBorderColor,
+                          color: Colors.white,
                           fontSize: 14,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.normal),
                     )))),
       ),
       MouseRegion(
@@ -221,9 +220,9 @@ class SystemContainer2State extends State<SystemContainer2> {
                     child: Text(
                       'Next Scenario',
                       style: TextStyle(
-                          color: this.nextBorderColor,
+                          color: Colors.white,
                           fontSize: 14,
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.normal),
                     )))),
       ),
     ]);

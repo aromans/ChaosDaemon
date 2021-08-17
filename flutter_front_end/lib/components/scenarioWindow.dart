@@ -50,7 +50,7 @@ class scenarioWindowState extends State<scenarioWindow> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.black,
       body: Padding(
         padding: EdgeInsets.all(25),
         child: Column(

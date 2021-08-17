@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
-import 'package:touchable/touchable.dart';
+//import 'package:flutter/services.dart';
+//import 'package:touchable/touchable.dart';
 
 import 'Vector.dart';
 import 'systemContainer.dart';
@@ -83,10 +83,10 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
         numOfWidgets, (index) => SystemContainer2());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.black,
       body: GridView(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
+            crossAxisCount: 3,
             mainAxisSpacing: 1,
             crossAxisSpacing: 1,
             childAspectRatio: 1.5),
