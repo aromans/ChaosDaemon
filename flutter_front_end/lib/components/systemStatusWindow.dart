@@ -1,11 +1,14 @@
 import 'dart:ui';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:touchable/touchable.dart';
 
 import 'Vector.dart';
 import 'systemContainer.dart';
+import 'systemContainer2.dart';
 
 List<SystemContainer> containers = <SystemContainer>[];
 
@@ -36,6 +39,27 @@ String SelectContainer(Offset screenPos) {
   return "";
 }
 
+void hover(Offset pointerPos) {
+  SystemContainer? container;
+  for (int i = 0; i < containers.length; i++) {
+    if (containers[i].Selected(pointerPos)) {
+      container = containers[i];
+      /*
+      Canvas canvas = container.canvas;
+      ParagraphBuilder pb = container.pb;
+      Paint paint = container.paint;
+      Offset pos = container.position;
+      Size size = container.size;
+      String label = container.label;
+      */
+      //SystemContainer newContainer =
+      //SystemContainer.override2(paint, pos, size, label);
+      //newContainer.Draw(canvas, pb, hasShadow: true);
+      print(container.label);
+    }
+  }
+}
+
 class systemStatusWindow extends StatefulWidget {
   systemStatusWindow({Key? key}) : super(key: key);
 
@@ -53,39 +77,21 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
 
   @override
   Widget build(BuildContext context) {
+
+    int numOfWidgets = 30;
+    var widgetList = new List<SystemContainer2>.generate(
+        numOfWidgets, (index) => SystemContainer2());
+
     return Scaffold(
-      body: Container(
-        child: Stack(
-          alignment: AlignmentDirectional.centerStart,
-          children: [
-            GestureDetector(
-              onTapUp: (TapUpDetails d) {
-                Offset transformedPos = Offset(
-                    d.localPosition.dx,
-                    d.localPosition.dy -
-                        ((MediaQuery.of(context).size.height - 35) * 0.5));
-
-                String selected = SelectContainer(transformedPos);
-
-                if (selected != "") {
-                  print("You selected " + selected);
-                }
-              },
-              child: new SizedBox(
-                width: MediaQuery.of(context).size.width * 0.5,
-                height: MediaQuery.of(context).size.height,
-                child: Container(color: Colors.white),
-              ),
-            ),
-            CanvasTouchDetector(
-                builder: (BuildContext ctx) =>
-                    CustomPaint(painter: OpenPainter(ctx, 100, 100))),
-            // CustomPaint(
-            //   painter: OpenPainter(context, 100, 50),
-            // ),
-          ],
-        ),
-      ),
+      backgroundColor: Colors.white,
+      body: GridView(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 4,
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
+            childAspectRatio: 1.5),
+          padding: EdgeInsets.all(25),
+          children: widgetList),
     );
   }
 }
@@ -104,7 +110,7 @@ class OpenPainter extends CustomPainter {
   late final double PADDING;
 
   List<Map> existing_Containers = [
-    {"name": "Solr", "status": "down"},
+    {"name": "SOLR", "status": "down"},
     {"name": "HA PROXY", "status": "up"},
     {"name": "HA PROXY", "status": "up"},
     {"name": "CORE SOA", "status": "scenario"},
@@ -195,8 +201,9 @@ class OpenPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     ParagraphBuilder pb = new ParagraphBuilder(ParagraphStyle(
-        fontSize: 20,
-        textAlign: TextAlign.center,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        textAlign: TextAlign.left,
         textDirection: TextDirection.ltr));
 
     for (int i = 0; i < containers.length; ++i) {

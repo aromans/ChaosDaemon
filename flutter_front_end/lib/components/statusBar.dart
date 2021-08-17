@@ -22,7 +22,7 @@ class statusBar extends StatelessWidget {
     return Container(
       height: 35,
       child: BottomAppBar(
-        color: Colors.deepPurple[600],
+        color: Colors.black,
         child: IconTheme(
             data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
             child: Row(

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 // Custom files
 import 'package:flutter_front_end/screens/SecondScreen.dart';
@@ -100,8 +101,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   String serverConnection() {
-   // if (serverSocket?.isEmpty == false) {
-      return "OK";
+    // if (serverSocket?.isEmpty == false) {
+    return "OK";
     //}
     //return "NOT CONNECTED";
   }
@@ -114,21 +115,26 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             /* SCENARIO WINDOW (LEFT SIDE) */
+            Expanded(child:
             Container(
-                width: MediaQuery.of(context).size.width * 0.25,
-                height: MediaQuery.of(context).size.height,
+                //width: MediaQuery.of(context).size.width * 0.25 - 10,
+                //height: MediaQuery.of(context).size.height,
                 child: scenarioWindow()),
             /* SOA-ESB STATUS WINDOW (MIDDLE) */
+            ),
+            VerticalDivider(thickness: 5, color: Colors.grey.shade900, width: 5,),
             Container(
               width: MediaQuery.of(context).size.width * 0.5,
               height: MediaQuery.of(context).size.height,
-              color: Colors.amber,
+              color: Colors.grey.shade200,
               child: systemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
+            VerticalDivider(thickness: 5, color: Colors.grey.shade900, width: 5,),
+            Expanded(child:
             Container(
-                width: MediaQuery.of(context).size.width * 0.25,
-                height: MediaQuery.of(context).size.height,
+                //width: MediaQuery.of(context).size.width * 0.25 - 10,
+                //height: MediaQuery.of(context).size.height,
                 child: logWindow(messages: messages)),
             // TextFormField(
             //     onChanged: (String? value) {
@@ -138,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //       border: UnderlineInputBorder(),
             //       labelText: 'Send your command!',
             //     )),
+            )
           ],
         ),
       ),

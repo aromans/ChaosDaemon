@@ -1,9 +1,11 @@
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' as fm;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart' as fw;
 import 'Vector.dart';
 
-class SystemContainer {
+class SystemContainer extends fm.ChangeNotifier {
   late Paint paint;
   late Offset position;
   late Size size;
@@ -11,6 +13,12 @@ class SystemContainer {
 
   late final Offset middleRight;
   late final Offset middleLeft;
+
+  late Canvas canvas;
+  late ParagraphBuilder pb;
+
+  bool hovering = false;
+
 
   SystemContainer(Paint paint, Vector pos, Vector size, String label) {
     this.paint = paint;
@@ -29,41 +37,61 @@ class SystemContainer {
     this.label = label;
   }
 
-  void Draw(Canvas canvas, ParagraphBuilder pb) {
+  void isHovering() {
+    this.hovering = true;
+    notifyListeners();
+  }
+
+  void Draw(Canvas canvas, ParagraphBuilder pb, {hasShadow = false}) {
+    this.canvas = canvas;
+    this.pb = pb;
     const Radius r = Radius.circular(10.0);
-    RRect roundedRect = RRect.fromRectAndRadius(
-      position & size,
-      r,
-    );
 
-    /*canvas.drawPath(
-        new Path()
-          ..fillType=PathFillType.evenOdd
-          ..addPath(new Path()..addRRect(BorderRadius.all(r)
+    if (hasShadow) {
+      canvas.drawRRect(
+          fw.BorderRadius.all(r)
               .resolve(TextDirection.ltr)
-              .toRRect(position & size)
-              .deflate(5.0)), Offset.zero),
-        new Paint()
-          ..style = PaintingStyle.stroke
-          ..color = Colors.green
-          ..strokeWidth = 5.0);*/
-
-    canvas.drawRRect(
-        fw.BorderRadius.all(r)
-            .resolve(TextDirection.ltr)
-            .toRRect(position & size),
-        new Paint()
-          ..style = PaintingStyle.stroke
-          ..color = fm.Colors.green.withOpacity(0.25)
-          ..strokeWidth = 5.0);
+              .toRRect(position & size),
+          new Paint()
+            ..style = PaintingStyle.stroke
+            ..color = fm.Colors.green.withOpacity(1)
+            ..strokeWidth = 1.0);
+    } else {
+      canvas.drawRRect(
+          fw.BorderRadius.all(r)
+              .resolve(TextDirection.ltr)
+              .toRRect(position & size),
+          new Paint()
+            ..style = PaintingStyle.stroke
+            ..color = fm.Colors.green.withOpacity(0.25)
+            ..strokeWidth = 5.0);
+    }
 
     pb.addText(label);
     Paragraph p = pb.build();
-    pb.pushStyle(new TextStyle(color: Color.fromARGB(255, 0, 0, 0)));
+    pb.pop();
+    pb.pushStyle(TextStyle(
+        color: Color.fromARGB(255, 0, 0, 0),
+        fontWeight: FontWeight.normal,
+        fontSize: 14));
     p.layout(ParagraphConstraints(width: size.width));
 
     canvas.drawParagraph(
-        p, Offset(position.dx, position.dy + (size.height * 0.25)));
+        p,
+        Offset(position.dx + (size.width - p.maxIntrinsicWidth) * 0.5,
+            position.dy + (size.height * 0.15)));
+
+    pb.addText(
+        'Uptime: 3.2hrs\nPackets S/R: 456/87\nPacket Loss: 4%\nCPU 1.2 Ghz\nMemory: 75% (3/4 Gib)');
+    Paragraph p2 = pb.build();
+    pb.pop();
+    pb.pushStyle(TextStyle(color: Color.fromARGB(255, 0, 0, 0)));
+    p2.layout(ParagraphConstraints(width: size.width));
+
+    canvas.drawParagraph(
+        p2,
+        Offset(position.dx + (size.width * 0.05),
+            position.dy + (size.height * 0.35)));
   }
 
   bool Selected(Offset pos) {

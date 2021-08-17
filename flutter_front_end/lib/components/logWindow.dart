@@ -9,7 +9,7 @@ class logWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.blueGrey,
+      backgroundColor: Colors.grey[200],
       body: ListView.builder(
           itemCount: messages.length,
           shrinkWrap: true,
@@ -27,7 +27,7 @@ class logWindow extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         messages[index].messageType,
-                        style: TextStyle(fontSize: 16, color: Colors.white),
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -37,7 +37,7 @@ class logWindow extends StatelessWidget {
                         width: MediaQuery.of(context).size.width * 0.25,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(3),
-                          color: Colors.green[100],
+                          color: Colors.white,
                         ),
                         padding: EdgeInsets.only(
                             top: 8, bottom: 8, right: 16, left: 6),
