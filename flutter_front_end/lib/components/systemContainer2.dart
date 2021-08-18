@@ -18,13 +18,14 @@ class SystemContainer2 extends StatefulWidget {
 }
 
 class SystemContainer2State extends State<SystemContainer2> {
-  Color backgroundColor = Colors.blueAccent.shade400;
-  Color borderColor = Colors.blueAccent.shade400;
-  Color currentBorderColor = Colors.red.shade900;
-  Color currentColor = Colors.red.shade900;
-  Color nextBorderColor = Colors.yellow.shade800;
-  Color nextColor = Colors.yellow.shade800;
-  int numberOfClicks = 0;
+  double containerHeight = 175.0;
+  double containerWidth = 175.0;
+  double borderWidth = 5.0;
+  double borderRadius = 8.0;
+
+  Color textColor = Colors.white;
+  double fontSize = 18;
+  Color containerColor = Colors.blueAccent.shade400;
 
   @override
   void initState() {
@@ -33,51 +34,51 @@ class SystemContainer2State extends State<SystemContainer2> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(mainAxisSize: MainAxisSize.min, children: <Widget>[
-      MouseRegion(
-        onEnter: (PointerEnterEvent enterEvent) {
-          print('hey!');
-        },
-        onExit: (PointerExitEvent exitEvent) {
-          print('bye!');
-        },
-        child: GestureDetector(
-          onTapUp: (TapUpDetails tapUpDetails) {
-            this.numberOfClicks++;
-            if (this.numberOfClicks % 2 == 0) {
-              this.borderColor = Colors.blue;
-            } else {
-              this.borderColor = Colors.green.shade700;
-            }
-          },
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                border: Border.all(width: 5.0, color: Colors.blue)),
-            width: 175.0,
-            height: 175.0,
-            child: Column(
-              children: <Widget>[
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      'SOLR 2',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+    return Row(
+        textDirection: TextDirection.rtl,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          scenarioStatus(),
+          MouseRegion(
+            onEnter: (PointerEnterEvent enterEvent) {
+              print('hey!');
+            },
+            onExit: (PointerExitEvent exitEvent) {
+              print('bye!');
+            },
+            child: GestureDetector(
+              onTapUp: (TapUpDetails tapUpDetails) {
+                print('tap tap tap');
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                    color: this.containerColor,
+                    shape: BoxShape.rectangle,
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(this.borderRadius)),
+                    border: Border.all(
+                        width: this.borderWidth, color: this.containerColor)),
+                width: this.containerWidth,
+                height: this.containerHeight,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: Center(
+                        child: Text(
+                          'SOLR 2',
+                          style: TextStyle(
+                              color: this.textColor,
+                              fontSize: this.fontSize,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
-                  ),
+                    statTable()
+                  ],
                 ),
-                statTable()
-              ],
+              ),
             ),
           ),
-        ),
-      ),
-      scenarioStatus(),
-    ]);
+        ]);
   }
 }
