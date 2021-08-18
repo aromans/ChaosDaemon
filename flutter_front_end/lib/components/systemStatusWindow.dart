@@ -6,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 //import 'package:flutter/services.dart';
 //import 'package:touchable/touchable.dart';
 
+import 'package:flutter_front_end/components/currentScenarioStat.dart';
+import 'package:flutter_front_end/components/nextScenarioStat.dart';
+
 import 'Vector.dart';
 import 'systemContainer.dart';
 import 'systemContainer2.dart';
@@ -77,22 +80,65 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
 
   @override
   Widget build(BuildContext context) {
-
     int numOfWidgets = 30;
     var widgetList = new List<SystemContainer2>.generate(
         numOfWidgets, (index) => SystemContainer2());
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: GridView(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 1,
-            crossAxisSpacing: 1,
-            childAspectRatio: 1.5),
-          padding: EdgeInsets.all(25),
-          children: widgetList),
-    );
+        backgroundColor: Colors.black,
+        body: Column(children: <Widget>[
+          Expanded(
+              child: GridView(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 1,
+                      crossAxisSpacing: 1,
+                      childAspectRatio: 1.5),
+                  padding: EdgeInsets.all(25),
+                  children: widgetList)),
+          Divider(
+            height: 25.0,
+            thickness: 5,
+            color: Colors.grey.shade900,
+          ),
+          ExpansionPanelList(
+            children: [
+              ExpansionPanel(
+                  headerBuilder: (BuildContext context, bool isExpanded) {
+                    return ListTile(
+                      title: Text('Expand me!'),
+                    );
+                  },
+                  body: ListTile(
+                    title: Text('Put me down!'),
+                  ),isExpanded: ),
+                
+            ],
+          ),
+          Row(children: <Widget>[
+            VerticalDivider(width: 25.0),
+            SystemContainer2(),
+            VerticalDivider(width: 25.0),
+            Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade900,
+                    shape: BoxShape.rectangle,
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    border: Border.all(width: 5, color: Colors.grey.shade900)),
+                width: MediaQuery.of(context).size.width * 0.32,
+                height: 200,
+                child: Row(
+                  children: [
+                    currentScenarioStat(),
+                    nextScenarioStat(),
+                    currentScenarioStat(),
+                    nextScenarioStat(),
+                    currentScenarioStat(),
+                    nextScenarioStat()
+                  ],
+                ))
+          ])
+        ]));
   }
 }
 
