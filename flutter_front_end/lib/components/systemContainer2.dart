@@ -41,14 +41,11 @@ class SystemContainer2State extends State<SystemContainer2> {
           scenarioStatus(),
           MouseRegion(
             onEnter: (PointerEnterEvent enterEvent) {
-              print('hey!');
             },
             onExit: (PointerExitEvent exitEvent) {
-              print('bye!');
             },
             child: GestureDetector(
               onTapUp: (TapUpDetails tapUpDetails) {
-                print('tap tap tap');
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -114,14 +114,18 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             /* SCENARIO WINDOW (LEFT SIDE) */
-            Expanded(child:
-            Container(
-                //width: MediaQuery.of(context).size.width * 0.25 - 10,
-                //height: MediaQuery.of(context).size.height,
-                child: scenarioWindow()),
-            /* SOA-ESB STATUS WINDOW (MIDDLE) */
+            Expanded(
+              child: Container(
+                  //width: MediaQuery.of(context).size.width * 0.25 - 10,
+                  //height: MediaQuery.of(context).size.height,
+                  child: scenarioWindow()),
+              /* SOA-ESB STATUS WINDOW (MIDDLE) */
             ),
-            VerticalDivider(thickness: 5, color: Colors.grey.shade900, width: 5,),
+            VerticalDivider(
+              thickness: 5,
+              color: Colors.grey.shade900,
+              width: 5,
+            ),
             Container(
               width: MediaQuery.of(context).size.width * 0.5,
               height: MediaQuery.of(context).size.height,
@@ -129,20 +133,24 @@ class _MyHomePageState extends State<MyHomePage> {
               child: systemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
-            VerticalDivider(thickness: 5, color: Colors.grey.shade900, width: 5,),
-            Expanded(child:
-            Container(
-                //width: MediaQuery.of(context).size.width * 0.25 - 10,
-                //height: MediaQuery.of(context).size.height,
-                child: logWindow(messages: messages)),
-            // TextFormField(
-            //     onChanged: (String? value) {
-            //       this.command = value;
-            //     },
-            //     decoration: InputDecoration(
-            //       border: UnderlineInputBorder(),
-            //       labelText: 'Send your command!',
-            //     )),
+            VerticalDivider(
+              thickness: 5,
+              color: Colors.grey.shade900,
+              width: 5,
+            ),
+            Expanded(
+              child: Container(
+                  //width: MediaQuery.of(context).size.width * 0.25 - 10,
+                  //height: MediaQuery.of(context).size.height,
+                  child: logWindow(messages: messages)),
+              // TextFormField(
+              //     onChanged: (String? value) {
+              //       this.command = value;
+              //     },
+              //     decoration: InputDecoration(
+              //       border: UnderlineInputBorder(),
+              //       labelText: 'Send your command!',
+              //     )),
             )
           ],
         ),
