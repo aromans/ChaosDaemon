@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 class expandedPanel extends StatefulWidget {
-  expandedPanel({Key? key}) : super(key: key);
+  final Map<String, Widget> widgetMap;
+  expandedPanel(this.widgetMap, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => expandedPanelState();
+  State<StatefulWidget> createState() => expandedPanelState(widgetMap);
 }
 
 class expandedPanelState extends State<expandedPanel>
@@ -15,8 +16,10 @@ class expandedPanelState extends State<expandedPanel>
   late Animation<Offset> _movePanel;
   late Animation<double> _rotateArrow;
   late Animation<double> _expandHiddenPanel;
-
   bool isExpanded = false;
+
+  final Map<String, Widget> expandedPanelWidgetMap;
+  expandedPanelState(this.expandedPanelWidgetMap);
 
   Icon arrowIcon(bool isExpanded) {
     return Icon(isExpanded ? Icons.arrow_downward : Icons.arrow_upward);
@@ -42,6 +45,7 @@ class expandedPanelState extends State<expandedPanel>
   }
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
+    Map<String, Widget>? widgetMap = widget.widgetMap;
     return new Stack(alignment: AlignmentDirectional.bottomEnd, children: [
       IgnorePointer(
         child: Container(

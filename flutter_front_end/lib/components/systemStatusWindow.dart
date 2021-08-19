@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:flutter_front_end/components/currentScenarioStat.dart';
 import 'package:flutter_front_end/components/nextScenarioStat.dart';
+import 'package:flutter_front_end/components/expandedPanelStatSystem.dart';
 import 'expandedPanel.dart';
 
 import 'Vector.dart';
@@ -53,7 +54,7 @@ void hover(Offset pointerPos) {
 }
 
 class systemStatusWindow extends StatefulWidget {
-  systemStatusWindow({Key? key}) : super(key: key);
+  systemStatusWindow( {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -66,8 +67,12 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
 
   int numOfWidgets = 30;
 
+  Map<String, Widget> expandedPanelWidgetMap = new Map<String, Widget>();
+
   @override
   void initState() {
+    expandedPanelStatSystem mainEPStats = new expandedPanelStatSystem();
+    expandedPanelWidgetMap['System'] = mainEPStats;
     super.initState();
     setState(() {
       widgetList = List.generate(numOfWidgets, (index) => SystemContainer2());
@@ -97,7 +102,7 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
                 thickness: 5,
                 color: Colors.grey.shade900,
               ),
-              expandedPanel(/*TODO: Pass in Widget*/),
+              expandedPanel(this.expandedPanelWidgetMap),
             ]));
     //   int numOfWidgets = 30;
     //   var widgetList = new List<SystemContainer2>.generate(
