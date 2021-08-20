@@ -12,14 +12,14 @@ class expandedPanel extends StatefulWidget {
 class expandedPanelState extends State<expandedPanel>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-
   late Animation<Offset> _movePanel;
   late Animation<double> _rotateArrow;
   late Animation<double> _expandHiddenPanel;
   bool isExpanded = false;
-
-  final Map<String, Widget> expandedPanelWidgetMap;
-  expandedPanelState(this.expandedPanelWidgetMap);
+  Widget? selectedWidget = Container();
+  final Map<String, Widget> widgetMap;
+  List<Widget> textWidgets = [];
+  expandedPanelState(this.widgetMap);
 
   Icon arrowIcon(bool isExpanded) {
     return Icon(isExpanded ? Icons.arrow_downward : Icons.arrow_upward);
@@ -41,17 +41,66 @@ class expandedPanelState extends State<expandedPanel>
             parent: _controller,
             curve: Interval(0.0, 1, curve: Curves.easeInOutCubic)));
 
+    Map<String, Widget>? widgetMap = widget.widgetMap;
+
+    TextStyle topRowStyle = TextStyle(
+        color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold);
+
+    int counter = 0;
+    for (String name in widgetMap.keys) {
+      counter++;
+      textWidgets.add(InkWell(
+          onTap: () {
+            if (!isExpanded) {
+              isExpanded = !isExpanded;
+              _controller.forward();
+            }
+            setState(() {
+              selectedWidget = widgetMap[name];
+            });
+          },
+          onHover: (value) {
+            setState(() {});
+          },
+          child: Text(
+            name,
+            style: topRowStyle,
+            textAlign: TextAlign.center,
+          )));
+
+      if (counter < widgetMap.keys.length) {
+        textWidgets.add(Container(
+            height: 25,
+            child: VerticalDivider(
+              color: Colors.white,
+              width: 15,
+              thickness: 2,
+            )));
+      }
+    }
+
     super.initState();
   }
 
+  // Widget? _selectedWidget(BuildContext context) {
+  //   if (selectedWidget != "") {
+  //     setState(() {
+
+  //     });
+  //     print('select widget: ' + selectedWidget);
+  //     return widgetMap[selectedWidget];
+  //   }
+  //   return Container();
+  // }
+
   Widget _buildAnimation(BuildContext context, Widget? child) {
-    Map<String, Widget>? widgetMap = widget.widgetMap;
     return new Stack(alignment: AlignmentDirectional.bottomEnd, children: [
       IgnorePointer(
         child: Container(
+          child: selectedWidget,
           height: _expandHiddenPanel.value,
+          width: MediaQuery.of(context).size.width * 0.5,
           color: Colors.indigo,
-          //TODO: child: Display Widget
         ),
       ),
       SlideTransition(
@@ -61,6 +110,15 @@ class expandedPanelState extends State<expandedPanel>
           width: MediaQuery.of(context).size.width * 0.5,
           color: Colors.indigo,
           child: Scaffold(
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                    child: Row(children: textWidgets),
+                    padding: EdgeInsets.only(left: 25)),
+                Row(children: [])
+              ],
+            ),
             backgroundColor: Color.fromARGB(0, 0, 0, 0),
             floatingActionButton: FloatingActionButton(
               onPressed: () {

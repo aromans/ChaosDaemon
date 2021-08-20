@@ -54,7 +54,7 @@ void hover(Offset pointerPos) {
 }
 
 class systemStatusWindow extends StatefulWidget {
-  systemStatusWindow( {Key? key}) : super(key: key);
+  systemStatusWindow({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -71,8 +71,17 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
 
   @override
   void initState() {
-    expandedPanelStatSystem mainEPStats = new expandedPanelStatSystem();
+    expandedPanelStatSystem mainEPStats =
+        new expandedPanelStatSystem(Colors.black);
+    expandedPanelStatSystem mainEPStats2 =
+        new expandedPanelStatSystem(Colors.white);
+    expandedPanelStatSystem mainEPStats3 =
+        new expandedPanelStatSystem(Colors.green);
+
     expandedPanelWidgetMap['System'] = mainEPStats;
+    expandedPanelWidgetMap['System2'] = mainEPStats2;
+    expandedPanelWidgetMap['System3'] = mainEPStats3;
+
     super.initState();
     setState(() {
       widgetList = List.generate(numOfWidgets, (index) => SystemContainer2());
