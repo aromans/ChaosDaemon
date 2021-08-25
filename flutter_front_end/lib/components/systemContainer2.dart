@@ -1,15 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
-import 'Vector.dart';
+import 'package:flutter/rendering.dart';
 
 import 'statTable.dart';
 import 'scenarioStatus.dart';
 
 class SystemContainer2 extends StatefulWidget {
-  const SystemContainer2({Key? key}) : super(key: key);
+  SystemContainer2({Key? key}) : super(key: key);
+
+  // default values
+  final double containerHeight = 175.0;
+  final double containerWidth = 175.0;
+  final double borderWidth = 5.0;
+  final double borderRadius = 8.0;
+
+  final Color textColor = Colors.white;
+  final Color containerColor = Colors.blueAccent.shade400;
+  final double fontSize = 36;
 
   @override
   State<StatefulWidget> createState() {
@@ -18,64 +26,58 @@ class SystemContainer2 extends StatefulWidget {
 }
 
 class SystemContainer2State extends State<SystemContainer2> {
-  double containerHeight = 175.0;
-  double containerWidth = 175.0;
-  double borderWidth = 5.0;
-  double borderRadius = 8.0;
-
-  Color textColor = Colors.white;
-  double fontSize = 18;
-  Color containerColor = Colors.blueAccent.shade400;
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Row(
-        textDirection: TextDirection.rtl,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          scenarioStatus(),
-          MouseRegion(
-            onEnter: (PointerEnterEvent enterEvent) {
-            },
-            onExit: (PointerExitEvent exitEvent) {
-            },
-            child: GestureDetector(
-              onTapUp: (TapUpDetails tapUpDetails) {
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                    color: this.containerColor,
-                    shape: BoxShape.rectangle,
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(this.borderRadius)),
-                    border: Border.all(
-                        width: this.borderWidth, color: this.containerColor)),
-                width: this.containerWidth,
-                height: this.containerHeight,
-                child: Column(
-                  children: <Widget>[
-                    Expanded(
-                      child: Center(
-                        child: Text(
-                          'SOLR 2',
-                          style: TextStyle(
-                              color: this.textColor,
-                              fontSize: this.fontSize,
-                              fontWeight: FontWeight.bold),
-                        ),
+      textDirection: TextDirection.rtl,
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        scenarioStatus(),
+        MouseRegion(
+          onEnter: (PointerEnterEvent enterEvent) {},
+          onExit: (PointerExitEvent exitEvent) {},
+          child: GestureDetector(
+            onTapUp: (TapUpDetails tapUpDetails) {},
+            child: Container(
+              decoration: BoxDecoration(
+                color: widget.containerColor,
+                shape: BoxShape.rectangle,
+                borderRadius:
+                    BorderRadius.all(Radius.circular(widget.borderRadius)),
+                border: Border.all(
+                  width: widget.borderWidth,
+                  color: widget.containerColor,
+                ),
+              ),
+              width: widget.containerWidth,
+              height: widget.containerHeight,
+              child: Column(
+                children: <Widget>[
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        'SOLR 2',
+                        style: TextStyle(
+                            color: widget.textColor,
+                            fontSize: widget.fontSize,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'SF-Pro-Rounded',
+                            fontStyle: FontStyle.normal),
                       ),
                     ),
-                    statTable()
-                  ],
-                ),
+                  ),
+                  statTable(),
+                ],
               ),
             ),
           ),
-        ]);
+        ),
+      ],
+    );
   }
 }

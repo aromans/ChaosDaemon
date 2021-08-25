@@ -15,13 +15,13 @@ void main() async {
   // modify with your true address/port
   Socket sock = await Socket.connect('localhost', 3000);
 
-  runApp(MyApp(sock));
+  runApp(DiagnosticLens(sock));
 }
 
-class MyApp extends StatelessWidget {
+class DiagnosticLens extends StatelessWidget {
   Socket? socket;
 
-  MyApp(Socket s) {
+  DiagnosticLens(Socket s) {
     this.socket = s;
     _sendConnectionHeader(this.socket);
   }
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        fontFamily: 'SF-Pro-Text',
       ),
       routes: <String, WidgetBuilder>{
         '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
