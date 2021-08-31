@@ -93,15 +93,15 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
     double screenWidth = MediaQuery.of(context).size.width;
     int numOfCols;
 
-    if (screenWidth < 475) {
+    if (screenWidth < 718) {
       numOfCols = 1;
-    } else if (screenWidth < 950) {
+    } else if (screenWidth >= 718 && screenWidth < 1036) {
       numOfCols = 2;
-    } else if (screenWidth < 1425) {
+    } else if (screenWidth >= 1036 && screenWidth < 1354) {
       numOfCols = 3;
-    } else if (screenWidth < 1900) {
+    } else if (screenWidth >= 1354 && screenWidth < 1672) {
       numOfCols = 4;
-    } else if (screenWidth < 2375) {
+    } else if (screenWidth >= 1672 && screenWidth < 1990) {
       numOfCols = 5;
     } else {
       numOfCols = 6;
@@ -120,9 +120,9 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
                   crossAxisCount: numOfCols,
                   mainAxisSpacing: 1,
                   crossAxisSpacing: 1,
-                  childAspectRatio: 3 / 2),
+                  childAspectRatio: 2),
               itemBuilder: (_, i) => SystemContainerWidget(
-                containerName: containers.items[i].id,
+                containerName: containers.items[i].id, creationDate: containers.items[i].creationDate,
               ),
               itemCount: containers.itemCount,
               padding: EdgeInsets.all(25),

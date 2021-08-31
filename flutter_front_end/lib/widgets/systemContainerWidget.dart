@@ -1,7 +1,10 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:cupertino_icons/cupertino_icons.dart';
+
 import '../models/system_container.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +13,8 @@ import 'scenarioStatus.dart';
 
 class SystemContainerWidget extends StatelessWidget {
   final String? containerName;
-  SystemContainerWidget({this.containerName});
+  final String? creationDate;
+  SystemContainerWidget({this.containerName, this.creationDate});
 
   // default values
   final double containerHeight = 175.0;
@@ -33,7 +37,12 @@ class SystemContainerWidget extends StatelessWidget {
           onEnter: (PointerEnterEvent enterEvent) {},
           onExit: (PointerExitEvent exitEvent) {},
           child: GestureDetector(
-            onTapUp: (TapUpDetails tapUpDetails) {},
+            onTapUp: (TapUpDetails tapUpDetails) {
+              // TODO: Add new scenario to queue
+            },
+            onDoubleTap: () {
+              print("Bring up stat information");
+            },
             child: Container(
               decoration: BoxDecoration(
                 color: this.containerColor,
@@ -47,24 +56,50 @@ class SystemContainerWidget extends StatelessWidget {
               ),
               width: this.containerWidth,
               height: this.containerHeight,
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    child: Center(
-                      child: Text(
-                        this.containerName!,
-                        style: Theme.of(context).textTheme.headline1,
+              child: 
+                  Column(
+                    children: <Widget>[
+                      Expanded(
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              IconButton(onPressed: () => {
+                                print("Refresh Me!")
+                              }, icon: Icon(CupertinoIcons.arrow_clockwise),
+                              color: Colors.white,),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 20.0),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      this.containerName!,
+                                      style: Theme.of(context).textTheme.headline1,
+                                    ),
+                                    Text(
+                                      this.creationDate!,
+                                      style: Theme.of(context).textTheme.bodyText2,
+                                    )
+                                  ],
+                                ),
+                              ),
+                              IconButton(onPressed: () => {
+                                print("Graph Me!")
+                              }, icon: Icon(CupertinoIcons.graph_square),
+                              color: Colors.white,),
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      statTable(
+                        id: this.containerName,
+                      ),
+                    ],
                   ),
-                  statTable(
-                    id: this.containerName,
-                  ),
-                ],
               ),
             ),
           ),
-        ),
       ],
     );
   }

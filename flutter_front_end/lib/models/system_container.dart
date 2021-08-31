@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import './scenarios.dart';
 
@@ -14,6 +15,7 @@ class SystemContainer with ChangeNotifier {
 
   // card metrics
   double? uptime;
+  String? creationDate;
   double? cpuUtil;
   double? memoryFree;
   double? totalMemory;
@@ -53,5 +55,7 @@ class SystemContainer with ChangeNotifier {
     if (this.memoryFree != null && this.memoryUtil != null) {
       this.memoryFree = this.totalMemory! - this.memoryUtil!;
     }
+    
+    creationDate = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
   }
 }
