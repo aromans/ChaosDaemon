@@ -120,9 +120,10 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
                   crossAxisCount: numOfCols,
                   mainAxisSpacing: 1,
                   crossAxisSpacing: 1,
-                  childAspectRatio: 2),
+                  childAspectRatio: 1.75),
               itemBuilder: (_, i) => SystemContainerWidget(
-                containerName: containers.items[i].id, creationDate: containers.items[i].creationDate,
+                containerName: containers.items[i].id,
+                creationDate: containers.items[i].creationDate,
               ),
               itemCount: containers.itemCount,
               padding: EdgeInsets.all(25),

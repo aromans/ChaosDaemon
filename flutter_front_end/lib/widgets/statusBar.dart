@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/darkModeSwitch.dart';
+
 class statusBar extends StatelessWidget {
   String serverStatus = "OK";
   String daemonStatus = "OK";
@@ -33,11 +35,7 @@ class statusBar extends StatelessWidget {
                 Text("\tDaemon Connection Status: ", style: labelStyle),
                 Text("${daemonStatus}", style: statusStyle(daemonStatus)),
                 const Spacer(),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite),
-                  tooltip: 'Love Me',
-                )
+                DarkModeSwitch()
               ],
             )),
       ),
