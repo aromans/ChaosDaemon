@@ -1,10 +1,60 @@
- .vscode/*
+ .vscode/
 
- build/*
+ flutter_front_end/build/
+ flutter_front_end/ios/
+ flutter_front_end/macos/
+ flutter_front_end/web/
+ flutter_front_end/linux/
+ flutter_front_end/android/
+ flutter_front_end/assets/
 
- package-lock.json
- package.json
+ flutter_front_end/package-lock.json
+ flutter_front_end/package.json
  
 src/.idea/
 src/.vscode/
 src/cmake-build-debug/
+
+
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+*.otf
+*.ttf
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+flutter_front_end/.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+flutter_front_end/.dart_tool/
+flutter_front_end/.flutter-plugins
+flutter_front_end/.flutter-plugins-dependencies
+flutter_front_end/.packages
+flutter_front_end/.pub-cache/
+flutter_front_end/.pub/
+
+# Web related
+flutter_front_end/lib/generated_plugin_registrant.dart
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json

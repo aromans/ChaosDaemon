@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_front_end/components/currentScenarioStat.dart';
-import 'package:flutter_front_end/components/nextScenarioStat.dart';
+import 'package:flutter_front_end/widgets/currentScenarioStat.dart';
+import 'package:flutter_front_end/widgets/nextScenarioStat.dart';
 
 class scenarioStatus extends StatefulWidget {
   scenarioStatus({Key? key}) : super(key: key);

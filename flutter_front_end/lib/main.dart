@@ -2,14 +2,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:provider/provider.dart';
 
 // Custom files
 import 'package:flutter_front_end/screens/SecondScreen.dart';
-import 'package:flutter_front_end/components/logWindow.dart';
-import 'package:flutter_front_end/components/scenarioWindow.dart';
-import 'package:flutter_front_end/components/chatMessage.dart';
-import 'package:flutter_front_end/components/statusBar.dart';
-import 'package:flutter_front_end/components/systemStatusWindow.dart';
+import 'package:flutter_front_end/widgets/logWindow.dart';
+import 'package:flutter_front_end/widgets/scenarioWindow.dart';
+import 'package:flutter_front_end/widgets/chatMessage.dart';
+import 'package:flutter_front_end/widgets/statusBar.dart';
+import 'package:flutter_front_end/screens/systemStatusWindow.dart';
+import './models/system_containers.dart';
 
 void main() async {
   // modify with your true address/port
@@ -29,16 +31,23 @@ class DiagnosticLens extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        fontFamily: 'SF-Pro-Text',
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => SystemContainers(),
+        ),
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          fontFamily: 'SF-Pro-Text',
+        ),
+        routes: <String, WidgetBuilder>{
+          '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
+          '/scenarioCreator': (context) => SecondScreen(),
+        },
       ),
-      routes: <String, WidgetBuilder>{
-        '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
-        '/scenarioCreator': (context) => SecondScreen(),
-      },
     );
   }
 }
