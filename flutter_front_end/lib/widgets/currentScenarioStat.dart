@@ -20,7 +20,8 @@ class currentScenarioStatState extends State<currentScenarioStat>
       color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(8.0)));
 
   Decoration fill = BoxDecoration(
-      color: Colors.red[900],
+      // color: Colors.red[900],
+      color: Color.fromARGB(255, 184, 15, 10),
       borderRadius: BorderRadius.all(Radius.circular(8.0)));
 
   @override
@@ -52,7 +53,6 @@ class currentScenarioStatState extends State<currentScenarioStat>
       parent: _transitionController,
       curve: Interval(0, 1, curve: Curves.easeInOut),
     ));
-
 
     super.initState();
   }

@@ -3,6 +3,7 @@ import 'dart:ui';
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 //import 'package:flutter/services.dart';
 //import 'package:touchable/touchable.dart';
@@ -14,7 +15,7 @@ import '../widgets/expandedPanel.dart';
 
 // import '../widgets/Vector.dart';
 //import '../widgets/systemContainer.dart';
-import '../widgets/systemContainer2.dart';
+import '../widgets/systemContainerWidget.dart';
 import '../models/system_containers.dart';
 
 Paint orange() => Paint()..color = Colors.orange;
@@ -56,6 +57,8 @@ Paint AnalyzeStatus(String value) {
 class systemStatusWindow extends StatefulWidget {
   systemStatusWindow({Key? key}) : super(key: key);
 
+  int numOfCols = 3;
+
   @override
   State<StatefulWidget> createState() {
     return _systemStatusWindowState();
@@ -86,6 +89,24 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
   @override
   Widget build(BuildContext context) {
     final containers = Provider.of<SystemContainers>(context);
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    int numOfCols;
+
+    if (screenWidth < 475) {
+      numOfCols = 1;
+    } else if (screenWidth < 950) {
+      numOfCols = 2;
+    } else if (screenWidth < 1425) {
+      numOfCols = 3;
+    } else if (screenWidth < 1900) {
+      numOfCols = 4;
+    } else if (screenWidth < 2375) {
+      numOfCols = 5;
+    } else {
+      numOfCols = 6;
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Column(
@@ -93,16 +114,16 @@ class _systemStatusWindowState extends State<systemStatusWindow> {
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisSize: MainAxisSize.max,
         children: [
-          Container(
-            height: double.infinity,
-            width: double.infinity,
+          Expanded(
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
+                  crossAxisCount: numOfCols,
                   mainAxisSpacing: 1,
                   crossAxisSpacing: 1,
                   childAspectRatio: 3 / 2),
-              itemBuilder: (_, i) => SystemContainer2(containers.items[i]),
+              itemBuilder: (_, i) => SystemContainerWidget(
+                containerName: containers.items[i].id,
+              ),
               itemCount: containers.itemCount,
               padding: EdgeInsets.all(25),
             ),

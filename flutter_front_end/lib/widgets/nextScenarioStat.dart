@@ -55,7 +55,7 @@ class nextScenarioStatState extends State<nextScenarioStat>
     ));
     // Color Animation
     _colorTransitionAnimation =
-        ColorTween(begin: Colors.yellow.shade700, end: Colors.red.shade600)
+        ColorTween(begin: Colors.yellow.shade700, end: Color.fromARGB(255, 184, 15, 10))
             .animate(CurvedAnimation(
                 parent: _transitionController,
                 curve: Interval(0.75, 1, curve: Curves.easeInOut)));

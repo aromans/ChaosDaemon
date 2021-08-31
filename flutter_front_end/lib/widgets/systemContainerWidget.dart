@@ -2,34 +2,25 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import '../models/system_container.dart';
+import 'package:provider/provider.dart';
 
 import 'statTable.dart';
 import 'scenarioStatus.dart';
 
-class SystemContainer2 extends StatefulWidget {
-  SystemContainer2({Key? key}) : super(key: key);
+class SystemContainerWidget extends StatelessWidget {
+  final String? containerName;
+  SystemContainerWidget({this.containerName});
 
   // default values
   final double containerHeight = 175.0;
-  final double containerWidth = 175.0;
+  final double containerWidth = 225.0;
   final double borderWidth = 5.0;
-  final double borderRadius = 8.0;
+  final double borderRadius = 30.0;
 
   final Color textColor = Colors.white;
-  final Color containerColor = Colors.blueAccent.shade400;
+  final Color containerColor = Color.fromARGB(255, 0, 0, 139);
   final double fontSize = 36;
-
-  @override
-  State<StatefulWidget> createState() {
-    return SystemContainer2State();
-  }
-}
-
-class SystemContainer2State extends State<SystemContainer2> {
-  // @override
-  // void initState() {
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -45,33 +36,30 @@ class SystemContainer2State extends State<SystemContainer2> {
             onTapUp: (TapUpDetails tapUpDetails) {},
             child: Container(
               decoration: BoxDecoration(
-                color: widget.containerColor,
+                color: this.containerColor,
                 shape: BoxShape.rectangle,
                 borderRadius:
-                    BorderRadius.all(Radius.circular(widget.borderRadius)),
+                    BorderRadius.all(Radius.circular(this.borderRadius)),
                 border: Border.all(
-                  width: widget.borderWidth,
-                  color: widget.containerColor,
+                  width: this.borderWidth,
+                  color: this.containerColor,
                 ),
               ),
-              width: widget.containerWidth,
-              height: widget.containerHeight,
+              width: this.containerWidth,
+              height: this.containerHeight,
               child: Column(
                 children: <Widget>[
                   Expanded(
                     child: Center(
                       child: Text(
-                        'SOLR 2',
-                        style: TextStyle(
-                            color: widget.textColor,
-                            fontSize: widget.fontSize,
-                            fontWeight: FontWeight.w600,
-                            fontFamily: 'SF-Pro-Rounded',
-                            fontStyle: FontStyle.normal),
+                        this.containerName!,
+                        style: Theme.of(context).textTheme.headline1,
                       ),
                     ),
                   ),
-                  statTable(),
+                  statTable(
+                    id: this.containerName,
+                  ),
                 ],
               ),
             ),

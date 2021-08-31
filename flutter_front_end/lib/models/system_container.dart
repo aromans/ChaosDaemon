@@ -35,6 +35,7 @@ class SystemContainer with ChangeNotifier {
 
   SystemContainer({
     required this.id,
+    this.uptime,
     this.cpuUtil,
     this.totalMemory,
     this.memoryUtil,

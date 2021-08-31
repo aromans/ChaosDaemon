@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // Custom files
@@ -12,9 +13,14 @@ import 'package:flutter_front_end/widgets/chatMessage.dart';
 import 'package:flutter_front_end/widgets/statusBar.dart';
 import 'package:flutter_front_end/screens/systemStatusWindow.dart';
 import './models/system_containers.dart';
+import 'package:window_size/window_size.dart';
 
 void main() async {
   // modify with your true address/port
+  WidgetsFlutterBinding.ensureInitialized();
+
+  setWindowMinSize(const Size(475, 500));
+
   Socket sock = await Socket.connect('localhost', 3000);
 
   runApp(DiagnosticLens(sock));
@@ -42,6 +48,28 @@ class DiagnosticLens extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
           fontFamily: 'SF-Pro-Text',
+          textTheme: const TextTheme(
+            bodyText1: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'SF-Pro-Text'),
+            bodyText2: TextStyle(
+                color: Color.fromARGB(180, 255, 255, 255),
+                fontSize: 12,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'SF-Pro-Text'),
+            headline1: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'SF-Pro-Rounded'),
+            headline2: TextStyle(
+                color: Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'SF-Pro-Display'),
+          ),
         ),
         routes: <String, WidgetBuilder>{
           '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
@@ -124,44 +152,44 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             /* SCENARIO WINDOW (LEFT SIDE) */
-            Expanded(
-              child: Container(
-                  //width: MediaQuery.of(context).size.width * 0.25 - 10,
-                  //height: MediaQuery.of(context).size.height,
-                  child: scenarioWindow()),
-              /* SOA-ESB STATUS WINDOW (MIDDLE) */
-            ),
-            VerticalDivider(
-              thickness: 5,
-              color: Colors.grey.shade900,
-              width: 5,
-            ),
+            // Expanded(
+            //   child: Container(
+            //       //width: MediaQuery.of(context).size.width * 0.25 - 10,
+            //       //height: MediaQuery.of(context).size.height,
+            //       child: scenarioWindow()),
+            //   /* SOA-ESB STATUS WINDOW (MIDDLE) */
+            // ),
+            // VerticalDivider(
+            //   thickness: 5,
+            //   color: Colors.grey.shade900,
+            //   width: 5,
+            // ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.5,
+              width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height,
               color: Colors.grey.shade200,
               child: systemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
-            VerticalDivider(
-              thickness: 5,
-              color: Colors.grey.shade900,
-              width: 5,
-            ),
-            Expanded(
-              child: Container(
-                  //width: MediaQuery.of(context).size.width * 0.25 - 10,
-                  //height: MediaQuery.of(context).size.height,
-                  child: logWindow(messages: messages)),
-              // TextFormField(
-              //     onChanged: (String? value) {
-              //       this.command = value;
-              //     },
-              //     decoration: InputDecoration(
-              //       border: UnderlineInputBorder(),
-              //       labelText: 'Send your command!',
-              //     )),
-            )
+            // VerticalDivider(
+            //   thickness: 5,
+            //   color: Colors.grey.shade900,
+            //   width: 5,
+            // ),
+            // Expanded(
+            //   child: Container(
+            //       //width: MediaQuery.of(context).size.width * 0.25 - 10,
+            //       //height: MediaQuery.of(context).size.height,
+            //       child: logWindow(messages: messages)),
+            // TextFormField(
+            //     onChanged: (String? value) {
+            //       this.command = value;
+            //     },
+            //     decoration: InputDecoration(
+            //       border: UnderlineInputBorder(),
+            //       labelText: 'Send your command!',
+            //     )),
+            // )
           ],
         ),
       ),
