@@ -18,7 +18,7 @@ class scenarioQueue extends StatefulWidget {
 
 class scenarioQueueState extends State<scenarioQueue> {
 
-  late scenarioAnimController controller;
+  late ScenarioAnimController controller;
 
   currentScenarioStat activeScenario = currentScenarioStat();
   nextScenarioStat nextScenario = nextScenarioStat();
