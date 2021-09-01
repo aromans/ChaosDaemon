@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+
+import 'package:flutter_front_end/models/darkModeStatus.dart';
 
 class DarkModeSwitch extends StatefulWidget {
-  bool darkModeToggle = false;
   DarkModeSwitch({Key? key}) : super(key: key);
 
   @override
@@ -12,6 +14,10 @@ class DarkModeSwitch extends StatefulWidget {
 class DarkModeSwitchState extends State<DarkModeSwitch> {
   @override
   Widget build(BuildContext context) {
+    DarkModeStatus status = Provider.of<DarkModeStatus>(context);
+
+    print("Switch BEFORE: " + status.darkModeEnabled.toString());
+
     return Container(
       child: Row(
         children: [
@@ -20,11 +26,13 @@ class DarkModeSwitchState extends State<DarkModeSwitch> {
             width: 10,
           ),
           CupertinoSwitch(
-              value: widget.darkModeToggle,
+              value: status.darkModeEnabled,
               onChanged: (bool val) {
                 setState(() {
-                  widget.darkModeToggle = val;
+                  status.toggle(val);
                 });
+
+                print("Switch AFTER: " + status.darkModeEnabled.toString());
               }),
           const SizedBox(
             width: 10,

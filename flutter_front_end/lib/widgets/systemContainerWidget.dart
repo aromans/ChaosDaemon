@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:cupertino_icons/cupertino_icons.dart';
 
+import 'package:flutter_front_end/models/darkModeStatus.dart';
+
 import '../models/system_container.dart';
 import 'package:provider/provider.dart';
 
@@ -22,12 +24,17 @@ class SystemContainerWidget extends StatelessWidget {
   final double borderWidth = 5.0;
   final double borderRadius = 30.0;
 
-  final Color textColor = Colors.white;
-  final Color containerColor = Color.fromARGB(255, 0, 0, 139);
+  Color containerColor = Color.fromARGB(255, 0, 0, 139);
   final double fontSize = 36;
 
   @override
   Widget build(BuildContext context) {
+    DarkModeStatus status = Provider.of<DarkModeStatus>(context);
+
+    this.containerColor = status.darkModeEnabled ? Colors.white : Color.fromARGB(255, 0, 0, 139);
+
+    print("SystemContainer: " + status.darkModeEnabled.toString());
+
     return Row(
       textDirection: TextDirection.rtl,
       mainAxisSize: MainAxisSize.min,

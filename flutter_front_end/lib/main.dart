@@ -12,6 +12,8 @@ import 'package:flutter_front_end/widgets/scenarioWindow.dart';
 import 'package:flutter_front_end/widgets/chatMessage.dart';
 import 'package:flutter_front_end/widgets/statusBar.dart';
 import 'package:flutter_front_end/screens/systemStatusWindow.dart';
+import 'package:flutter_front_end/widgets/darkModeSwitch.dart';
+import 'package:flutter_front_end/models/darkModeStatus.dart';
 import './models/system_containers.dart';
 import 'package:window_size/window_size.dart';
 
@@ -42,6 +44,7 @@ class DiagnosticLens extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => SystemContainers(),
         ),
+        ChangeNotifierProvider(create: (_) => DarkModeStatus(),)
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
