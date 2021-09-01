@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-import './scenarios.dart';
+import 'scenario.dart';
 
 enum SystemStatus {
   healthy,

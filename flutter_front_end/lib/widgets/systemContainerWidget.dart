@@ -33,8 +33,6 @@ class SystemContainerWidget extends StatelessWidget {
 
     this.containerColor = status.darkModeEnabled ? Colors.white : Color.fromARGB(255, 0, 0, 139);
 
-    print("SystemContainer: " + status.darkModeEnabled.toString());
-
     return Row(
       textDirection: TextDirection.rtl,
       mainAxisSize: MainAxisSize.min,

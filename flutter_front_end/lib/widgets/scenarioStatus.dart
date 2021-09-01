@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_front_end/widgets/currentScenarioStat.dart';
-import 'package:flutter_front_end/widgets/nextScenarioStat.dart';
+import 'package:flutter_front_end/controllers/scenarioQueue.dart';
+import 'package:flutter_front_end/models/scenarioAnimController.dart';
+import 'package:provider/provider.dart';
 
 class scenarioStatus extends StatefulWidget {
   scenarioStatus({Key? key}) : super(key: key);
@@ -10,28 +11,11 @@ class scenarioStatus extends StatefulWidget {
   State<StatefulWidget> createState() => scenarioStatusState();
 }
 
-class scenarioStatusState extends State<scenarioStatus>
-    with SingleTickerProviderStateMixin {
-  @override
-  void initState() {
-    super.initState();
-  }
-
+class scenarioStatusState extends State<scenarioStatus> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        VerticalDivider(width: 1.0),
-        currentScenarioStat(),
-        VerticalDivider(width: 2.0),
-        nextScenarioStat(),
-      ],
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+    return ChangeNotifierProvider(
+      create: (_) => scenarioAnimController(),
+      child: scenarioQueue());
   }
 }
