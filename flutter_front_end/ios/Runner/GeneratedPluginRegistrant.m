@@ -4,6 +4,12 @@
 
 #import "GeneratedPluginRegistrant.h"
 
+#if __has_include(<flutter_isolate/FlutterIsolatePlugin.h>)
+#import <flutter_isolate/FlutterIsolatePlugin.h>
+#else
+@import flutter_isolate;
+#endif
+
 #if __has_include(<flutter_js/FlutterJsPlugin.h>)
 #import <flutter_js/FlutterJsPlugin.h>
 #else
@@ -19,6 +25,7 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
+  [FlutterIsolatePlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterIsolatePlugin"]];
   [FlutterJsPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterJsPlugin"]];
   [FLTWebViewFlutterPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTWebViewFlutterPlugin"]];
 }

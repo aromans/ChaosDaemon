@@ -62,7 +62,7 @@ class ScenarioAnimator {
     );
     slideSingleActive = AnimationInfo<Offset>(
       Offset(0, 0),
-      Offset(-1.05, 0),
+      Offset(0, 0),
       Interval(
         0.0,
         1.0,
@@ -70,11 +70,11 @@ class ScenarioAnimator {
       ),
     );
     slideDouble = AnimationInfo<Offset>(
-      Offset(1, 0),
-      Offset(-1.05, 0),
+      Offset(1.0, 0),
+      Offset(0.0, 0),
       Interval(
         0.0,
-        1.0,
+        0.1,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -112,7 +112,7 @@ class ScenarioAnimator {
       1.0,
       Interval(
         0.0,
-        1.0,
+        0.1,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -148,7 +148,7 @@ class ScenarioAnimator {
 
     // -- Color --
     transitionColor = AnimationInfo<Color>(Colors.yellow.shade700, Colors.red,
-        Interval(0.0, 1, curve: Curves.easeInOut));
+        Interval(0.0, 0.1, curve: Curves.easeInOut));
   }
 
   // -- Base Animation Groups --
@@ -166,6 +166,7 @@ class ScenarioAnimator {
           if (status == AnimationStatus.completed) {
             _animStatus.hasActiveScenario = false;
             _animStatus.hasNextScenario = false;
+            _animStatus.isDisplayed = true;
           }
         },
       );
@@ -278,6 +279,7 @@ class ScenarioAnimator {
         (status) {
           if (status == AnimationStatus.completed)
             _animStatus.hasActiveScenario = false;
+          _animStatus.isDisplayed = false;
         },
       );
 
@@ -302,11 +304,11 @@ class ScenarioAnimator {
   }
 
   Animation<double> loadingProgressBar() {
+    _animStatus.activeScenarioLoading = true;
+
     return Tween(begin: 0.0, end: 175.0).animate(CurvedAnimation(
-        parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.linear))
+        parent: _controller, curve: Interval(0.1, 1.0, curve: Curves.linear))
       ..addStatusListener((status) {
-        if (status == AnimationStatus.forward)
-          _animStatus.activeScenarioLoading = true;
         if (status == AnimationStatus.completed)
           _animStatus.activeScenarioLoading = false;
       }));

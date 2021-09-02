@@ -1,8 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 import 'package:intl/intl.dart';
+import 'dart:collection';
 
 import '../../models/scenario.dart';
+
+import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
 
 enum SystemStatus {
   healthy,
@@ -32,7 +36,11 @@ class SystemContainer with ChangeNotifier {
   String? network;
   String? role;
   String? engine;
+
+  // Scenario Data/Visualization
   Scenario? currentScenario;
+  ScenarioAnimController? animStatus;
+  ListQueue<Scenario>? scenarioQueue;
   Map<String, Scenario> scenarioHistory = {};
 
   SystemContainer({
@@ -55,7 +63,10 @@ class SystemContainer with ChangeNotifier {
     if (this.memoryFree != null && this.memoryUtil != null) {
       this.memoryFree = this.totalMemory! - this.memoryUtil!;
     }
-    
+
     creationDate = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+
+    scenarioQueue = ListQueue();
+    animStatus = ScenarioAnimController();
   }
 }

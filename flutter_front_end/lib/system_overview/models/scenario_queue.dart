@@ -2,77 +2,52 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/scenario.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
-import 'package:flutter_front_end/system_overview/widgets/scenarios/current_scenario_stat.dart';
-import 'package:flutter_front_end/system_overview/widgets/scenarios/next_scenario_stat.dart';
+import 'package:flutter_front_end/system_overview/models/system_container.dart';
+import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
+import 'package:mutex/mutex.dart';
 import 'package:provider/provider.dart';
 
 //ignore: must_be_immutable
 class ScenarioQueue extends StatefulWidget {
-  ScenarioQueue({Key? key}) : super(key: key);
-
-  Queue<Scenario> queue = Queue();
+  final SystemContainer container;
+  ScenarioQueue(this.container, {Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => ScenarioQueueState();
 }
 
 class ScenarioQueueState extends State<ScenarioQueue> {
-  late ScenarioAnimController controller;
+  ScenarioAnimController controller = ScenarioAnimController();
 
-  CurrentScenarioStat activeScenario = CurrentScenarioStat();
-  NextScenarioStat nextScenario = NextScenarioStat();
+  List<Widget> InitializeVisualizations() {
+    List<Widget> visualizationList = [];
+    int count = 0;
 
-  void TickAnimations() async {
-    if (!activeScenario.isInitialized) return;
+    visualizationList.add(VerticalDivider(width: 3.0));
 
-    if (widget.queue.length > 0) {
-      // If current visualization doesn't exit
-      if (!controller.hasNextScenario) {
-        // Load the next queued Scenario Visualization
-        await nextScenario.state.newArrivalAnimation();
-      }
+    while (widget.container.scenarioQueue!.length > 0 && count < 2) {
+      visualizationList.add(ScenarioWidget(1, controller));
+      visualizationList.add(VerticalDivider(width: 3.0));
 
-      // If current scenario is still active
-      if (controller.hasActiveScenario) {
-        if (!controller.activeScenarioLoading) {
-          await activeScenario.state.finishedScenarioAnimation();
-        } else {
-          return;
-        }
-      }
+      widget.container.scenarioQueue!.removeFirst();
 
-      // Transition next scenario visualization
-      // Wait until next scenario transition is done
-      await nextScenario.state.transitionAnimation();
-
-      // Enable "queue current scenario" transition
-      await activeScenario.state.activatedScenarionAnimation();
-      // Exit "next scenario" transition
-      await nextScenario.state.exitAnimation();
-
-      // Set activate scenario visualization loading bar
-      activeScenario.state.progressBarAnimation();
+      count++;
     }
+
+    return visualizationList;
   }
 
   @override
   Widget build(BuildContext context) {
-    controller = Provider.of<ScenarioAnimController>(context);
-
-    Scenario x = Scenario();
-
-    widget.queue.add(x);
-
-    TickAnimations();
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        VerticalDivider(width: 3.0),
-        activeScenario,
-        VerticalDivider(width: 2.0),
-        nextScenario,
-      ],
+      children: InitializeVisualizations(),
+      // children: [
+      //   VerticalDivider(width: 3.0),
+      //   scenario_one,
+      //   VerticalDivider(width: 2.0),
+      //   scenario_two,
+      // ],
     );
   }
 }

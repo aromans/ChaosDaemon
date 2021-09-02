@@ -6,26 +6,27 @@ class ScenarioAnimController with ChangeNotifier {
   bool hasActiveScenario = false;
   bool activeScenarioLoading = false;
   bool hasNextScenario = false;
+  bool isDisplayed = false;
+
+  static bool mutex = false;
 
   int? oldDuration = null;
 
-  ScenarioAnimController();
+  ScenarioAnimController() {}
 
-  // void StartAnimation({int value = -1}) async {
-  //   if (value > 0) {
-  //     oldDuration = controller.duration!.inSeconds;
-  //     controller.duration = Duration(seconds: value);
-  //   }
+  static Future<bool> runLockedMethod(Function fn) async {
+    if (mutex) {
+      await HoldForMutex();
+    }
 
-  //   controller.reset();
+    mutex = true;
+    final result = await fn();
+    mutex = true;
+    return Future<bool>.value(result);
+  }
 
-  //   await controller.forward();
-
-  //   if (oldDuration != null) {
-  //     controller.duration = Duration(seconds: oldDuration!);
-  //     oldDuration = null;
-  //   }
-
-  //   notifyListeners();
-  // }
+  static Future<bool> HoldForMutex() async {
+    while (!mutex) {}
+    return Future<bool>.value(true);
+  }
 }
