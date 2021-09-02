@@ -3,7 +3,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_front_end/models/system_container.dart';
 import 'package:provider/provider.dart';
 
-import '../models/system_containers.dart';
+import '../models/system_container_set.dart';
 import 'stat_table_item.dart';
 import 'stat_item.dart';
 
@@ -41,7 +41,7 @@ class StateTableState extends State<statTable> {
 
   @override
   Widget build(BuildContext context) {
-    SystemContainers containers = Provider.of<SystemContainers>(context);
+    SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
     SystemContainer container = containers.findById(widget.id!);
     return Container(
       height: 100,

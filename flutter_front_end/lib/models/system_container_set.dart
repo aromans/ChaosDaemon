@@ -4,7 +4,7 @@ import 'dart:math';
 import './system_container.dart';
 //import './scenarios.dart';
 
-class SystemContainers with ChangeNotifier {
+class SystemContainerSet with ChangeNotifier {
   List<SystemContainer> _systemContainers = [
     SystemContainer(
         id: 'SOLR',

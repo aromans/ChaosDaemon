@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 // import '../widgets/Vector.dart';
 //import '../widgets/systemContainer.dart';
 import '../widgets/system_container_widget.dart';
-import '../models/system_containers.dart';
+import '../models/system_container_set.dart';
 
 Paint orange() => Paint()..color = Colors.orange;
 Paint black() => Paint()..color = Colors.black;
@@ -89,7 +89,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
 
   @override
   Widget build(BuildContext context) {
-    final containers = Provider.of<SystemContainers>(context);
+    final containers = Provider.of<SystemContainerSet>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     int numOfCols;

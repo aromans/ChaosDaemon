@@ -17,7 +17,6 @@ class ScenarioQueue extends StatefulWidget {
 }
 
 class ScenarioQueueState extends State<ScenarioQueue> {
-
   late ScenarioAnimController controller;
 
   CurrentScenarioStat activeScenario = CurrentScenarioStat();
@@ -27,10 +26,9 @@ class ScenarioQueueState extends State<ScenarioQueue> {
     if (!activeScenario.isInitialized) return;
 
     if (widget.queue.length > 0) {
-
       // If current visualization doesn't exit
       if (!controller.hasNextScenario) {
-        // Load the next queued Scenario Visualization 
+        // Load the next queued Scenario Visualization
         await nextScenario.state.newArrivalAnimation();
       }
 
@@ -41,12 +39,11 @@ class ScenarioQueueState extends State<ScenarioQueue> {
         } else {
           return;
         }
-      } 
+      }
 
-      // Transition next scenario visualization 
+      // Transition next scenario visualization
       // Wait until next scenario transition is done
       await nextScenario.state.transitionAnimation();
-
 
       // Enable "queue current scenario" transition
       await activeScenario.state.activatedScenarionAnimation();
@@ -60,7 +57,6 @@ class ScenarioQueueState extends State<ScenarioQueue> {
 
   @override
   Widget build(BuildContext context) {
-
     controller = Provider.of<ScenarioAnimController>(context);
 
     Scenario x = Scenario();
@@ -70,13 +66,13 @@ class ScenarioQueueState extends State<ScenarioQueue> {
     TickAnimations();
 
     return Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          VerticalDivider(width: 3.0),
-          activeScenario,
-          VerticalDivider(width: 2.0),
-          nextScenario,
-        ],
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        VerticalDivider(width: 3.0),
+        activeScenario,
+        VerticalDivider(width: 2.0),
+        nextScenario,
+      ],
     );
   }
 }

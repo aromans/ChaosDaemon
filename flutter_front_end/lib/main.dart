@@ -11,7 +11,7 @@ import 'package:flutter_front_end/widgets/chat_message.dart';
 import 'package:flutter_front_end/widgets/status_bar.dart';
 import 'package:flutter_front_end/screens/system_status_window.dart';
 import 'package:flutter_front_end/models/dark_mode_status.dart';
-import './models/system_containers.dart';
+import 'models/system_container_set.dart';
 import 'package:window_size/window_size.dart';
 
 void main() async {
@@ -39,7 +39,7 @@ class DiagnosticLens extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => SystemContainers(),
+          create: (_) => SystemContainerSet(),
         ),
         ChangeNotifierProvider(create: (_) => DarkModeStatus(),)
       ],
