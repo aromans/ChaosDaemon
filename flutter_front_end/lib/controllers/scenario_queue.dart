@@ -1,27 +1,27 @@
 import 'dart:collection';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/scenario.dart';
-import 'package:flutter_front_end/models/scenarioAnimController.dart';
-import 'package:flutter_front_end/widgets/currentScenarioStat.dart';
-import 'package:flutter_front_end/widgets/nextScenarioStat.dart';
+import 'package:flutter_front_end/models/scenario_anim_controller.dart';
+import 'package:flutter_front_end/widgets/current_scenario_stat.dart';
+import 'package:flutter_front_end/widgets/next_scenario_stat.dart';
 import 'package:provider/provider.dart';
 
-class scenarioQueue extends StatefulWidget {
-  scenarioQueue({Key? key}) : super(key: key);
+//ignore: must_be_immutable
+class ScenarioQueue extends StatefulWidget {
+  ScenarioQueue({Key? key}) : super(key: key);
 
   Queue<Scenario> queue = Queue();
 
   @override
-  State<StatefulWidget> createState() => scenarioQueueState();
+  State<StatefulWidget> createState() => ScenarioQueueState();
 }
 
-class scenarioQueueState extends State<scenarioQueue> {
+class ScenarioQueueState extends State<ScenarioQueue> {
 
-  late scenarioAnimController controller;
+  late ScenarioAnimController controller;
 
-  currentScenarioStat activeScenario = currentScenarioStat();
-  nextScenarioStat nextScenario = nextScenarioStat();
+  CurrentScenarioStat activeScenario = CurrentScenarioStat();
+  NextScenarioStat nextScenario = NextScenarioStat();
 
   void TickAnimations() async {
     if (!activeScenario.isInitialized) return;
@@ -61,7 +61,7 @@ class scenarioQueueState extends State<scenarioQueue> {
   @override
   Widget build(BuildContext context) {
 
-    controller = Provider.of<scenarioAnimController>(context);
+    controller = Provider.of<ScenarioAnimController>(context);
 
     Scenario x = Scenario();
 

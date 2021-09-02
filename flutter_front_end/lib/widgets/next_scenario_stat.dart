@@ -1,29 +1,29 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_front_end/models/animationInfo.dart';
-import 'package:flutter_front_end/models/scenarioAnimController.dart';
+import 'package:flutter_front_end/models/animation_info.dart';
+import 'package:flutter_front_end/models/scenario_anim_controller.dart';
 import 'package:provider/provider.dart';
 
+//ignore: must_be_immutable
+class NextScenarioStat extends StatefulWidget {
+  NextScenarioStat({Key? key}) : super(key: key);
 
-class nextScenarioStat extends StatefulWidget {
-  nextScenarioStat({Key? key}) : super(key: key);
-
-  late nextScenarioStatState state;
+  late NextScenarioStatState state;
 
   bool isInitialized = false;
 
   @override
   State<StatefulWidget> createState() { 
-    state = nextScenarioStatState(); 
+    state = NextScenarioStatState(); 
     return state;  
   }
 }
 
-class nextScenarioStatState extends State<nextScenarioStat>
+class NextScenarioStatState extends State<NextScenarioStat>
     with TickerProviderStateMixin {
 
-  late scenarioAnimController controller;
+  late ScenarioAnimController controller;
 
   late AnimationController _controller;
 
@@ -31,18 +31,18 @@ class nextScenarioStatState extends State<nextScenarioStat>
   late Animation<double> _fadeTransitionAnimation;
   late Animation<Color?>? _colorTransitionAnimation;
 
-  late animationInfo<Offset> arrivalSlide;
-  late animationInfo<Offset> transitionSlide;
-  late animationInfo<Offset> exitSlide;
+  late AnimationInfo<Offset> arrivalSlide;
+  late AnimationInfo<Offset> transitionSlide;
+  late AnimationInfo<Offset> exitSlide;
 
-  late animationInfo<double> arrivalFade;
-  late animationInfo<double> transitionFade;
-  late animationInfo<double> exitFade;
+  late AnimationInfo<double> arrivalFade;
+  late AnimationInfo<double> transitionFade;
+  late AnimationInfo<double> exitFade;
 
-  late animationInfo<double> baseFade;
-  late animationInfo<Offset> basePos;
+  late AnimationInfo<double> baseFade;
+  late AnimationInfo<Offset> basePos;
 
-  late final animationInfo<Color> transitionColor;
+  late final AnimationInfo<Color> transitionColor;
 
   Decoration outline =
       BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(8.0)));
@@ -54,18 +54,18 @@ class nextScenarioStatState extends State<nextScenarioStat>
   void initState() {
     _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
 
-    arrivalSlide    = animationInfo<Offset>(Offset(1, 0), Offset(0, 0), Interval(0.25, 0.75, curve: Curves.easeInOutCubic));
-    transitionSlide = animationInfo<Offset>(Offset(0, 0), Offset(-1.05, 0), Interval(0.25, 0.75, curve: Curves.easeInOutCubic));
-    exitSlide       = animationInfo<Offset>(Offset(-1.05, 0), Offset(1, 0), Interval(0.95, 1.0, curve: Curves.easeInOutCubic));
+    arrivalSlide    = AnimationInfo<Offset>(Offset(1, 0), Offset(0, 0), Interval(0.25, 0.75, curve: Curves.easeInOutCubic));
+    transitionSlide = AnimationInfo<Offset>(Offset(0, 0), Offset(-1.05, 0), Interval(0.25, 0.75, curve: Curves.easeInOutCubic));
+    exitSlide       = AnimationInfo<Offset>(Offset(-1.05, 0), Offset(1, 0), Interval(0.95, 1.0, curve: Curves.easeInOutCubic));
 
-    arrivalFade     = animationInfo<double>(0.0, 0.5, Interval(0.0, 0.50, curve: Curves.easeInOutCubic));
-    transitionFade  = animationInfo<double>(0.5, 1.0, Interval(0.5, 0.75, curve: Curves.easeInOutCubic));
-    exitFade        = animationInfo<double>(1.0, 0.0, Interval(0.0, 0.2, curve: Curves.easeInOutCubic));
+    arrivalFade     = AnimationInfo<double>(0.0, 0.5, Interval(0.0, 0.50, curve: Curves.easeInOutCubic));
+    transitionFade  = AnimationInfo<double>(0.5, 1.0, Interval(0.5, 0.75, curve: Curves.easeInOutCubic));
+    exitFade        = AnimationInfo<double>(1.0, 0.0, Interval(0.0, 0.2, curve: Curves.easeInOutCubic));
 
-    basePos = animationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
-    baseFade  = animationInfo<double>(0.0, 0.0, Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    basePos = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    baseFade  = AnimationInfo<double>(0.0, 0.0, Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
 
-    transitionColor = animationInfo<Color>(Colors.yellow.shade700, Colors.red, Interval(0.75, 1, curve: Curves.easeInOut));
+    transitionColor = AnimationInfo<Color>(Colors.yellow.shade700, Colors.red, Interval(0.75, 1, curve: Curves.easeInOut));
 
     idleScenarioAnimation();
 
@@ -244,7 +244,7 @@ class nextScenarioStatState extends State<nextScenarioStat>
 
   @override
   Widget build(BuildContext context) {
-    controller = Provider.of<scenarioAnimController>(context);
+    controller = Provider.of<ScenarioAnimController>(context);
 
     init();
 

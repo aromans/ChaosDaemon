@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-class statItem extends StatelessWidget {
+class StatItem extends StatelessWidget {
   final String label;
   final String value;
 
-  statItem(this.label, this.value);
+  StatItem(this.label, this.value);
 
   @override
   Widget build(BuildContext context) {

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
-import 'package:flutter_front_end/models/darkModeStatus.dart';
+import 'package:flutter_front_end/models/dark_mode_status.dart';
 
 class DarkModeSwitch extends StatefulWidget {
   DarkModeSwitch({Key? key}) : super(key: key);

@@ -6,14 +6,11 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 
 // Custom files
-import 'package:flutter_front_end/screens/SecondScreen.dart';
-import 'package:flutter_front_end/widgets/logWindow.dart';
-import 'package:flutter_front_end/widgets/scenarioWindow.dart';
-import 'package:flutter_front_end/widgets/chatMessage.dart';
-import 'package:flutter_front_end/widgets/statusBar.dart';
-import 'package:flutter_front_end/screens/systemStatusWindow.dart';
-import 'package:flutter_front_end/widgets/darkModeSwitch.dart';
-import 'package:flutter_front_end/models/darkModeStatus.dart';
+import 'package:flutter_front_end/screens/second_screen.dart';
+import 'package:flutter_front_end/widgets/chat_message.dart';
+import 'package:flutter_front_end/widgets/status_bar.dart';
+import 'package:flutter_front_end/screens/system_status_window.dart';
+import 'package:flutter_front_end/models/dark_mode_status.dart';
 import './models/system_containers.dart';
 import 'package:window_size/window_size.dart';
 
@@ -27,7 +24,7 @@ void main() async {
 
   runApp(DiagnosticLens(sock));
 }
-
+//ignore: must_be_immutable
 class DiagnosticLens extends StatelessWidget {
   Socket? socket;
 
@@ -116,7 +113,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   String? command = "";
   //Socket? serverSocket;
 
@@ -134,11 +130,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
   ];
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
 
   String serverConnection() {
     // if (serverSocket?.isEmpty == false) {
@@ -171,7 +162,7 @@ class _MyHomePageState extends State<MyHomePage> {
               width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height,
               color: Colors.grey.shade200,
-              child: systemStatusWindow(),
+              child: SystemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
             // VerticalDivider(
@@ -196,7 +187,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: statusBar(serverConnection(), "OK"),
+      bottomNavigationBar: StatusBar(serverConnection(), "OK"),
       // floatingActionButton: Row(
       //   children: [
       //     FloatingActionButton(
@@ -220,12 +211,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  void _sendMessage() {
-    String message = this.command ?? "";
-    print("Message: " + message);
-    widget.channel?.write(message);
-    this.command = "";
-  }
+  // void _sendMessage() {
+  //   String message = this.command ?? "";
+  //   print("Message: " + message);
+  //   widget.channel?.write(message);
+  //   this.command = "";
+  // }
 
   @override
   void dispose() {

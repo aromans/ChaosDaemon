@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class expandedPanel extends StatefulWidget {
+class ExpandedPanel extends StatefulWidget {
   final Map<String, Widget> widgetMap;
-  expandedPanel(this.widgetMap, {Key? key}) : super(key: key);
+  ExpandedPanel(this.widgetMap, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => expandedPanelState(widgetMap);
+  State<StatefulWidget> createState() => ExpandedPanelState(widgetMap);
 }
 
-class expandedPanelState extends State<expandedPanel>
+class ExpandedPanelState extends State<ExpandedPanel>
     with SingleTickerProviderStateMixin {
+
   late AnimationController _controller;
   late Animation<Offset> _movePanel;
   late Animation<double> _rotateArrow;
@@ -19,7 +20,7 @@ class expandedPanelState extends State<expandedPanel>
   Widget? selectedWidget = Container();
   final Map<String, Widget> widgetMap;
   List<Widget> textWidgets = [];
-  expandedPanelState(this.widgetMap);
+  ExpandedPanelState(this.widgetMap);
 
   Icon arrowIcon(bool isExpanded) {
     return Icon(isExpanded ? Icons.arrow_downward : Icons.arrow_upward);

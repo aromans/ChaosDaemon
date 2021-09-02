@@ -6,14 +6,14 @@ class ActorFilterEntry {
   final Icon initials;
 }
 
-class scenarioWindow extends StatefulWidget {
-  const scenarioWindow({Key? key}) : super(key: key);
+class ScenarioWindow extends StatefulWidget {
+  const ScenarioWindow({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => scenarioWindowState();
+  State<StatefulWidget> createState() => ScenarioWindowState();
 }
 
-class scenarioWindowState extends State<scenarioWindow> {
+class ScenarioWindowState extends State<ScenarioWindow> {
   final List<ActorFilterEntry> _cast = <ActorFilterEntry>[
     const ActorFilterEntry('Aaron Burr', Icon(Icons.check)),
     const ActorFilterEntry('Alexander Hamilton', Icon(Icons.check)),

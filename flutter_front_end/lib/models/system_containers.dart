@@ -5,7 +5,6 @@ import './system_container.dart';
 //import './scenarios.dart';
 
 class SystemContainers with ChangeNotifier {
-  int _itemCount = 0;
   List<SystemContainer> _systemContainers = [
     SystemContainer(
         id: 'SOLR',

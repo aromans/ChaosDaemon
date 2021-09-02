@@ -11,11 +11,11 @@ import 'package:provider/provider.dart';
 // import 'package:flutter_front_end/widgets/currentScenarioStat.dart';
 // import 'package:flutter_front_end/widgets/nextScenarioStat.dart';
 // import 'package:flutter_front_end/widgets/expandedPanelStatSystem.dart';
-import '../widgets/expandedPanel.dart';
+//import '../widgets/expandedPanel.dart';
 
 // import '../widgets/Vector.dart';
 //import '../widgets/systemContainer.dart';
-import '../widgets/systemContainerWidget.dart';
+import '../widgets/system_container_widget.dart';
 import '../models/system_containers.dart';
 
 Paint orange() => Paint()..color = Colors.orange;
@@ -54,18 +54,19 @@ Paint AnalyzeStatus(String value) {
 //   }
 // }
 
-class systemStatusWindow extends StatefulWidget {
-  systemStatusWindow({Key? key}) : super(key: key);
+//ignore: must_be_immutable
+class SystemStatusWindow extends StatefulWidget {
+  SystemStatusWindow({Key? key}) : super(key: key);
 
   int numOfCols = 3;
 
   @override
   State<StatefulWidget> createState() {
-    return _systemStatusWindowState();
+    return _SystemStatusWindowState();
   }
 }
 
-class _systemStatusWindowState extends State<systemStatusWindow> {
+class _SystemStatusWindowState extends State<SystemStatusWindow> {
   // late List<SystemContainer2> widgetList;
 
   // int numOfWidgets = 30;

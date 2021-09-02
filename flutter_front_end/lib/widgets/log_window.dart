@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_front_end/widgets/chatMessage.dart';
+import 'package:flutter_front_end/widgets/chat_message.dart';
 
-class logWindow extends StatelessWidget {
-  logWindow({required this.messages});
+//ignore: must_be_immutable
+class LogWindow extends StatelessWidget {
+  LogWindow({required this.messages});
 
   List<ChatMessage> messages;
 

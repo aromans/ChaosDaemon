@@ -3,16 +3,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:cupertino_icons/cupertino_icons.dart';
 
-import 'package:flutter_front_end/models/darkModeStatus.dart';
+import 'package:flutter_front_end/models/dark_mode_status.dart';
 
-import '../models/system_container.dart';
 import 'package:provider/provider.dart';
 
-import 'statTable.dart';
-import 'scenarioStatus.dart';
+import 'stat_table.dart';
+import 'scenario_status.dart';
 
+//ignore: must_be_immutable
 class SystemContainerWidget extends StatelessWidget {
   final String? containerName;
   final String? creationDate;
@@ -37,7 +36,7 @@ class SystemContainerWidget extends StatelessWidget {
       textDirection: TextDirection.rtl,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        scenarioStatus(),
+        ScenarioStatus(),
         MouseRegion(
           onEnter: (PointerEnterEvent enterEvent) {},
           onExit: (PointerExitEvent exitEvent) {},

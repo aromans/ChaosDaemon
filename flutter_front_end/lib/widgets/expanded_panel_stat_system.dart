@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class expandedPanelStatSystem extends StatefulWidget {
+class ExpandedPanelStatSystem extends StatefulWidget {
   // constructor values
   final Color testColor;
 
@@ -13,20 +13,20 @@ class expandedPanelStatSystem extends StatefulWidget {
 
   final Color borderColor = Colors.white;
 
-  expandedPanelStatSystem(this.testColor, {Key? key}) : super(key: key);
+  ExpandedPanelStatSystem(this.testColor, {Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _expandedPanelStatSystemState();
+  State<StatefulWidget> createState() => _ExpandedPanelStatSystemState();
 }
 
-class _expandedPanelStatSystemState extends State<expandedPanelStatSystem>
+class _ExpandedPanelStatSystemState extends State<ExpandedPanelStatSystem>
     with SingleTickerProviderStateMixin {
   // @override
   // void initState() {
   //   super.initState();
   // }
 
-  _expandedPanelStatSystemState();
+  _ExpandedPanelStatSystemState();
   @override
   Widget build(BuildContext context) {
     return Align(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class scenarioAnimController with ChangeNotifier {
+class ScenarioAnimController with ChangeNotifier {
   // AnimationController controller;
 
   bool hasActiveScenario = false;
@@ -9,7 +9,7 @@ class scenarioAnimController with ChangeNotifier {
 
   int? oldDuration = null;
 
-  scenarioAnimController();
+  ScenarioAnimController();
 
   // void StartAnimation({int value = -1}) async {
   //   if (value > 0) {

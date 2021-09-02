@@ -1,31 +1,31 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_front_end/models/animationInfo.dart';
-import 'package:flutter_front_end/models/scenarioAnimController.dart';
+import 'package:flutter_front_end/models/animation_info.dart';
+import 'package:flutter_front_end/models/scenario_anim_controller.dart';
 import 'package:provider/provider.dart';
 
+//ignore: must_be_immutable
+class CurrentScenarioStat extends StatefulWidget {
 
-class currentScenarioStat extends StatefulWidget {
+  CurrentScenarioStat({Key? key}) : super(key: key);
 
-  currentScenarioStat({Key? key}) : super(key: key);
-
-  late currentScenarioStatState state;
+  late CurrentScenarioStatState state;
 
   bool isInitialized = false;
 
   @override
   State<StatefulWidget> createState() {
-    state = currentScenarioStatState();
+    state = CurrentScenarioStatState();
 
     return state;
   }
 }
 
-class currentScenarioStatState extends State<currentScenarioStat>
+class CurrentScenarioStatState extends State<CurrentScenarioStat>
     with TickerProviderStateMixin {
 
-  late scenarioAnimController controller;
+  late ScenarioAnimController controller;
 
   late AnimationController _controller;
 
@@ -33,14 +33,14 @@ class currentScenarioStatState extends State<currentScenarioStat>
   late Animation<Offset> _slideTransitionAnimation;
   late Animation<double> _fadeTransitionAnimation;
 
-  late animationInfo<double> fadeIn;
-  late animationInfo<double> fadeOut;
+  late AnimationInfo<double> fadeIn;
+  late AnimationInfo<double> fadeOut;
 
-  late animationInfo<double> baseFade;
-  late animationInfo<Offset> basePos;
+  late AnimationInfo<double> baseFade;
+  late AnimationInfo<Offset> basePos;
 
-  late animationInfo<Offset> slideIn;
-  late animationInfo<Offset> slideOut;
+  late AnimationInfo<Offset> slideIn;
+  late AnimationInfo<Offset> slideOut;
 
   Decoration outline = BoxDecoration(
       color: Colors.red, borderRadius: BorderRadius.all(Radius.circular(8.0)));
@@ -54,14 +54,14 @@ class currentScenarioStatState extends State<currentScenarioStat>
   void initState() {
    _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
 
-    slideIn  = animationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
-    slideOut = animationInfo<Offset>(Offset(0, 0), Offset(-2, 0), Interval(0.25, 1.0, curve: Curves.easeInOutCubic));
+    slideIn  = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    slideOut = AnimationInfo<Offset>(Offset(0, 0), Offset(-2, 0), Interval(0.25, 1.0, curve: Curves.easeInOutCubic));
 
-    fadeIn   = animationInfo<double>(0.0, 1.0, Interval(0.0, 0.50, curve: Curves.easeInOutCubic));
-    fadeOut  = animationInfo<double>(1.0, 0.0, Interval(0.0, 1.0, curve: Curves.easeInOutCubic));
+    fadeIn   = AnimationInfo<double>(0.0, 1.0, Interval(0.0, 0.50, curve: Curves.easeInOutCubic));
+    fadeOut  = AnimationInfo<double>(1.0, 0.0, Interval(0.0, 1.0, curve: Curves.easeInOutCubic));
 
-    basePos = animationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
-    baseFade  = animationInfo<double>(0.0, 0.0, Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    basePos = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    baseFade  = AnimationInfo<double>(0.0, 0.0, Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
 
     idleScenarioAnimation();
 
@@ -255,7 +255,7 @@ class currentScenarioStatState extends State<currentScenarioStat>
 
   @override
   Widget build(BuildContext context) {
-    controller = Provider.of<scenarioAnimController>(context);
+    controller = Provider.of<ScenarioAnimController>(context);
 
     init();
 

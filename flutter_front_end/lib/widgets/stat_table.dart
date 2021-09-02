@@ -1,28 +1,27 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_front_end/models/system_container.dart';
 import 'package:provider/provider.dart';
 
 import '../models/system_containers.dart';
-import '../widgets/statTableItem.dart';
-import 'statItem.dart';
+import 'stat_table_item.dart';
+import 'stat_item.dart';
 
-statItem generateItem(int index, List<Map> stats) {
+StatItem generateItem(int index, List<Map> stats) {
   String key = stats[index].keys.elementAt(0);
 
-  return statItem(key, stats[index][key]);
+  return StatItem(key, stats[index][key]);
 }
-
+//ignore: must_be_immutable
 class statTable extends StatefulWidget {
   String? id;
   statTable({this.id, Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => stateTableState();
+  State<StatefulWidget> createState() => StateTableState();
 }
 
-class stateTableState extends State<statTable> {
+class StateTableState extends State<statTable> {
   // List<Map> stats = [
   //   {"Memory": "25%"},
   //   {"Packets S/R": "456/87"},

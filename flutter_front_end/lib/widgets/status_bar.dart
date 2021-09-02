@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/darkModeSwitch.dart';
+import 'dark_mode_switch.dart';
 
-class statusBar extends StatelessWidget {
+//ignore: must_be_immutable
+class StatusBar extends StatelessWidget {
   String serverStatus = "OK";
   String daemonStatus = "OK";
 
-  statusBar(this.serverStatus, this.daemonStatus) {}
+  StatusBar(this.serverStatus, this.daemonStatus) {}
 
   TextStyle labelStyle = TextStyle(color: Colors.white);
 
