@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 
 //ignore: must_be_immutable
 class CurrentScenarioStat extends StatefulWidget {
-
   CurrentScenarioStat({Key? key}) : super(key: key);
 
   late CurrentScenarioStatState state;
@@ -24,7 +23,6 @@ class CurrentScenarioStat extends StatefulWidget {
 
 class CurrentScenarioStatState extends State<CurrentScenarioStat>
     with TickerProviderStateMixin {
-
   late ScenarioAnimController controller;
 
   late AnimationController _controller;
@@ -52,16 +50,23 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
 
   @override
   void initState() {
-   _controller = AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    _controller =
+        AnimationController(duration: const Duration(seconds: 2), vsync: this);
 
-    slideIn  = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
-    slideOut = AnimationInfo<Offset>(Offset(0, 0), Offset(-2, 0), Interval(0.25, 1.0, curve: Curves.easeInOutCubic));
+    slideIn = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0),
+        Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    slideOut = AnimationInfo<Offset>(Offset(0, 0), Offset(-2, 0),
+        Interval(0.25, 1.0, curve: Curves.easeInOutCubic));
 
-    fadeIn   = AnimationInfo<double>(0.0, 1.0, Interval(0.0, 0.50, curve: Curves.easeInOutCubic));
-    fadeOut  = AnimationInfo<double>(1.0, 0.0, Interval(0.0, 1.0, curve: Curves.easeInOutCubic));
+    fadeIn = AnimationInfo<double>(
+        0.0, 1.0, Interval(0.0, 0.50, curve: Curves.easeInOutCubic));
+    fadeOut = AnimationInfo<double>(
+        1.0, 0.0, Interval(0.0, 1.0, curve: Curves.easeInOutCubic));
 
-    basePos = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0), Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
-    baseFade  = AnimationInfo<double>(0.0, 0.0, Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    basePos = AnimationInfo<Offset>(Offset(0, 0), Offset(0, 0),
+        Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
+    baseFade = AnimationInfo<double>(
+        0.0, 0.0, Interval(0.0, 0.0, curve: Curves.easeInOutCubic));
 
     idleScenarioAnimation();
 
@@ -80,11 +85,16 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: basePos.timeline,
-    ))..addStatusListener((status) { if (status == AnimationStatus.completed) controller.hasActiveScenario = false;});
+    ))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed)
+          controller.hasActiveScenario = false;
+      });
 
     //Opacity Animation
     _fadeTransitionAnimation =
-        Tween<double>(begin: baseFade.start, end: baseFade.end).animate(CurvedAnimation(
+        Tween<double>(begin: baseFade.start, end: baseFade.end)
+            .animate(CurvedAnimation(
       parent: _controller,
       curve: baseFade.timeline,
     ));
@@ -108,16 +118,18 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: slideIn.timeline,
-    ))..addStatusListener((status) { 
-      if (status == AnimationStatus.completed) {
-        controller.hasActiveScenario = true;
-        controller.activeScenarioLoading = true;
-      }
-    });
+    ))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          controller.hasActiveScenario = true;
+          controller.activeScenarioLoading = true;
+        }
+      });
 
     //Opacity Animation
     _fadeTransitionAnimation =
-        Tween<double>(begin: fadeIn.start, end: fadeIn.end).animate(CurvedAnimation(
+        Tween<double>(begin: fadeIn.start, end: fadeIn.end)
+            .animate(CurvedAnimation(
       parent: _controller,
       curve: fadeIn.timeline,
     ));
@@ -146,15 +158,15 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
     ));
 
     //Opacity Animation
-    _fadeTransitionAnimation =
-        Tween<double>(begin: fadeIn.end, end: fadeIn.end).animate(CurvedAnimation(
+    _fadeTransitionAnimation = Tween<double>(begin: fadeIn.end, end: fadeIn.end)
+        .animate(CurvedAnimation(
       parent: _controller,
       curve: fadeIn.timeline,
     ));
 
     // Progress Bar Animation
     _progressAnimation = Tween(begin: 0.0, end: 175.0).animate(CurvedAnimation(
-        parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.ease)));
+        parent: _controller, curve: Interval(0.0, 1.0, curve: Curves.linear)));
 
     await _StartAnimation(value: 11);
   }
@@ -167,17 +179,23 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
     ).animate(CurvedAnimation(
       parent: _controller,
       curve: slideOut.timeline,
-    ))..addStatusListener((status) { if (status == AnimationStatus.completed) controller.hasActiveScenario = false;});
+    ))
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed)
+          controller.hasActiveScenario = false;
+      });
 
     //Opacity Animation
     _fadeTransitionAnimation =
-        Tween<double>(begin: fadeOut.start, end: fadeOut.end).animate(CurvedAnimation(
+        Tween<double>(begin: fadeOut.start, end: fadeOut.end)
+            .animate(CurvedAnimation(
       parent: _controller,
       curve: fadeOut.timeline,
     ));
 
-    _progressAnimation = Tween(begin: 175.0, end: 175.0).animate(CurvedAnimation(
-        parent: _controller, curve: Interval(0.0, 0.0, curve: Curves.ease)))
+    _progressAnimation = Tween(begin: 175.0, end: 175.0).animate(
+        CurvedAnimation(
+            parent: _controller, curve: Interval(0.0, 0.0, curve: Curves.ease)))
       ..addListener(() {
         setState(() {});
       });
@@ -190,7 +208,7 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
   Future<void> _StartAnimation({int value = -1}) async {
     if (value > 0) {
       oldDuration = _controller.duration!.inSeconds;
-     _controller.duration = Duration(seconds: value);
+      _controller.duration = Duration(seconds: value);
     }
 
     _controller.reset();
@@ -198,59 +216,59 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
     await _controller.forward();
 
     if (oldDuration != null) {
-     _controller.duration = Duration(seconds: oldDuration!);
+      _controller.duration = Duration(seconds: oldDuration!);
       oldDuration = null;
     }
   }
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
     return FadeTransition(
-      opacity: _fadeTransitionAnimation,
-      child: SlideTransition(
-          position: _slideTransitionAnimation,
-          child: Container(
-              child: Stack(alignment: Alignment.topCenter, children: [
-            Align(
-                child: Stack(alignment: Alignment.bottomCenter, children: [
-              MouseRegion(
-                child: Container(
-                  decoration: outline,
-                  width: 45,
-                  height: 175,
+        opacity: _fadeTransitionAnimation,
+        child: SlideTransition(
+            position: _slideTransitionAnimation,
+            child: Container(
+                child: Stack(alignment: Alignment.topCenter, children: [
+              Align(
+                  child: Stack(alignment: Alignment.bottomCenter, children: [
+                MouseRegion(
+                  child: Container(
+                    decoration: outline,
+                    width: 45,
+                    height: 175,
+                  ),
                 ),
-              ),
-              Container(
-                decoration: fill,
-                width: 45,
-                height: _progressAnimation?.value,
-              )
-            ])),
-            Align(
-                child: RotatedBox(
-                    quarterTurns: 3,
-                    child: Container(
-                        child: Stack(children: [
-                      Text(
-                        'Current Scenario',
-                        textWidthBasis: TextWidthBasis.parent,
-                        style: TextStyle(
+                Container(
+                  decoration: fill,
+                  width: 45,
+                  height: _progressAnimation?.value,
+                )
+              ])),
+              Align(
+                  child: RotatedBox(
+                      quarterTurns: 3,
+                      child: Container(
+                          child: Stack(children: [
+                        Text(
+                          'Current Scenario',
+                          textWidthBasis: TextWidthBasis.parent,
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal,
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 3.0
+                                ..color = Colors.black),
+                        ),
+                        Text(
+                          'Current Scenario',
+                          style: TextStyle(
+                            color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.normal,
-                            foreground: Paint()
-                              ..style = PaintingStyle.stroke
-                              ..strokeWidth = 3.0
-                              ..color = Colors.black),
-                      ),
-                      Text(
-                        'Current Scenario',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      )
-                    ])))),
-        ]))));
+                          ),
+                        )
+                      ])))),
+            ]))));
   }
 
   @override
@@ -259,7 +277,6 @@ class CurrentScenarioStatState extends State<CurrentScenarioStat>
 
     init();
 
-    return AnimatedBuilder(
-        builder: _buildAnimation, animation: _controller);
+    return AnimatedBuilder(builder: _buildAnimation, animation: _controller);
   }
 }
