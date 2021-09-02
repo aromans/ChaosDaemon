@@ -9,7 +9,7 @@ import 'package:flutter_front_end/models/dark_mode_status.dart';
 import 'package:provider/provider.dart';
 
 import 'stat_table.dart';
-import 'scenario_status.dart';
+import '../scenarios/scenario_status.dart';
 
 //ignore: must_be_immutable
 class SystemContainerWidget extends StatelessWidget {
@@ -96,7 +96,7 @@ class SystemContainerWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      statTable(
+                      StatTable(
                         id: this.containerName,
                       ),
                     ],

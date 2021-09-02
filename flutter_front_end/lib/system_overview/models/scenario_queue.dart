@@ -1,9 +1,9 @@
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/scenario.dart';
-import 'package:flutter_front_end/models/scenario_anim_controller.dart';
-import 'package:flutter_front_end/widgets/current_scenario_stat.dart';
-import 'package:flutter_front_end/widgets/next_scenario_stat.dart';
+import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
+import 'package:flutter_front_end/system_overview/widgets/scenarios/current_scenario_stat.dart';
+import 'package:flutter_front_end/system_overview/widgets/scenarios/next_scenario_stat.dart';
 import 'package:provider/provider.dart';
 
 //ignore: must_be_immutable

@@ -1,43 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_front_end/models/system_container.dart';
+import 'package:flutter_front_end/system_overview/models/system_container.dart';
 import 'package:provider/provider.dart';
 
-import '../models/system_container_set.dart';
+import '../../models/system_container_set.dart';
 import 'stat_table_item.dart';
-import 'stat_item.dart';
 
-StatItem generateItem(int index, List<Map> stats) {
-  String key = stats[index].keys.elementAt(0);
+// StatItem generateItem(int index, List<Map> stats) {
+//   String key = stats[index].keys.elementAt(0);
 
-  return StatItem(key, stats[index][key]);
-}
+//   return StatItem(key, stats[index][key]);
+// }
 //ignore: must_be_immutable
-class statTable extends StatefulWidget {
+class StatTable extends StatefulWidget {
   String? id;
-  statTable({this.id, Key? key}) : super(key: key);
+  StatTable({this.id, Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => StateTableState();
 }
 
-class StateTableState extends State<statTable> {
-  // List<Map> stats = [
-  //   {"Memory": "25%"},
-  //   {"Packets S/R": "456/87"},
-  //   {"Packet Loss": "15%"},
-  //   {"CPU": "1.2 GHZ"},
-  //   {"Uptime": "3.2 hrs"}
-  // ];
-
-  // Iterable<Widget> get StatItems sync* {
-  //   var statList = new List<statItem>.generate(
-  //       stats.length, (index) => generateItem(index, stats));
-
-  //   for (final statItem stat in statList) {
-  //     yield stat;
-  //   }
-  // }
+class StateTableState extends State<StatTable> {
 
   @override
   Widget build(BuildContext context) {

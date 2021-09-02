@@ -1,8 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_front_end/models/animation_info.dart';
-import 'package:flutter_front_end/models/scenario_anim_controller.dart';
+import 'package:flutter_front_end/system_overview/animation/animation_info.dart';
+import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 import 'package:provider/provider.dart';
 
 //ignore: must_be_immutable

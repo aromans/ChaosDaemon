@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/scenario_anim_controller.dart';
-import '../controllers/scenario_queue.dart';
+import '../../animation/scenario_anim_controller.dart';
+import '../../models/scenario_queue.dart';
 
 class ScenarioStatus extends StatefulWidget {
   ScenarioStatus({Key? key}) : super(key: key);

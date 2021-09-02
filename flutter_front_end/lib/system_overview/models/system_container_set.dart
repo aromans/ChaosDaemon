@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'dart:math';
 
-import './system_container.dart';
+import 'system_container.dart';
 //import './scenarios.dart';
 
 class SystemContainerSet with ChangeNotifier {

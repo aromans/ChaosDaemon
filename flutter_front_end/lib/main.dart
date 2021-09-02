@@ -9,9 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:flutter_front_end/screens/second_screen.dart';
 import 'package:flutter_front_end/widgets/chat_message.dart';
 import 'package:flutter_front_end/widgets/status_bar.dart';
-import 'package:flutter_front_end/screens/system_status_window.dart';
+import 'package:flutter_front_end/system_overview/system_status_window.dart';
 import 'package:flutter_front_end/models/dark_mode_status.dart';
-import 'models/system_container_set.dart';
+import 'system_overview/models/system_container_set.dart';
 import 'package:window_size/window_size.dart';
 
 void main() async {

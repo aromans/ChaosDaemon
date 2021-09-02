@@ -15,8 +15,8 @@ import 'package:provider/provider.dart';
 
 // import '../widgets/Vector.dart';
 //import '../widgets/systemContainer.dart';
-import '../widgets/system_container_widget.dart';
-import '../models/system_container_set.dart';
+import 'widgets/container_card/system_container_widget.dart';
+import 'models/system_container_set.dart';
 
 Paint orange() => Paint()..color = Colors.orange;
 Paint black() => Paint()..color = Colors.black;
