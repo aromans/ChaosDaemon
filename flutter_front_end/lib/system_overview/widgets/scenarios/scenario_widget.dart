@@ -1,7 +1,8 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/scenario.dart';
-
+import 'package:flutter_front_end/models/dark_mode_status.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_animator.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 
@@ -35,8 +36,8 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   late Animation<double> _fadeAnimation;
   // late Animation<Color?>? _colorAnimation;
 
-  final Color bgColor = Color.fromARGB(255, 147, 159, 92);
-  final Color fillColor = Color.fromARGB(255, 60, 65, 37);
+  // final Color bgColor = Color.fromARGB(255, 147, 159, 92);
+  // final Color fillColor = Color.fromARGB(255, 60, 65, 37);
 
   @override
   void initState() {
@@ -90,7 +91,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   Future<void> singleQueuedAnimation() async {
     animStatus.hasNextScenario = true;
     animStatus.waitingIsDone + ControlAnimations;
-    
+
     AnimData queued = animator.singleQueued();
     // _colorAnimation = animator.idleColor();
     _progressAnimation = animator.idleProgressBar();
@@ -118,7 +119,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
     _positionAnimation = activeLoadBar.position;
     _fadeAnimation = activeLoadBar.fade;
     await _StartAnimation(value: widget.scenario.duration);
-    
+
     animStatus.activeScenarioLoading = false;
   }
 
@@ -153,6 +154,13 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   }
 
   Widget _buildAnimation(BuildContext context, Widget? child) {
+    DarkModeStatus status = Provider.of<DarkModeStatus>(context);
+    final Color bgColor = status.darkModeEnabled
+        ? Color.fromARGB(126, 239, 35, 60)
+        : Color.fromARGB(255, 255, 71, 71);
+    final Color fillColor = status.darkModeEnabled
+        ? Color.fromARGB(255, 239, 35, 60)
+        : Color.fromARGB(255, 205, 0, 0);
     return FadeTransition(
         opacity: _fadeAnimation,
         child: SlideTransition(
@@ -183,24 +191,20 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                       quarterTurns: 3,
                       child: Container(
                           child: Stack(children: [
+                        Text('Scenario',
+                            textWidthBasis: TextWidthBasis.parent,
+                            style: Theme.of(context).textTheme.headline1
+                            // style: TextStyle(
+                            //     fontSize: 16,
+                            //     fontWeight: FontWeight.normal,
+                            //     foreground: Paint()
+                            //       ..style = PaintingStyle.stroke
+                            //       ..strokeWidth = 3.0
+                            //       ..color = Colors.black),
+                            ),
                         Text(
-                          'Current Scenario',
-                          textWidthBasis: TextWidthBasis.parent,
-                          style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              foreground: Paint()
-                                ..style = PaintingStyle.stroke
-                                ..strokeWidth = 3.0
-                                ..color = Colors.black),
-                        ),
-                        Text(
-                          'Current Scenario',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.normal,
-                          ),
+                          'Scenario',
+                          style: Theme.of(context).textTheme.headline1,
                         )
                       ])))),
             ]))));
@@ -211,12 +215,10 @@ class ScenarioWidgetState extends State<ScenarioWidget>
 
     if (!animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
       await animStatus.runLockedMethod(arriveActiveAnimation);
-    } 
-    else if (!animStatus.hasActiveScenario && animStatus.hasNextScenario) {
+    } else if (!animStatus.hasActiveScenario && animStatus.hasNextScenario) {
       await animStatus.runLockedMethod(singleActiveAnimation);
       animStatus.waitingIsDone - ControlAnimations;
-    } 
-    else if (animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
+    } else if (animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
       await animStatus.runLockedMethod(singleQueuedAnimation);
       return;
     }

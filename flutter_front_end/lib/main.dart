@@ -26,6 +26,7 @@ void main() async {
 
   runApp(DiagnosticLens(sock));
 }
+
 //ignore: must_be_immutable
 class DiagnosticLens extends StatelessWidget {
   Socket? socket;
@@ -38,9 +39,13 @@ class DiagnosticLens extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    const Color textColor = Color.fromARGB(255, 240, 239, 244);
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => DarkModeStatus(),)
+        ChangeNotifierProvider(
+          create: (_) => DarkModeStatus(),
+        )
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -49,22 +54,22 @@ class DiagnosticLens extends StatelessWidget {
           fontFamily: 'SF-Pro-Text',
           textTheme: const TextTheme(
             bodyText1: TextStyle(
-                color: Colors.white,
+                color: textColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'SF-Pro-Text'),
             bodyText2: TextStyle(
-                color: Color.fromARGB(180, 255, 255, 255),
+                color: textColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w400,
                 fontFamily: 'SF-Pro-Text'),
             headline1: TextStyle(
-                color: Colors.white,
+                color: textColor,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'SF-Pro-Rounded'),
             headline2: TextStyle(
-                color: Colors.white,
+                color: textColor,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'SF-Pro-Display'),
@@ -129,7 +134,6 @@ class _MyHomePageState extends State<MyHomePage> {
     ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
   ];
 
-
   String serverConnection() {
     // if (serverSocket?.isEmpty == false) {
     return "OK";
@@ -160,7 +164,6 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height,
-              
               color: Colors.grey.shade200,
               child: SystemStatusWindow(),
             ),

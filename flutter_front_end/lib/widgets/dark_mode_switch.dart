@@ -26,6 +26,7 @@ class DarkModeSwitchState extends State<DarkModeSwitch> {
             width: 10,
           ),
           CupertinoSwitch(
+              activeColor: Color.fromARGB(255, 88, 176, 156),
               value: status.darkModeEnabled,
               onChanged: (bool val) {
                 setState(() {

@@ -19,23 +19,18 @@ import 'package:provider/provider.dart';
 import 'widgets/container_card/system_container_widget.dart';
 import 'models/system_container_set.dart';
 
-Paint orange() => Paint()..color = Colors.orange;
-Paint black() => Paint()..color = Colors.black;
-Paint red() => Paint()..color = Colors.red;
-Paint green() => Paint()..color = Colors.green;
-
-Paint AnalyzeStatus(String value) {
-  switch (value) {
-    case "up":
-      return green();
-    case "scenario":
-      return orange();
-    case "down":
-      return red();
-    default:
-      return black();
-  }
-}
+// Paint AnalyzeStatus(String value) {
+//   switch (value) {
+//     case "up":
+//       return green();
+//     case "scenario":
+//       return orange();
+//     case "down":
+//       return red();
+//     default:
+//       return black();
+//   }
+// }
 
 // String SelectContainer(Offset screenPos) {
 //   for (int i = 0; i < containers.length; i++) {
@@ -110,7 +105,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
     }
 
     return Scaffold(
-      backgroundColor: status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 61) : Color.fromARGB(255, 190, 186, 173),
+      backgroundColor: status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 61) : Color.fromARGB(255, 238, 240, 235),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
