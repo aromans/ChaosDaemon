@@ -53,7 +53,7 @@ class ScenarioAnimator {
     // -- Positions --
     slideSingleArrival = AnimationInfo<Offset>(
       Offset(1, 0),
-      Offset(0, 0),
+      Offset(0.25, 0),
       Interval(
         0.0,
         1.0,
@@ -61,29 +61,20 @@ class ScenarioAnimator {
       ),
     );
     slideSingleActive = AnimationInfo<Offset>(
-      Offset(0, 0),
-      Offset(0, 0),
-      Interval(
-        0.0,
-        1.0,
-        curve: Curves.easeInOutCubic,
-      ),
-    );
-    slideDouble = AnimationInfo<Offset>(
-      Offset(1.0, 0),
-      Offset(0.0, 0),
+      Offset(0.25, 0),
+      Offset(-0.25, 0),
       Interval(
         0.0,
         0.1,
         curve: Curves.easeInOutCubic,
       ),
     );
-    slideOut = AnimationInfo<Offset>(
-      Offset(-1.05, 0),
-      Offset(-3, 0),
+    slideDouble = AnimationInfo<Offset>(
+      Offset(1.0, 0),
+      Offset(-0.25, 0),
       Interval(
         0.0,
-        1.0,
+        0.1,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -103,7 +94,7 @@ class ScenarioAnimator {
       1.0,
       Interval(
         0.0,
-        1.0,
+        0.1,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -116,20 +107,11 @@ class ScenarioAnimator {
         curve: Curves.easeInOutCubic,
       ),
     );
-    fadeOut = AnimationInfo<double>(
-      1.0,
-      0.0,
-      Interval(
-        0.0,
-        1.0,
-        curve: Curves.easeInOutCubic,
-      ),
-    );
 
     // -- Exit --
     slideOut = AnimationInfo<Offset>(
       Offset(0, 0),
-      Offset(-2, 0),
+      Offset(-1, 0),
       Interval(
         0.25,
         1.0,
@@ -268,12 +250,12 @@ class ScenarioAnimator {
 
   AnimData exit() {
     var position = Tween<Offset>(
-      begin: slideOut.start,
-      end: slideOut.end,
+      begin: slideSingleActive.end,
+      end: slideSingleActive.end,
     ).animate(
       CurvedAnimation(
         parent: _controller,
-        curve: slideSingleActive.timeline,
+        curve: slideOut.timeline,
       ),
     )..addStatusListener(
         (status) {

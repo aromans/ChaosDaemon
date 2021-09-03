@@ -1,32 +1,32 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_front_end/models/delegate.dart';
 
 class ScenarioAnimController with ChangeNotifier {
   // AnimationController controller;
+
+  Delegate waitingIsDone = Delegate();
 
   bool hasActiveScenario = false;
   bool activeScenarioLoading = false;
   bool hasNextScenario = false;
   bool isDisplayed = false;
 
-  static bool mutex = false;
+  bool mutex = false;
 
-  int? oldDuration = null;
+  // final _streamController = StreamController<bool>();
 
-  ScenarioAnimController() {}
+  ScenarioAnimController();
 
-  static Future<bool> runLockedMethod(Function fn) async {
-    if (mutex) {
-      await HoldForMutex();
-    }
+  // Stream<bool> get stream => _streamController.stream;
 
+  Future<bool> runLockedMethod(Function fn) async {
     mutex = true;
-    final result = await fn();
-    mutex = true;
-    return Future<bool>.value(result);
-  }
-
-  static Future<bool> HoldForMutex() async {
-    while (!mutex) {}
-    return Future<bool>.value(true);
+    // _streamController.sink.add(mutex);
+    await fn();
+    mutex = false;
+    // _streamController.sink.add(mutex);
+    return true;
   }
 }

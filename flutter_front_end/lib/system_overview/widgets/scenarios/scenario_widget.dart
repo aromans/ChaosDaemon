@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_front_end/models/scenario.dart';
 
 import 'package:flutter_front_end/system_overview/animation/scenario_animator.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
@@ -7,10 +8,10 @@ import 'package:provider/provider.dart';
 
 //ignore: must_be_immutable
 class ScenarioWidget extends StatefulWidget {
-  int count = 0;
+  late final Scenario scenario;
   late ScenarioAnimController animStatus;
 
-  ScenarioWidget(this.count, this.animStatus, {Key? key}) : super(key: key);
+  ScenarioWidget(this.scenario, this.animStatus, {Key? key}) : super(key: key);
 
   late ScenarioWidgetState state;
 
@@ -46,11 +47,13 @@ class ScenarioWidgetState extends State<ScenarioWidget>
     super.initState();
 
     widget.isInitialized = true;
-
-    idleAnimation();
   }
 
   Future<void> idleAnimation() async {
+    animStatus.hasActiveScenario = false;
+    animStatus.activeScenarioLoading = false;
+    animStatus.hasNextScenario = false;
+
     AnimData idle = animator.idle();
     _colorAnimation = animator.idleColor();
     _progressAnimation = animator.idleProgressBar();
@@ -60,15 +63,23 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   }
 
   Future<void> arriveActiveAnimation() async {
+    animStatus.hasActiveScenario = true;
+    animStatus.activeScenarioLoading = true;
+
     AnimData arriveActive = animator.arriveActive();
     _colorAnimation = animator.activeColor();
     _progressAnimation = animator.loadingProgressBar();
     _positionAnimation = arriveActive.position;
     _fadeAnimation = arriveActive.fade;
-    await _StartAnimation(value: 12);
+    await _StartAnimation(value: widget.scenario.duration);
+
+    animStatus.activeScenarioLoading = false;
   }
 
   Future<void> singleQueuedAnimation() async {
+    animStatus.hasNextScenario = true;
+    animStatus.waitingIsDone + ControlAnimations;
+    
     AnimData queued = animator.singleQueued();
     _colorAnimation = animator.idleColor();
     _progressAnimation = animator.idleProgressBar();
@@ -78,12 +89,18 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   }
 
   Future<void> singleActiveAnimation() async {
+    animStatus.hasActiveScenario = true;
+    animStatus.activeScenarioLoading = true;
+    if (animStatus.hasNextScenario) animStatus.hasNextScenario = false;
+
     AnimData activated = animator.singleActive();
     _colorAnimation = animator.activeColor();
     _progressAnimation = animator.loadingProgressBar();
     _positionAnimation = activated.position;
     _fadeAnimation = activated.fade;
-    await _StartAnimation(value: 11);
+    await _StartAnimation(value: widget.scenario.duration);
+    
+    animStatus.activeScenarioLoading = false;
   }
 
   Future<void> exitAnimation() async {
@@ -93,6 +110,9 @@ class ScenarioWidgetState extends State<ScenarioWidget>
     _positionAnimation = exit.position;
     _fadeAnimation = exit.fade;
     await _StartAnimation();
+
+    animStatus.hasActiveScenario = false;
+    animStatus.waitingIsDone();
   }
 
   int? oldDuration = null;
@@ -167,23 +187,36 @@ class ScenarioWidgetState extends State<ScenarioWidget>
             ]))));
   }
 
-  Future<void> ControlAnimations() async {
-    ScenarioAnimController.mutex = true;
+  Future singleActive() async {
+    await animStatus.runLockedMethod(singleActiveAnimation);
+    await animStatus.runLockedMethod(exitAnimation);
+  }
 
-    if (!animStatus.hasActiveScenario) {
+  Future<void> ControlAnimations() async {
+    if (animStatus.hasActiveScenario && animStatus.hasNextScenario) return;
+
+    // print("---------------------------------------");
+    // print("Active: " + animStatus.hasActiveScenario.toString());
+    // print("Next: " + animStatus.hasNextScenario.toString());
+    // print("Load: " + animStatus.activeScenarioLoading.toString());
+
+    if (!animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
       // Load the next queued Scenario Visualization
-      await ScenarioAnimController.runLockedMethod(arriveActiveAnimation);
-    } else {
+      await animStatus.runLockedMethod(arriveActiveAnimation);
+    } else if (!animStatus.hasActiveScenario && animStatus.hasNextScenario) {
+      await animStatus.runLockedMethod(singleActiveAnimation);
+    } else if (animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
       // If current scenario is still active
-      if (!animStatus.hasNextScenario) {
-        await ScenarioAnimController.runLockedMethod(singleQueuedAnimation);
-      }
+      await animStatus.runLockedMethod(singleQueuedAnimation);
+      return;
     }
 
     // If current visualization doesn't exit
     if (animStatus.hasActiveScenario && !animStatus.activeScenarioLoading) {
-      await ScenarioAnimController.runLockedMethod(exitAnimation);
+      await animStatus.runLockedMethod(exitAnimation);
     }
+
+    await animStatus.runLockedMethod(idleAnimation);
   }
 
   @override

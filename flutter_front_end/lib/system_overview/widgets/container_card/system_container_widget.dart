@@ -33,21 +33,24 @@ class SystemContainerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
+    // SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
 
     this.containerColor =
         status.darkModeEnabled ? Colors.white : Color.fromARGB(255, 0, 0, 139);
 
-    SystemContainer thisGuyHere = containers.findById(containerName!);
+    SystemContainer thisGuyHere = SystemContainerSet.findById(containerName!);
 
     if (containerName == "SOLR") {
-      thisGuyHere.scenarioQueue?.add(Scenario());
-      thisGuyHere.scenarioQueue?.add(Scenario());
-      thisGuyHere.scenarioQueue?.add(Scenario());
+      thisGuyHere.scenarioQueue?.add(Scenario(15));
+      thisGuyHere.scenarioQueue?.add(Scenario(5));
+      thisGuyHere.scenarioQueue?.add(Scenario(20));
+    } else if (containerName == "Filebeat") {
+      thisGuyHere.scenarioQueue?.add(Scenario(30));
     }
 
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       textDirection: TextDirection.rtl,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[

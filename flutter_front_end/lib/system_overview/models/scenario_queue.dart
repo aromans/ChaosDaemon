@@ -6,6 +6,7 @@ import 'package:flutter_front_end/system_overview/models/system_container.dart';
 import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
 import 'package:mutex/mutex.dart';
 import 'package:provider/provider.dart';
+import 'package:async/async.dart';
 
 //ignore: must_be_immutable
 class ScenarioQueue extends StatefulWidget {
@@ -17,37 +18,51 @@ class ScenarioQueue extends StatefulWidget {
 }
 
 class ScenarioQueueState extends State<ScenarioQueue> {
+
   ScenarioAnimController controller = ScenarioAnimController();
-
-  List<Widget> InitializeVisualizations() {
-    List<Widget> visualizationList = [];
-    int count = 0;
-
-    visualizationList.add(VerticalDivider(width: 3.0));
-
-    while (widget.container.scenarioQueue!.length > 0 && count < 2) {
-      visualizationList.add(ScenarioWidget(1, controller));
-      visualizationList.add(VerticalDivider(width: 3.0));
-
-      widget.container.scenarioQueue!.removeFirst();
-
-      count++;
-    }
-
-    return visualizationList;
-  }
+  int counter = 0;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: InitializeVisualizations(),
-      // children: [
-      //   VerticalDivider(width: 3.0),
-      //   scenario_one,
-      //   VerticalDivider(width: 2.0),
-      //   scenario_two,
-      // ],
+    List<Widget> the_children = [];
+    the_children.add(VerticalDivider(width: 3.0));
+
+    // final Stream<bool> myStream = controller.stream;
+    // final stuff = myStream.listen((event) { print("MUTEX : " +  event.toString()); });
+    // stuff.onData((data) {print("Data : " + data.toString());});
+
+    final Future<String> _calculation = Future<String>.delayed(
+        const Duration(seconds: 2),
+        () => 'Data Loaded',
+    );
+
+    return 
+      FutureBuilder(
+        future: _calculation,
+        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+
+          if (widget.container.scenarioQueue!.length > 0 && counter < 2) {
+
+            the_children.add(ScenarioWidget(
+              widget.container.scenarioQueue!.removeFirst(), 
+              controller
+              ),
+            );
+
+            the_children.add(VerticalDivider(width: 3.0));
+
+            counter++;
+          }
+
+          return Container(
+            width: 100,
+            child: Stack(alignment: Alignment.centerLeft, children: the_children,),
+            // child: Row(
+            //   mainAxisAlignment: MainAxisAlignment.start,
+            //   children: the_children,
+            // ),
+          );
+        },
     );
   }
 }

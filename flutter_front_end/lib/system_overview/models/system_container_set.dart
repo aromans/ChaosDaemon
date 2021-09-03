@@ -4,8 +4,9 @@ import 'dart:math';
 import 'system_container.dart';
 //import './scenarios.dart';
 
-class SystemContainerSet with ChangeNotifier {
-  List<SystemContainer> _systemContainers = [
+class SystemContainerSet {
+
+  static List<SystemContainer> _systemContainers = [
     SystemContainer(
         id: 'SOLR',
         uptime: Random().nextDouble() * 10,
@@ -80,20 +81,19 @@ class SystemContainerSet with ChangeNotifier {
         packetsTransmitted: Random().nextDouble() * 500),
   ];
 
-  SystemContainer findById(String id) {
+  static SystemContainer findById(String id) {
     return _systemContainers.firstWhere((container) => container.id == id);
   }
 
-  List<SystemContainer> get items {
+  static List<SystemContainer> get items {
     return [..._systemContainers];
   }
 
-  int get itemCount {
+  static int get itemCount {
     return _systemContainers.length;
   }
 
-  void addContainer(SystemContainer container) {
+  static void addContainer(SystemContainer container) {
     _systemContainers.add(container);
-    notifyListeners();
   }
 }

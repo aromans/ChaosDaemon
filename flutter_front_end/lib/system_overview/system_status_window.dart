@@ -89,7 +89,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
 
   @override
   Widget build(BuildContext context) {
-    final containers = Provider.of<SystemContainerSet>(context);
+    // final containers = Provider.of<SystemContainerSet>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     int numOfCols;
@@ -123,10 +123,10 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
                   crossAxisSpacing: 1,
                   childAspectRatio: 1.75),
               itemBuilder: (_, i) => SystemContainerWidget(
-                containerName: containers.items[i].id,
-                creationDate: containers.items[i].creationDate,
+                containerName: SystemContainerSet.items[i].id,
+                creationDate: SystemContainerSet.items[i].creationDate,
               ),
-              itemCount: containers.itemCount,
+              itemCount: SystemContainerSet.itemCount,
               padding: EdgeInsets.all(25),
             ),
           ),

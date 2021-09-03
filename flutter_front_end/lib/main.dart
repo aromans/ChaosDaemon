@@ -18,6 +18,8 @@ void main() async {
   // modify with your true address/port
   WidgetsFlutterBinding.ensureInitialized();
 
+  SystemContainerSet systemContainers = SystemContainerSet();
+
   setWindowMinSize(const Size(475, 500));
 
   Socket sock = await Socket.connect('localhost', 3000);
@@ -38,9 +40,9 @@ class DiagnosticLens extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => SystemContainerSet(),
-        ),
+        // ChangeNotifierProvider(
+        //   create: (_) => SystemContainerSet(),
+        // ),
         ChangeNotifierProvider(create: (_) => DarkModeStatus(),)
       ],
       child: MaterialApp(

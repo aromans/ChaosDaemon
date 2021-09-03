@@ -24,8 +24,8 @@ class StateTableState extends State<StatTable> {
 
   @override
   Widget build(BuildContext context) {
-    SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
-    SystemContainer container = containers.findById(widget.id!);
+    // SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
+    SystemContainer container = SystemContainerSet.findById(widget.id!);
     return Container(
       height: 100,
       child: Align(
