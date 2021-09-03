@@ -42,7 +42,7 @@ class SystemContainerWidget extends StatelessWidget {
     SystemContainer thisGuyHere = SystemContainerSet.findById(containerName!);
 
     if (containerName == "SOLR") {
-      thisGuyHere.scenarioQueue?.add(Scenario(15));
+      thisGuyHere.scenarioQueue?.add(Scenario(5));
       thisGuyHere.scenarioQueue?.add(Scenario(5));
       thisGuyHere.scenarioQueue?.add(Scenario(20));
     } else if (containerName == "Filebeat") {

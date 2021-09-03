@@ -12,7 +12,6 @@ class AnimData {
 
 class ScenarioAnimator {
   final AnimationController _controller;
-  final ScenarioAnimController _animStatus;
 
   late AnimationInfo<double> fadeInArrival;
   late AnimationInfo<double> fadeInActive;
@@ -29,7 +28,7 @@ class ScenarioAnimator {
 
   late AnimationInfo<Color> transitionColor;
 
-  ScenarioAnimator(this._controller, this._animStatus) {
+  ScenarioAnimator(this._controller) {
     // -- Idle --
     basePos = AnimationInfo<Offset>(
       Offset(0, 0),
@@ -65,7 +64,7 @@ class ScenarioAnimator {
       Offset(-0.25, 0),
       Interval(
         0.0,
-        0.1,
+        1.0,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -74,7 +73,7 @@ class ScenarioAnimator {
       Offset(-0.25, 0),
       Interval(
         0.0,
-        0.1,
+        1.0,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -94,7 +93,7 @@ class ScenarioAnimator {
       1.0,
       Interval(
         0.0,
-        0.1,
+        1.0,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -103,7 +102,7 @@ class ScenarioAnimator {
       1.0,
       Interval(
         0.0,
-        0.1,
+        1.0,
         curve: Curves.easeInOutCubic,
       ),
     );
@@ -129,8 +128,8 @@ class ScenarioAnimator {
     );
 
     // -- Color --
-    transitionColor = AnimationInfo<Color>(Colors.yellow.shade700, Colors.red,
-        Interval(0.0, 0.1, curve: Curves.easeInOut));
+    // transitionColor = AnimationInfo<Color>(Colors.red, Color.fromARGB(255, 128, 0, 0),
+    //     Interval(0.0, 0.1, curve: Curves.easeInOut));
   }
 
   // -- Base Animation Groups --
@@ -143,17 +142,30 @@ class ScenarioAnimator {
         parent: _controller,
         curve: basePos.timeline,
       ),
-    )..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed) {
-            _animStatus.hasActiveScenario = false;
-            _animStatus.hasNextScenario = false;
-            _animStatus.isDisplayed = true;
-          }
-        },
-      );
+    );
 
     var fade = Tween<double>(begin: baseFade.start, end: baseFade.end).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: baseFade.timeline,
+      ),
+    );
+
+    return AnimData(position, fade);
+  }
+
+    AnimData idleActive() {
+    var position = Tween<Offset>(
+      begin: slideDouble.end,
+      end: slideDouble.end,
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: basePos.timeline,
+      ),
+    );
+
+    var fade = Tween<double>(begin: fadeInFull.end, end: fadeInFull.end).animate(
       CurvedAnimation(
         parent: _controller,
         curve: baseFade.timeline,
@@ -172,12 +184,7 @@ class ScenarioAnimator {
         parent: _controller,
         curve: slideDouble.timeline,
       ),
-    )..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed)
-            _animStatus.hasActiveScenario = true;
-        },
-      );
+    );
 
     var fade =
         Tween<double>(begin: fadeInFull.start, end: fadeInFull.end).animate(
@@ -199,12 +206,7 @@ class ScenarioAnimator {
         parent: _controller,
         curve: slideSingleArrival.timeline,
       ),
-    )..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed)
-            _animStatus.hasNextScenario = true;
-        },
-      );
+    );
 
     var fade = Tween<double>(begin: fadeInArrival.start, end: fadeInArrival.end)
         .animate(
@@ -226,16 +228,7 @@ class ScenarioAnimator {
         parent: _controller,
         curve: slideSingleActive.timeline,
       ),
-    )..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.forward) {
-            _animStatus.hasNextScenario = false;
-          }
-          if (status == AnimationStatus.completed) {
-            _animStatus.hasActiveScenario = true;
-          }
-        },
-      );
+    );
 
     var fade =
         Tween<double>(begin: fadeInActive.start, end: fadeInActive.end).animate(
@@ -257,13 +250,7 @@ class ScenarioAnimator {
         parent: _controller,
         curve: slideOut.timeline,
       ),
-    )..addStatusListener(
-        (status) {
-          if (status == AnimationStatus.completed)
-            _animStatus.hasActiveScenario = false;
-          _animStatus.isDisplayed = false;
-        },
-      );
+    );
 
     var fade = Tween<double>(begin: fadeOut.start, end: fadeOut.end).animate(
       CurvedAnimation(
@@ -278,33 +265,34 @@ class ScenarioAnimator {
   // -- Special Animations --
   Animation<double> idleProgressBar() {
     return Tween(begin: 0.0, end: 0.0).animate(CurvedAnimation(
-        parent: _controller, curve: Interval(0.0, 0.0, curve: Curves.linear))
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed)
-          _animStatus.activeScenarioLoading = false;
-      }));
+        parent: _controller, curve: Interval(0.0, 0.0, curve: Curves.linear)));
+  }
+
+    Animation<double> idleFillProgressBar() {
+    return Tween(begin: 175.0, end: 175.0).animate(CurvedAnimation(
+        parent: _controller, curve: Interval(0.0, 0.0, curve: Curves.linear)));
   }
 
   Animation<double> loadingProgressBar() {
-    _animStatus.activeScenarioLoading = true;
-
     return Tween(begin: 0.0, end: 175.0).animate(CurvedAnimation(
-        parent: _controller, curve: Interval(0.1, 1.0, curve: Curves.linear))
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.completed)
-          _animStatus.activeScenarioLoading = false;
-      }));
+        parent: _controller, curve: Interval(0.1, 1.0, curve: Curves.linear)));
   }
 
-  Animation<Color?> idleColor() {
-    return ColorTween(
-            begin: Colors.yellow.shade700, end: Colors.yellow.shade700)
-        .animate(_controller);
-  }
+  // Animation<Color?> idleColor() {
+  //   return ColorTween(
+  //           begin: Colors.red, end: Colors.red)
+  //       .animate(_controller);
+  // }
 
-  Animation<Color?> activeColor() {
-    return ColorTween(begin: transitionColor.start, end: transitionColor.end)
-        .animate(CurvedAnimation(
-            parent: _controller, curve: transitionColor.timeline));
-  }
+  //   Animation<Color?> idleActiveColor() {
+  //   return ColorTween(
+  //           begin: Color.fromARGB(255, 128, 0, 0), end: Color.fromARGB(255, 128, 0, 0))
+  //       .animate(_controller);
+  // }
+
+  // Animation<Color?> activeColor() {
+  //   return ColorTween(begin: transitionColor.start, end: transitionColor.end)
+  //       .animate(CurvedAnimation(
+  //           parent: _controller, curve: transitionColor.timeline));
+  // }
 }

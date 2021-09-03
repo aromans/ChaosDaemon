@@ -1,23 +1,11 @@
-import 'package:flutter/material.dart';
-import 'dart:convert';
-
-
 class Delegate implements Function {
   Map<int, Function> addedFunctions = {};
 
   Delegate();
 
-  call({bool remove: true}) {
-    List<Function> removeItems = [];
+  call() {
     addedFunctions.forEach((key, value) {
       value();
-      
-      if (remove)
-        removeItems.add(value);
-    });
-
-    removeItems.forEach((element) {
-      addedFunctions.remove(hash(element));
     });
   }
 
@@ -33,23 +21,3 @@ class Delegate implements Function {
       addedFunctions.remove(hash(fn));
   } 
 }
-
-// Dart
-// public static delegate<void> myDelegate;
-
-// C#
-// public delegate void OnButtonClickDelegate();
-// public static OnButtonClickDelegate myDelegate;
-
-// C# Add Functions
-// myDelegate += someFunc;
-// myDelegate += someFunc2;
-
-// C# Call delegate
-// myDelegate(); (Calls someFunc and someFunc2)
-
-// C# Remove Functions
-// myDelegate -= someFunc;
-// myDelegate -= someFunc2;
-//  -- or --
-// myDelegate.clear()

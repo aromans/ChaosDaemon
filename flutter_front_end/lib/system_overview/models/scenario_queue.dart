@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/scenario.dart';
@@ -20,47 +21,64 @@ class ScenarioQueue extends StatefulWidget {
 class ScenarioQueueState extends State<ScenarioQueue> {
 
   ScenarioAnimController controller = ScenarioAnimController();
+  List<Widget> the_children = [];
   int counter = 0;
+
+  StreamController<String> _refreshController = StreamController<String>();
+
+  void incrementCounter() {
+    if (widget.container.scenarioQueue!.length > 0 && counter < 2) {
+      the_children.add(ScenarioWidget(
+        widget.container.scenarioQueue!.removeFirst(), 
+        controller
+        ),
+      );
+
+      the_children.add(VerticalDivider(width: 3.0));
+
+      _refreshController.add("");
+      counter++;
+    }
+  }
+
+  void decrementCounter() {
+    if (counter > 0)
+      counter -= 1;
+  }
+
+  Widget extraText() {
+    int queueLength = widget.container.scenarioQueue!.length;
+    if (queueLength > 0) {
+      return RotatedBox(quarterTurns: 3, child: Text("+ " + queueLength.toString(), style: Theme.of(context).textTheme.bodyText2,));
+    } 
+    return Text("");
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> the_children = [];
+    
     the_children.add(VerticalDivider(width: 3.0));
 
-    // final Stream<bool> myStream = controller.stream;
-    // final stuff = myStream.listen((event) { print("MUTEX : " +  event.toString()); });
-    // stuff.onData((data) {print("Data : " + data.toString());});
+    controller.waitingIsDone + decrementCounter;
+    controller.addToQueue + incrementCounter;
 
-    final Future<String> _calculation = Future<String>.delayed(
-        const Duration(seconds: 2),
-        () => 'Data Loaded',
-    );
+    controller.addToQueue();
 
     return 
-      FutureBuilder(
-        future: _calculation,
-        builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-
-          if (widget.container.scenarioQueue!.length > 0 && counter < 2) {
-
-            the_children.add(ScenarioWidget(
-              widget.container.scenarioQueue!.removeFirst(), 
-              controller
+      StreamBuilder(
+        stream: _refreshController.stream,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          return Row(
+            children: [
+              Container(
+                width: 100,
+                child: Stack(alignment: Alignment.centerLeft, children: the_children,),
               ),
-            );
-
-            the_children.add(VerticalDivider(width: 3.0));
-
-            counter++;
-          }
-
-          return Container(
-            width: 100,
-            child: Stack(alignment: Alignment.centerLeft, children: the_children,),
-            // child: Row(
-            //   mainAxisAlignment: MainAxisAlignment.start,
-            //   children: the_children,
-            // ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: extraText(),
+              ),
+            ],
           );
         },
     );
