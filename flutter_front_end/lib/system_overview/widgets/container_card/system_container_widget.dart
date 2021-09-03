@@ -17,18 +17,26 @@ import 'stat_table.dart';
 import '../scenarios/scenario_status.dart';
 
 //ignore: must_be_immutable
-class SystemContainerWidget extends StatelessWidget {
+class SystemContainerWidget extends StatefulWidget {
   final String? containerName;
   final String? creationDate;
   SystemContainerWidget({this.containerName, this.creationDate});
 
-  // default values
+  @override
+  _SystemContainerWidgetState createState() => _SystemContainerWidgetState();
+}
+
+class _SystemContainerWidgetState extends State<SystemContainerWidget> {
   final double containerHeight = 175.0;
+
   final double containerWidth = 225.0;
+
   final double borderWidth = 5.0;
+
   final double borderRadius = 30.0;
 
   Color containerColor = Color.fromARGB(255, 0, 0, 139);
+
   final double fontSize = 36;
 
   @override
@@ -39,28 +47,22 @@ class SystemContainerWidget extends StatelessWidget {
     this.containerColor =
         status.darkModeEnabled ? Colors.white : Color.fromARGB(255, 0, 0, 139);
 
-    SystemContainer thisGuyHere = SystemContainerSet.findById(containerName!);
-
-    if (containerName == "SOLR") {
-      thisGuyHere.scenarioQueue?.add(Scenario(5));
-      thisGuyHere.scenarioQueue?.add(Scenario(5));
-      thisGuyHere.scenarioQueue?.add(Scenario(20));
-    } else if (containerName == "Filebeat") {
-      thisGuyHere.scenarioQueue?.add(Scenario(30));
-    }
+    SystemContainer objectContainer = SystemContainerSet.findById(widget.containerName!);
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       textDirection: TextDirection.rtl,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
-        ScenarioStatus(thisGuyHere),
+        ScenarioStatus(objectContainer),
         MouseRegion(
           onEnter: (PointerEnterEvent enterEvent) {},
           onExit: (PointerExitEvent exitEvent) {},
           child: GestureDetector(
             onTapUp: (TapUpDetails tapUpDetails) {
-              // TODO: Add new scenario to queue
+              setState(() {
+                objectContainer.scenarioQueue?.add(Scenario(5));
+              });
             },
             onDoubleTap: () {
               print("Bring up stat information");
@@ -96,11 +98,11 @@ class SystemContainerWidget extends StatelessWidget {
                             child: Column(
                               children: [
                                 Text(
-                                  this.containerName!,
+                                  this.widget.containerName!,
                                   style: Theme.of(context).textTheme.headline1,
                                 ),
                                 Text(
-                                  this.creationDate!,
+                                  this.widget.creationDate!,
                                   style: Theme.of(context).textTheme.bodyText2,
                                 )
                               ],
@@ -116,7 +118,7 @@ class SystemContainerWidget extends StatelessWidget {
                     ),
                   ),
                   StatTable(
-                    id: this.containerName,
+                    id: this.widget.containerName,
                   ),
                 ],
               ),
