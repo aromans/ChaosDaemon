@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DarkModeStatus extends ChangeNotifier {
-  bool darkModeEnabled = false;
+  bool darkModeEnabled = true;
 
   void toggle(bool value) {
     darkModeEnabled = value;
-
-    print(darkModeEnabled);
 
     notifyListeners();
   }

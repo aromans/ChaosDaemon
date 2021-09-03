@@ -34,7 +34,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
         ),
       );
 
-      the_children.add(VerticalDivider(width: 3.0));
+      the_children.add(VerticalDivider(width: 3.0, color: Color.fromARGB(0, 0, 0, 0),));
 
       _refreshController.add("");
       counter++;
@@ -57,7 +57,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
   @override
   Widget build(BuildContext context) {
     
-    the_children.add(VerticalDivider(width: 3.0));
+    // the_children.add(VerticalDivider(width: 3.0));
 
     controller.waitingIsDone + decrementCounter;
     controller.addToQueue + incrementCounter;

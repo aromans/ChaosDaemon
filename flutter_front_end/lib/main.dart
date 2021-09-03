@@ -40,9 +40,6 @@ class DiagnosticLens extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        // ChangeNotifierProvider(
-        //   create: (_) => SystemContainerSet(),
-        // ),
         ChangeNotifierProvider(create: (_) => DarkModeStatus(),)
       ],
       child: MaterialApp(
@@ -163,6 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               width: MediaQuery.of(context).size.width * 1,
               height: MediaQuery.of(context).size.height,
+              
               color: Colors.grey.shade200,
               child: SystemStatusWindow(),
             ),

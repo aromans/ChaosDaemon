@@ -35,7 +35,8 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   late Animation<double> _fadeAnimation;
   // late Animation<Color?>? _colorAnimation;
 
-  final Color fillColor = Color.fromARGB(255, 155, 17, 30);
+  final Color bgColor = Color.fromARGB(255, 147, 159, 92);
+  final Color fillColor = Color.fromARGB(255, 60, 65, 37);
 
   @override
   void initState() {
@@ -163,7 +164,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                 MouseRegion(
                   child: Container(
                     decoration: BoxDecoration(
-                        color: Colors.red,
+                        color: bgColor,
                         borderRadius: BorderRadius.all(Radius.circular(8.0))),
                     width: 45,
                     height: 175,

@@ -45,7 +45,7 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget> {
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
 
     this.containerColor =
-        status.darkModeEnabled ? Colors.white : Color.fromARGB(255, 0, 0, 139);
+        status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 139) : Color.fromARGB(255, 65, 105, 225);
 
     SystemContainer objectContainer = SystemContainerSet.findById(widget.containerName!);
 

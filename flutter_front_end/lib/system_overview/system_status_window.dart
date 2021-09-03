@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_front_end/models/dark_mode_status.dart';
 import 'package:provider/provider.dart';
 //import 'package:flutter/services.dart';
 //import 'package:touchable/touchable.dart';
@@ -89,7 +90,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
 
   @override
   Widget build(BuildContext context) {
-    // final containers = Provider.of<SystemContainerSet>(context);
+    DarkModeStatus status = Provider.of<DarkModeStatus>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     int numOfCols;
@@ -109,7 +110,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 61) : Color.fromARGB(255, 190, 186, 173),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
