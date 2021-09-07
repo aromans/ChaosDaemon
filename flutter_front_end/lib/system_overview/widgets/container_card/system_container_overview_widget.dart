@@ -21,28 +21,30 @@ import 'stat_table.dart';
 import '../scenarios/scenario_status.dart';
 
 //ignore: must_be_immutable
-class SystemContainerWidget extends StatefulWidget {
+class SystemContainerOverviewWidget extends StatefulWidget {
   final String? containerName;
   final String? creationDate;
-  SystemContainerWidget({this.containerName, this.creationDate});
+  SystemContainerOverviewWidget({this.containerName, this.creationDate});
 
   @override
-  _SystemContainerWidgetState createState() => _SystemContainerWidgetState();
+  _SystemContainerOverviewWidgetState createState() =>
+      _SystemContainerOverviewWidgetState();
 }
 
-class _SystemContainerWidgetState extends State<SystemContainerWidget>
+class _SystemContainerOverviewWidgetState
+    extends State<SystemContainerOverviewWidget>
     with SingleTickerProviderStateMixin {
   final double containerHeight = 175.0;
 
-  final double containerWidth = 370.0; // 225.0, 370
+  late double containerWidth; // 225.0, 370
 
   final double borderWidth = 3.0;
 
   final double borderRadius = 30.0;
 
-  SystemStatus systemStatus = SystemStatus.dead;
+  SystemStatus systemStatus = SystemStatus.healthy;
 
-  Color containerColor = Color.fromARGB(255, 0, 0, 139);
+  Color containerColor = Color.fromARGB(255, 88, 176, 156);
 
   double t = 0.0;
   final double fontSize = 36;
@@ -53,21 +55,14 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
   Widget build(BuildContext context) {
     // SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
-    if (t < 1) {
-      t += 0.1;
-    } else {
-      t = 1.0;
-    }
+
     this.containerColor = status.darkModeEnabled
-        ? Color.fromARGB(255, 0, 0, 139)
+        ? Color.fromARGB(255, 19, 21, 22)
         : Color.fromARGB(255, 65, 105, 225);
 
-    SystemContainer objectContainer =
-        SystemContainerSet.findById(widget.containerName!);
+    // objectContainer.eventNotifier + UpdateScenarioText;
 
-    objectContainer.eventNotifier + UpdateScenarioText;
-
-    this.systemStatus = objectContainer.containerStatus;
+    // this.systemStatus = objectContainer.containerStatus;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -79,9 +74,9 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
           onExit: (PointerExitEvent exitEvent) {},
           child: GestureDetector(
             onTapUp: (TapUpDetails tapUpDetails) {
-              setState(() {
-                objectContainer.scenarioQueue?.add(Scenario(5));
-              });
+              // setState(() {
+              //   objectContainer.scenarioQueue?.add(Scenario(5));
+              // });
             },
             onDoubleTap: () {
               print("Bring up stat information");
@@ -90,56 +85,62 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  decoration: ContainerBoxStyle(this.containerColor, this.borderRadius, this.borderWidth),
-                  width: containerWidth,
+                  decoration: ContainerBoxStyle(
+                    this.containerColor,
+                    this.borderRadius,
+                    this.borderWidth,
+                  ),
+                  width: MediaQuery.of(context).size.width * 0.593,
                   height: containerHeight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       StaticElement(
-                        containerName: widget.containerName, 
-                        creationDate: widget.creationDate, 
-                        containerColor: containerColor, 
-                        systemStatus: systemStatus
-                      ),      
+                          containerName: widget.containerName,
+                          creationDate: widget.creationDate,
+                          containerColor: containerColor,
+                          systemStatus: systemStatus),
                       Container(
                         decoration: DottedDecoration(
                           shape: Shape.box,
                           strokeWidth: 2,
-                          borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
+                          borderRadius: BorderRadius.circular(
+                              10), //remove this to get plane rectange
                         ),
-                        width: 120,
+                        width: MediaQuery.of(context).size.width * 0.5,
                         child: Stack(
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 0, 0, 25).withOpacity(0.5),
+                                color: Color.fromARGB(255, 0, 0, 25)
+                                    .withOpacity(0.5),
                                 shape: BoxShape.rectangle,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15)),
                               ),
-                              width: 120,
+                              width: MediaQuery.of(context).size.width * 0.5,
                               height: containerHeight,
                               child: StreamBuilder(
                                 stream: _refreshController.stream,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                builder: (BuildContext context,
+                                    AsyncSnapshot snapshot) {
                                   return Center(
                                     child: Text(
-                                      NoScenarioText(objectContainer), 
-                                      textAlign: TextAlign.center, 
-                                      style: Theme.of(context).textTheme.bodyText2,
+                                      'No Current Scenarios',
+                                      // NoScenarioText(objectContainer),
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
                                     ),
                                   );
                                 },
                               ),
                             ),
-                            ScenarioStatus(objectContainer),
+                            // ScenarioStatus(objectContainer),
                           ],
                         ),
                       ),
-                      SizedBox(
-                        width: 10
-                      ),
+                      SizedBox(width: 10),
                     ],
                   ),
                 ),
@@ -162,24 +163,24 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
     return "";
   }
 
-  BoxDecoration ContainerBoxStyle(Color color, double radius, double borderWidth) {
+  BoxDecoration ContainerBoxStyle(
+      Color color, double radius, double borderWidth) {
     return BoxDecoration(
-      color: color,
-      shape: BoxShape.rectangle,
-      borderRadius:
-          BorderRadius.all(Radius.circular(radius)),
-      border: Border.all(
-        width: borderWidth,
         color: color,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Color.fromARGB(255, 0, 0, 20).withOpacity(0.2),
-          spreadRadius: 5,
-          blurRadius: 5,
-          offset: Offset(0, 5),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
+        border: Border.all(
+          width: borderWidth,
+          color: color,
         ),
-    ]);
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(255, 0, 0, 20).withOpacity(0.2),
+            spreadRadius: 5,
+            blurRadius: 5,
+            offset: Offset(0, 5),
+          ),
+        ]);
   }
 }
 
@@ -278,20 +279,18 @@ class StaticElement extends StatelessWidget {
                           children: [
                             Text(
                               containerName!,
-                              style:
-                                  Theme.of(context).textTheme.headline1,
+                              style: Theme.of(context).textTheme.headline1,
                             ),
                             Text(
                               creationDate!,
-                              style:
-                                  Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText2,
                             )
                           ],
                         ),
                       ),
-                      StatTable(
-                        id: containerName,
-                      ),
+                      // StatTable(
+                      //   id: containerName,
+                      // ),
                     ],
                   ),
                 ],

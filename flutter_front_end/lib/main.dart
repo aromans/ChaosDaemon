@@ -152,9 +152,9 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             /* SCENARIO WINDOW (LEFT SIDE) */
             Container(
-                  width: MediaQuery.of(context).size.width * 0.2 - 10,
-                  height: MediaQuery.of(context).size.height,
-                  child: ScenarioWindow(),
+              width: MediaQuery.of(context).size.width * 0.2 - 7,
+              height: MediaQuery.of(context).size.height,
+              child: ScenarioWindow(),
               /* SOA-ESB STATUS WINDOW (MIDDLE) */
             ),
             VerticalDivider(
@@ -175,17 +175,17 @@ class _MyHomePageState extends State<MyHomePage> {
               width: 5,
             ),
             Container(
-                  width: MediaQuery.of(context).size.width * 0.2,
-                  height: MediaQuery.of(context).size.height,
-                  child: LogWindow(messages: messages),
-            // TextFormField(
-            //     onChanged: (String? value) {
-            //       this.command = value;
-            //     },
-            //     decoration: InputDecoration(
-            //       border: UnderlineInputBorder(),
-            //       labelText: 'Send your command!',
-            //     )),
+              width: MediaQuery.of(context).size.width * 0.2 - 7,
+              height: MediaQuery.of(context).size.height,
+              child: LogWindow(messages: messages),
+              // TextFormField(
+              //     onChanged: (String? value) {
+              //       this.command = value;
+              //     },
+              //     decoration: InputDecoration(
+              //       border: UnderlineInputBorder(),
+              //       labelText: 'Send your command!',
+              //     )),
             ),
           ],
         ),

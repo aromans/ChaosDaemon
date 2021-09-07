@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:intl/intl.dart';
 
 // import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ import 'package:provider/provider.dart';
 // import '../widgets/Vector.dart';
 //import '../widgets/systemContainer.dart';
 import 'widgets/container_card/system_container_widget.dart';
+import 'widgets/container_card/system_container_overview_widget.dart';
 import 'models/system_container_set.dart';
 
 // Paint AnalyzeStatus(String value) {
@@ -63,7 +65,6 @@ class SystemStatusWindow extends StatefulWidget {
 }
 
 class _SystemStatusWindowState extends State<SystemStatusWindow> {
-
   @override
   Widget build(BuildContext context) {
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
@@ -86,10 +87,28 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
     // }
 
     return Scaffold(
-      backgroundColor: status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 61) : Color.fromARGB(255, 238, 240, 235),
-      body: Container(
-        alignment: Alignment.center,
-        child: ContainerGrid(numOfCols: numOfCols),
+      backgroundColor: status.darkModeEnabled
+          ? Color.fromARGB(255, 0, 0, 61)
+          : Color.fromARGB(255, 238, 240, 235),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8.0),
+            child: SystemContainerOverviewWidget(
+              containerName: 'System',
+              creationDate:
+                  DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now()),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              alignment: Alignment.center,
+              child: ContainerGrid(numOfCols: numOfCols),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -106,16 +125,16 @@ class ContainerGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: numOfCols,
-            mainAxisSpacing: 1,
-            crossAxisSpacing: 1,
-            childAspectRatio: 2),
-        itemBuilder: (_, i) => SystemContainerWidget(
-          containerName: SystemContainerSet.items[i].id,
-          creationDate: SystemContainerSet.items[i].creationDate,
-        ),
-        itemCount: SystemContainerSet.itemCount,
-      );
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: numOfCols,
+          mainAxisSpacing: 1,
+          crossAxisSpacing: 1,
+          childAspectRatio: 2),
+      itemBuilder: (_, i) => SystemContainerWidget(
+        containerName: SystemContainerSet.items[i].id,
+        creationDate: SystemContainerSet.items[i].creationDate,
+      ),
+      itemCount: SystemContainerSet.itemCount,
+    );
   }
 }
