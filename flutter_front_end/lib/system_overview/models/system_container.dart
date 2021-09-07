@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'dart:collection';
 
 import '../../models/scenario.dart';
+import 'package:flutter_front_end/system_overview/models/system_status.dart';
 
 import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
 
@@ -21,6 +22,8 @@ class SystemContainer with ChangeNotifier {
   double? memoryUtil;
   double? packetsReceived;
   double? packetsTransmitted;
+
+  String? stringStatus = "dead";
   SystemStatus containerStatus = SystemStatus.healthy;
 
   // expanded metrics
@@ -54,14 +57,17 @@ class SystemContainer with ChangeNotifier {
     this.role,
     this.engine,
     this.currentScenario,
+    this.stringStatus,
   }) {
     if (this.memoryFree != null && this.memoryUtil != null) {
       this.memoryFree = this.totalMemory! - this.memoryUtil!;
     }
 
-    creationDate = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
+    this.creationDate = DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now());
 
-    scenarioQueue = ListQueue();
-    animStatus = ScenarioAnimController();
+    this.scenarioQueue = ListQueue();
+    this.animStatus = ScenarioAnimController();
+
+    this.containerStatus = stringToStatus(stringStatus);
   }
 }

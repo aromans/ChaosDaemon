@@ -14,7 +14,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Healthy"),
     SystemContainer(
         id: 'HAProxy',
         uptime: Random().nextDouble() * 10,
@@ -22,7 +23,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Healthy"),
     SystemContainer(
         id: 'SOA Core',
         uptime: Random().nextDouble() * 10,
@@ -30,7 +32,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Healthy"),
     SystemContainer(
         id: 'Artemis',
         uptime: Random().nextDouble() * 10,
@@ -38,7 +41,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Dead"),
     SystemContainer(
         id: 'Kafka',
         uptime: Random().nextDouble() * 10,
@@ -54,7 +58,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Unhealthy"),
     SystemContainer(
         id: 'Filebeat',
         uptime: Random().nextDouble() * 10,
@@ -62,7 +67,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Healthy"),
     SystemContainer(
         id: 'Elastic Search',
         uptime: Random().nextDouble() * 10,
@@ -70,7 +76,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Unhealthy"),
     SystemContainer(
         id: 'LDAP',
         uptime: Random().nextDouble() * 10,
@@ -78,7 +85,8 @@ class SystemContainerSet {
         memoryUtil: Random().nextDouble() * 64,
         totalMemory: 64,
         packetsReceived: Random().nextDouble() * 500,
-        packetsTransmitted: Random().nextDouble() * 500),
+        packetsTransmitted: Random().nextDouble() * 500,
+        stringStatus: "Healthy"),
   ];
 
   static SystemContainer findById(String id) {

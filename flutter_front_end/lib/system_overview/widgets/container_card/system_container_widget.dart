@@ -13,6 +13,8 @@ import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_wid
 
 import 'package:provider/provider.dart';
 
+import 'package:flutter_front_end/system_overview/models/system_status.dart';
+
 import 'stat_table.dart';
 import '../scenarios/scenario_status.dart';
 
@@ -36,12 +38,12 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
 
   final double borderRadius = 30.0;
 
-  SystemContainer.SystemStatus systemStatus = SystemContainer.SystemStatus.dead;
+  SystemStatus systemStatus = SystemStatus.dead;
 
   Color containerColor = Color.fromARGB(255, 0, 0, 139);
   Color unhealthyColor = Color.fromARGB(255, 255, 221, 74);
   Color deadColor = Color.fromARGB(255, 216, 0, 50);
-  Color healthyColor = Color.fromARGB(255, 5, 158, 53);
+  Color healthyColor = Color.fromARGB(255, 7, 218, 74);
 
   double t = 0.0;
   final double fontSize = 36;

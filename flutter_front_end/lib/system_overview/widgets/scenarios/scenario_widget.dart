@@ -180,6 +180,15 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                           borderRadius: BorderRadius.all(
                             Radius.circular(8.0),
                           ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 14, 14, 14)
+                                  .withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(2, 2),
+                            ),
+                          ]
                         ),
                         width: 45,
                         height: 175,
@@ -191,15 +200,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                           borderRadius: BorderRadius.all(
                             Radius.circular(8.0),
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Color.fromARGB(255, 14, 14, 14)
-                                  .withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: Offset(2, 2),
-                            ),
-                          ]),
+                        ),
                       width: 45,
                       height: _progressAnimation?.value,
                     )

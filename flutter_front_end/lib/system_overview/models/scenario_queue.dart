@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
+import 'package:flutter_front_end/models/dark_mode_status.dart';
 import 'package:flutter_front_end/models/scenario.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 import 'package:flutter_front_end/system_overview/models/system_container.dart';
@@ -46,19 +47,30 @@ class ScenarioQueueState extends State<ScenarioQueue> {
       counter -= 1;
   }
 
-  Widget extraText() {
+  Widget extraText(DarkModeStatus status) {
     int queueLength = widget.container.scenarioQueue!.length;
+    TextStyle extraStyle = Theme.of(context).textTheme.bodyText2!;
+
     if (queueLength > 0) {
-      return RotatedBox(quarterTurns: 3, child: Text("+ " + queueLength.toString(), style: Theme.of(context).textTheme.bodyText2,));
+      return RotatedBox(
+        quarterTurns: 3, 
+        child: Text(
+          "+ " + queueLength.toString(), 
+          style: TextStyle(color: status.darkModeEnabled ? extraStyle.color : Color.fromARGB(255, 25, 23, 22),
+          fontSize: extraStyle.fontSize,
+          fontWeight: FontWeight.bold,
+          fontFamily: extraStyle.fontFamily),
+        ),
+      );
     } 
     return Text("");
   }
 
   @override
   Widget build(BuildContext context) {
-    
-    // the_children.add(VerticalDivider(width: 3.0));
 
+    DarkModeStatus status = Provider.of<DarkModeStatus>(context);
+    
     controller.waitingIsDone + decrementCounter;
     controller.addToQueue + incrementCounter;
 
@@ -76,7 +88,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
               ),
               Align(
                 alignment: Alignment.centerRight,
-                child: extraText(),
+                child: extraText(status),
               ),
             ],
           );
