@@ -110,7 +110,7 @@ class ContainerGrid extends StatelessWidget {
             crossAxisCount: numOfCols,
             mainAxisSpacing: 1,
             crossAxisSpacing: 1,
-            childAspectRatio: 1.5),
+            childAspectRatio: 2),
         itemBuilder: (_, i) => SystemContainerWidget(
           containerName: SystemContainerSet.items[i].id,
           creationDate: SystemContainerSet.items[i].creationDate,

@@ -36,7 +36,7 @@ class StateTableState extends State<StatTable> {
             children: [
               StatTableItem(
                 header: 'Status',
-                body: 'Healthy',
+                body: '${container.stringStatus?.toLowerCase().toString()}',
                 trailer: '',
               ),
               StatTableItem(

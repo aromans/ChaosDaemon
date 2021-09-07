@@ -71,6 +71,9 @@ class SystemContainer with ChangeNotifier {
     this.scenarioQueue = ListQueue();
     this.animStatus = ScenarioAnimController();
 
+    if (stringStatus == null)
+      this.stringStatus = "Dead";
+
     this.containerStatus = stringToStatus(stringStatus);
     
     eventNotifier = Delegate();

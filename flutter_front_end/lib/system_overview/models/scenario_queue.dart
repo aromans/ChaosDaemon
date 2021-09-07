@@ -10,6 +10,8 @@ import 'package:mutex/mutex.dart';
 import 'package:provider/provider.dart';
 import 'package:async/async.dart';
 
+// Cool Black Color: Color.fromARGB(255, 25, 23, 22)
+
 //ignore: must_be_immutable
 class ScenarioQueue extends StatefulWidget {
   final SystemContainer container;
@@ -59,7 +61,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
         quarterTurns: 3, 
         child: Text(
           "+ " + queueLength.toString(), 
-          style: TextStyle(color: status.darkModeEnabled ? extraStyle.color : Color.fromARGB(255, 25, 23, 22),
+          style: TextStyle(color: extraStyle.color,
           fontSize: extraStyle.fontSize,
           fontWeight: FontWeight.bold,
           fontFamily: extraStyle.fontFamily),

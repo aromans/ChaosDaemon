@@ -34,7 +34,7 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
     with SingleTickerProviderStateMixin {
   final double containerHeight = 175.0;
 
-  final double containerWidth = 335.0; // 225.0
+  final double containerWidth = 370.0; // 225.0, 370
 
   final double borderWidth = 3.0;
 
@@ -87,14 +87,21 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
               print("Bring up stat information");
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   decoration: ContainerBoxStyle(this.containerColor, this.borderRadius, this.borderWidth),
                   width: containerWidth,
                   height: containerHeight,
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      StaticElement(containerName: widget.containerName, creationDate: widget.creationDate, containerColor: containerColor, systemStatus: systemStatus),
+                      StaticElement(
+                        containerName: widget.containerName, 
+                        creationDate: widget.creationDate, 
+                        containerColor: containerColor, 
+                        systemStatus: systemStatus
+                      ),
                       Container(
                         decoration: DottedDecoration(
                           shape: Shape.box,
@@ -129,6 +136,9 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
                             ScenarioStatus(objectContainer),
                           ],
                         ),
+                      ),
+                      SizedBox(
+                        width: 10
                       ),
                     ],
                   ),
@@ -231,42 +241,63 @@ class StaticElement extends StatelessWidget {
                 right: 3,
               ),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Container(
-                    child: statusIcon(systemStatus!),
-                    margin: EdgeInsets.all(8.0),
+                  Column(
+                    children: [
+                      Container(
+                        child: statusIcon(systemStatus!),
+                        margin: EdgeInsets.all(8.0),
+                      ),
+                      IconButton(
+                        onPressed: () => {print("Graph Me!")},
+                        icon: Icon(CupertinoIcons.graph_square),
+                        color: Colors.white,
+                      ),
+                      IconButton(
+                        onPressed: () => {print("Press Me!")},
+                        icon: Icon(CupertinoIcons.bolt_fill),
+                        color: Colors.white,
+                      ),
+                      IconButton(
+                        onPressed: () => {print("Press Me!")},
+                        icon: Icon(CupertinoIcons.square_stack),
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20.0),
-                    child: Column(
-                      children: [
-                        Text(
-                          containerName!,
-                          style:
-                              Theme.of(context).textTheme.headline1,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              containerName!,
+                              style:
+                                  Theme.of(context).textTheme.headline1,
+                            ),
+                            Text(
+                              creationDate!,
+                              style:
+                                  Theme.of(context).textTheme.bodyText2,
+                            )
+                          ],
                         ),
-                        Text(
-                          creationDate!,
-                          style:
-                              Theme.of(context).textTheme.bodyText2,
-                        )
-                      ],
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => {print("Graph Me!")},
-                    icon: Icon(CupertinoIcons.graph_square),
-                    color: Colors.white,
+                      ),
+                      StatTable(
+                        id: containerName,
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
           ),
-        ),
-        StatTable(
-          id: containerName,
         ),
       ],
     );
