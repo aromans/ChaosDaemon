@@ -45,6 +45,9 @@ class ScenarioQueueState extends State<ScenarioQueue> {
   void decrementCounter() {
     if (counter > 0)
       counter -= 1;
+
+    if (counter <= 0)
+      widget.container.eventNotifier();
   }
 
   Widget extraText(DarkModeStatus status) {

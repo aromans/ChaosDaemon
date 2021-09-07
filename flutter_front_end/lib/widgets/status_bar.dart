@@ -37,6 +37,7 @@ class StatusBar extends StatelessWidget {
             data: IconThemeData(color: Theme.of(context).colorScheme.onPrimary),
             child: Row(
               children: <Widget>[
+                Padding(padding: EdgeInsets.only(left: 10)),
                 Text("Server Connection Status: ", style: labelStyle),
                 Text("${serverStatus}", style: statusStyle(serverStatus)),
                 Text("\t\t\t|\t\t\t", style: labelStyle),

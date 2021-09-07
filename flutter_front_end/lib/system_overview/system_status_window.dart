@@ -63,77 +63,59 @@ class SystemStatusWindow extends StatefulWidget {
 }
 
 class _SystemStatusWindowState extends State<SystemStatusWindow> {
-  // late List<SystemContainer2> widgetList;
-
-  // int numOfWidgets = 30;
-
-  // Map<String, Widget> expandedPanelWidgetMap = new Map<String, Widget>();
-
-  // @override
-  // void initState() {
-  //   expandedPanelStatSystem mainEPStats =
-  //       new expandedPanelStatSystem(Colors.black);
-  //   expandedPanelStatSystem mainEPStats2 =
-  //       new expandedPanelStatSystem(Colors.white);
-  //   expandedPanelStatSystem mainEPStats3 =
-  //       new expandedPanelStatSystem(Colors.green);
-
-  //   expandedPanelWidgetMap['System'] = mainEPStats;
-  //   expandedPanelWidgetMap['System2'] = mainEPStats2;
-  //   expandedPanelWidgetMap['System3'] = mainEPStats3;
-  // }
 
   @override
   Widget build(BuildContext context) {
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
-    int numOfCols;
+    int numOfCols = 3;
 
-    if (screenWidth < 718) {
-      numOfCols = 1;
-    } else if (screenWidth >= 718 && screenWidth < 1036) {
-      numOfCols = 2;
-    } else if (screenWidth >= 1036 && screenWidth < 1354) {
-      numOfCols = 3;
-    } else if (screenWidth >= 1354 && screenWidth < 1672) {
-      numOfCols = 4;
-    } else if (screenWidth >= 1672 && screenWidth < 1990) {
-      numOfCols = 5;
-    } else {
-      numOfCols = 6;
-    }
+    // if (screenWidth < 718) {
+    //   numOfCols = 1;
+    // } else if (screenWidth >= 718 && screenWidth < 1036) {
+    //   numOfCols = 2;
+    // } else if (screenWidth >= 1036 && screenWidth < 1354) {
+    //   numOfCols = 3;
+    // } else if (screenWidth >= 1354 && screenWidth < 1672) {
+    //   numOfCols = 4;
+    // } else if (screenWidth >= 1672 && screenWidth < 1990) {
+    //   numOfCols = 5;
+    // } else {
+    //   numOfCols = 6;
+    // }
 
     return Scaffold(
       backgroundColor: status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 61) : Color.fromARGB(255, 238, 240, 235),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: numOfCols,
-                  mainAxisSpacing: 1,
-                  crossAxisSpacing: 1,
-                  childAspectRatio: 1.75),
-              itemBuilder: (_, i) => SystemContainerWidget(
-                containerName: SystemContainerSet.items[i].id,
-                creationDate: SystemContainerSet.items[i].creationDate,
-              ),
-              itemCount: SystemContainerSet.itemCount,
-              padding: EdgeInsets.all(25),
-            ),
-          ),
-          // Divider(
-          //   height: 25.0,
-          //   thickness: 5,
-          //   color: Colors.grey.shade900,
-          // ),
-          // expandedPanel(this.expandedPanelWidgetMap),
-        ],
+      body: Container(
+        alignment: Alignment.center,
+        child: ContainerGrid(numOfCols: numOfCols),
       ),
     );
+  }
+}
+
+class ContainerGrid extends StatelessWidget {
+  const ContainerGrid({
+    Key? key,
+    required this.numOfCols,
+  }) : super(key: key);
+
+  final int numOfCols;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: numOfCols,
+            mainAxisSpacing: 1,
+            crossAxisSpacing: 1,
+            childAspectRatio: 1.5),
+        itemBuilder: (_, i) => SystemContainerWidget(
+          containerName: SystemContainerSet.items[i].id,
+          creationDate: SystemContainerSet.items[i].creationDate,
+        ),
+        itemCount: SystemContainerSet.itemCount,
+      );
   }
 }

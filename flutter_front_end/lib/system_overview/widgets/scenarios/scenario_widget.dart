@@ -34,6 +34,9 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   late Animation? _progressAnimation;
   late Animation<Offset> _positionAnimation;
   late Animation<double> _fadeAnimation;
+
+  final double height = 160.0;
+  final double width = 45.0;
   // late Animation<Color?>? _colorAnimation;
 
   // final Color bgColor = Color.fromARGB(255, 147, 159, 92);
@@ -45,7 +48,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
         AnimationController(duration: const Duration(seconds: 2), vsync: this);
 
     animStatus = widget.animStatus;
-    animator = ScenarioAnimator(_controller);
+    animator = ScenarioAnimator(_controller, height);
 
     super.initState();
 
@@ -190,8 +193,8 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                             ),
                           ]
                         ),
-                        width: 45,
-                        height: 175,
+                        width: width,
+                        height: height,
                       ),
                     ),
                     Container(
@@ -201,7 +204,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                             Radius.circular(8.0),
                           ),
                         ),
-                      width: 45,
+                      width: width,
                       height: _progressAnimation?.value,
                     )
                   ],

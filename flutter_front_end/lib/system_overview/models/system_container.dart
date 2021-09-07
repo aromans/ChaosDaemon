@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_front_end/models/delegate.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 import 'package:intl/intl.dart';
 import 'dart:collection';
@@ -41,6 +42,8 @@ class SystemContainer with ChangeNotifier {
   ListQueue<Scenario>? scenarioQueue;
   Map<String, Scenario> scenarioHistory = {};
 
+  late Delegate eventNotifier;
+
   SystemContainer({
     required this.id,
     this.uptime,
@@ -69,5 +72,7 @@ class SystemContainer with ChangeNotifier {
     this.animStatus = ScenarioAnimController();
 
     this.containerStatus = stringToStatus(stringStatus);
+    
+    eventNotifier = Delegate();
   }
 }

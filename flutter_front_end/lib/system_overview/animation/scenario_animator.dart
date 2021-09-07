@@ -28,7 +28,9 @@ class ScenarioAnimator {
 
   late AnimationInfo<Color> transitionColor;
 
-  ScenarioAnimator(this._controller) {
+  final double barHeight;
+
+  ScenarioAnimator(this._controller, this.barHeight) {
     // -- Idle --
     basePos = AnimationInfo<Offset>(
       Offset(0, 0),
@@ -269,12 +271,12 @@ class ScenarioAnimator {
   }
 
     Animation<double> idleFillProgressBar() {
-    return Tween(begin: 175.0, end: 175.0).animate(CurvedAnimation(
+    return Tween(begin: barHeight, end: barHeight).animate(CurvedAnimation(
         parent: _controller, curve: Interval(0.0, 0.0, curve: Curves.linear)));
   }
 
   Animation<double> loadingProgressBar() {
-    return Tween(begin: 0.0, end: 175.0).animate(CurvedAnimation(
+    return Tween(begin: 0.0, end: barHeight).animate(CurvedAnimation(
         parent: _controller, curve: Interval(0.1, 1.0, curve: Curves.linear)));
   }
 

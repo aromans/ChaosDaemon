@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_front_end/widgets/log_window.dart';
 import 'package:provider/provider.dart';
 
 // Custom files
@@ -11,6 +12,7 @@ import 'package:flutter_front_end/widgets/chat_message.dart';
 import 'package:flutter_front_end/widgets/status_bar.dart';
 import 'package:flutter_front_end/system_overview/system_status_window.dart';
 import 'package:flutter_front_end/models/dark_mode_status.dart';
+import 'package:flutter_front_end/widgets/scenario_window.dart';
 import 'system_overview/models/system_container_set.dart';
 import 'package:window_size/window_size.dart';
 
@@ -149,35 +151,33 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             /* SCENARIO WINDOW (LEFT SIDE) */
-            // Expanded(
-            //   child: Container(
-            //       //width: MediaQuery.of(context).size.width * 0.25 - 10,
-            //       //height: MediaQuery.of(context).size.height,
-            //       child: scenarioWindow()),
-            //   /* SOA-ESB STATUS WINDOW (MIDDLE) */
-            // ),
-            // VerticalDivider(
-            //   thickness: 5,
-            //   color: Colors.grey.shade900,
-            //   width: 5,
-            // ),
             Container(
-              width: MediaQuery.of(context).size.width * 1,
+                  width: MediaQuery.of(context).size.width * 0.2 - 10,
+                  height: MediaQuery.of(context).size.height,
+                  child: ScenarioWindow(),
+              /* SOA-ESB STATUS WINDOW (MIDDLE) */
+            ),
+            VerticalDivider(
+              thickness: 5,
+              color: Colors.grey.shade900,
+              width: 5,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width * 0.6,
               height: MediaQuery.of(context).size.height,
               color: Colors.grey.shade200,
               child: SystemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
-            // VerticalDivider(
-            //   thickness: 5,
-            //   color: Colors.grey.shade900,
-            //   width: 5,
-            // ),
-            // Expanded(
-            //   child: Container(
-            //       //width: MediaQuery.of(context).size.width * 0.25 - 10,
-            //       //height: MediaQuery.of(context).size.height,
-            //       child: logWindow(messages: messages)),
+            VerticalDivider(
+              thickness: 5,
+              color: Colors.grey.shade900,
+              width: 5,
+            ),
+            Container(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  height: MediaQuery.of(context).size.height,
+                  child: LogWindow(messages: messages),
             // TextFormField(
             //     onChanged: (String? value) {
             //       this.command = value;
@@ -186,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //       border: UnderlineInputBorder(),
             //       labelText: 'Send your command!',
             //     )),
-            // )
+            ),
           ],
         ),
       ),
