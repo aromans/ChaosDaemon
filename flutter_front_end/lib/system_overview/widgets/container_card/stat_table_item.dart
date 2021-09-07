@@ -6,11 +6,13 @@ class StatTableItem extends StatelessWidget {
   String? header = "";
   String body;
   String? trailer = "";
+  Color? textColor = Colors.white;
 
   StatTableItem({
     this.header,
     required this.body,
     this.trailer,
+    this.textColor
   });
 
   @override
@@ -27,7 +29,7 @@ class StatTableItem extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodyText1!
-                .copyWith(fontWeight: FontWeight.bold),
+                .copyWith(fontWeight: FontWeight.bold, color: this.textColor),
           ),
           TextSpan(
             text: " ${trailer}",

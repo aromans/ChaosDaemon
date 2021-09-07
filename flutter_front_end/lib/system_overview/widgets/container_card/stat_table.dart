@@ -21,7 +21,6 @@ class StatTable extends StatefulWidget {
 }
 
 class StateTableState extends State<StatTable> {
-
   @override
   Widget build(BuildContext context) {
     // SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
@@ -35,6 +34,11 @@ class StateTableState extends State<StatTable> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              StatTableItem(
+                header: 'Status',
+                body: 'Healthy',
+                trailer: '',
+              ),
               StatTableItem(
                 header: 'Uptime',
                 body: '${container.uptime!.toStringAsFixed(2)}',

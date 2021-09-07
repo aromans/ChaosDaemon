@@ -8,11 +8,6 @@ import '../../models/scenario.dart';
 
 import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
 
-enum SystemStatus {
-  healthy,
-  unhealthy,
-  dead,
-}
 
 class SystemContainer with ChangeNotifier {
   final String id;

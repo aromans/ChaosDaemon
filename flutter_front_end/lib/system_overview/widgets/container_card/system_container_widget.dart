@@ -26,28 +26,71 @@ class SystemContainerWidget extends StatefulWidget {
   _SystemContainerWidgetState createState() => _SystemContainerWidgetState();
 }
 
-class _SystemContainerWidgetState extends State<SystemContainerWidget> {
+class _SystemContainerWidgetState extends State<SystemContainerWidget>
+    with SingleTickerProviderStateMixin {
   final double containerHeight = 175.0;
 
   final double containerWidth = 225.0;
 
-  final double borderWidth = 5.0;
+  final double borderWidth = 3.0;
 
   final double borderRadius = 30.0;
 
-  Color containerColor = Color.fromARGB(255, 0, 0, 139);
+  SystemContainer.SystemStatus systemStatus = SystemContainer.SystemStatus.dead;
 
+  Color containerColor = Color.fromARGB(255, 0, 0, 139);
+  Color unhealthyColor = Color.fromARGB(255, 255, 221, 74);
+  Color deadColor = Color.fromARGB(255, 216, 0, 50);
+  Color healthyColor = Color.fromARGB(255, 5, 158, 53);
+
+  double t = 0.0;
   final double fontSize = 36;
+
+  Tooltip statusIcon(SystemStatus ss) {
+    if (ss == SystemStatus.healthy) {
+      return Tooltip(
+        message: 'Healthy',
+        child: Icon(
+          CupertinoIcons.wifi,
+          color: this.healthyColor,
+        ),
+      );
+    } else if (ss == SystemStatus.unhealthy) {
+      return Tooltip(
+        message: 'Unhealthy',
+        child: Icon(
+          CupertinoIcons.wifi_exclamationmark,
+          color: this.unhealthyColor,
+        ),
+      );
+    } else {
+      return Tooltip(
+        message: 'Out of service',
+        child: Icon(
+          CupertinoIcons.wifi_slash,
+          color: this.deadColor,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
+    if (t < 1) {
+      t += 0.1;
+    } else {
+      t = 1.0;
+    }
+    this.containerColor = status.darkModeEnabled
+        ? Color.fromARGB(255, 0, 0, 139)
+        : Color.fromARGB(255, 65, 105, 225);
 
-    this.containerColor =
-        status.darkModeEnabled ? Color.fromARGB(255, 0, 0, 139) : Color.fromARGB(255, 65, 105, 225);
+    SystemContainer objectContainer =
+        SystemContainerSet.findById(widget.containerName!);
 
-    SystemContainer objectContainer = SystemContainerSet.findById(widget.containerName!);
+    this.systemStatus = objectContainer.containerStatus;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -69,51 +112,69 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget> {
             },
             child: Container(
               decoration: BoxDecoration(
-                color: this.containerColor,
-                shape: BoxShape.rectangle,
-                borderRadius:
-                    BorderRadius.all(Radius.circular(this.borderRadius)),
-                border: Border.all(
-                  width: this.borderWidth,
                   color: this.containerColor,
-                ),
-              ),
+                  shape: BoxShape.rectangle,
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(this.borderRadius)),
+                  border: Border.all(
+                    width: this.borderWidth,
+                    color: Color.lerp(
+                      this.containerColor,
+                      this.containerColor,
+                      0.5,
+                    )!,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color.fromARGB(255, 0, 0, 20).withOpacity(0.2),
+                      spreadRadius: 5,
+                      blurRadius: 5,
+                      offset: Offset(0, 5),
+                    ),
+                  ]),
               width: this.containerWidth,
               height: this.containerHeight,
               child: Column(
                 children: <Widget>[
                   Expanded(
                     child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          IconButton(
-                            onPressed: () => {print("Refresh Me!")},
-                            icon: Icon(CupertinoIcons.arrow_clockwise),
-                            color: Colors.white,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 20.0),
-                            child: Column(
-                              children: [
-                                Text(
-                                  this.widget.containerName!,
-                                  style: Theme.of(context).textTheme.headline1,
-                                ),
-                                Text(
-                                  this.widget.creationDate!,
-                                  style: Theme.of(context).textTheme.bodyText2,
-                                )
-                              ],
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                          left: 3,
+                          right: 3,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              child: statusIcon(systemStatus),
+                              margin: EdgeInsets.all(8.0),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () => {print("Graph Me!")},
-                            icon: Icon(CupertinoIcons.graph_square),
-                            color: Colors.white,
-                          ),
-                        ],
+                            Padding(
+                              padding: const EdgeInsets.only(top: 20.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    this.widget.containerName!,
+                                    style:
+                                        Theme.of(context).textTheme.headline1,
+                                  ),
+                                  Text(
+                                    this.widget.creationDate!,
+                                    style:
+                                        Theme.of(context).textTheme.bodyText2,
+                                  )
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () => {print("Graph Me!")},
+                              icon: Icon(CupertinoIcons.graph_square),
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

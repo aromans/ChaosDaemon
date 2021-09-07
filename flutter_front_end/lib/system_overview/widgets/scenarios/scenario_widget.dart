@@ -162,35 +162,56 @@ class ScenarioWidgetState extends State<ScenarioWidget>
         ? Color.fromARGB(255, 239, 35, 60)
         : Color.fromARGB(255, 205, 0, 0);
     return FadeTransition(
-        opacity: _fadeAnimation,
-        child: SlideTransition(
-            position: _positionAnimation,
-            child: Container(
-                child: Stack(alignment: Alignment.topCenter, children: [
+      opacity: _fadeAnimation,
+      child: SlideTransition(
+        position: _positionAnimation,
+        child: Container(
+          child: Stack(
+            alignment: Alignment.topCenter,
+            children: [
               Align(
-                  child: Stack(alignment: Alignment.bottomCenter, children: [
-                MouseRegion(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        color: bgColor,
-                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                    width: 45,
-                    height: 175,
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                      color: fillColor,
-                      borderRadius: BorderRadius.all(Radius.circular(8.0))),
-                  width: 45,
-                  height: _progressAnimation?.value,
-                )
-              ])),
-              Align(
-                  child: RotatedBox(
-                      quarterTurns: 3,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
+                  children: [
+                    MouseRegion(
                       child: Container(
-                          child: Stack(children: [
+                        decoration: BoxDecoration(
+                          color: bgColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                        ),
+                        width: 45,
+                        height: 175,
+                      ),
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                          color: fillColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8.0),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Color.fromARGB(255, 14, 14, 14)
+                                  .withOpacity(0.5),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: Offset(2, 2),
+                            ),
+                          ]),
+                      width: 45,
+                      height: _progressAnimation?.value,
+                    )
+                  ],
+                ),
+              ),
+              Align(
+                child: RotatedBox(
+                  quarterTurns: 3,
+                  child: Container(
+                    child: Stack(
+                      children: [
                         Text('Scenario',
                             textWidthBasis: TextWidthBasis.parent,
                             style: Theme.of(context).textTheme.headline1
@@ -206,8 +227,16 @@ class ScenarioWidgetState extends State<ScenarioWidget>
                           'Scenario',
                           style: Theme.of(context).textTheme.headline1,
                         )
-                      ])))),
-            ]))));
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> ControlAnimations() async {
