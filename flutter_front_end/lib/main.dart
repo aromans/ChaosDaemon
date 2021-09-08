@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_front_end/widgets/expanded_panel.dart';
+import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
 import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
 import 'package:flutter_front_end/widgets/log_window.dart';
 import 'package:provider/provider.dart';
@@ -169,20 +170,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
-              child: ExpandedPanel(
-                left: true,
-                top: false,
-                vertical: true,
-                widgetMap: {
-                  'Stats': ExpandedPanelStatSystem(
-                    Colors.black,
-                  ),
-                },
-                panelDecoration: scenarioPanelBoxDecoration,
-              ),
-            ),
-            SizedBox(
-              width: 50,
+              child: ExpandablePanelVert(true, 250, Color.fromARGB(255, 46, 40, 54)),
             ),
             // VerticalDivider(
             //   thickness: 5,
@@ -220,17 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
-              child: ExpandedPanel(
-                left: false,
-                top: false,
-                vertical: true,
-                widgetMap: {
-                  'Stats': ExpandedPanelStatSystem(
-                    Colors.black,
-                  ),
-                },
-                panelDecoration: scenarioPanelBoxDecoration,
-              ),
+              child: ExpandablePanelVert(false, 250, Color.fromARGB(255, 46, 40, 54)),
             ),
           ],
         ),

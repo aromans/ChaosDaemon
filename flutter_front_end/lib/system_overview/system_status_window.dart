@@ -1,5 +1,6 @@
 import 'dart:ui';
-import 'package:flutter_front_end/widgets/expanded_panel.dart';
+import 'package:flutter_front_end/widgets/expandable_panel_horz.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
 import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
 import 'package:intl/intl.dart';
 
@@ -94,6 +95,27 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
     //   numOfCols = 6;
     // }
 
+    // TODO: Add to UTILS class
+    BoxDecoration ContainerBoxStyle(
+      Color color, double radius, double borderWidth) {
+      return BoxDecoration(
+          color: color,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.all(Radius.circular(radius)),
+          border: Border.all(
+            width: borderWidth,
+            color: color,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Color.fromARGB(255, 0, 0, 20).withOpacity(0.2),
+              spreadRadius: 5,
+              blurRadius: 5,
+              offset: Offset(0, 5),
+            ),
+          ]);
+    }
+
     return Scaffold(
       backgroundColor: status.darkModeEnabled
           ? Color.fromARGB(255, 0, 0, 61)
@@ -104,16 +126,10 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
         children: [
           Container(
             margin: EdgeInsets.all(20),
-            child: ExpandedPanel(
-              left: false,
-              top: true,
-              vertical: false,
-              widgetMap: {
-                'Stats': ExpandedPanelStatSystem(
-                  Colors.black,
-                ),
-              },
-              panelDecoration: systemTopPanelDecoration,
+            child: ExpandablePanelHorz(
+              true, 
+              300, 
+              ContainerBoxStyle(Color.fromARGB(255, 46, 40, 54), 30.0, 3.0),
             ),
           ),
           // Padding(
