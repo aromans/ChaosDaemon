@@ -1,4 +1,6 @@
 import 'dart:ui';
+import 'package:flutter_front_end/widgets/expanded_panel.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
 import 'package:intl/intl.dart';
 
 // import 'package:flutter/gestures.dart';
@@ -72,6 +74,12 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
     double screenWidth = MediaQuery.of(context).size.width;
     int numOfCols = 3;
 
+    BoxDecoration systemTopPanelDecoration = BoxDecoration(
+      color: Color.fromARGB(255, 19, 21, 22),
+      shape: BoxShape.rectangle,
+      borderRadius: BorderRadius.all(Radius.circular(15)),
+    );
+
     // if (screenWidth < 718) {
     //   numOfCols = 1;
     // } else if (screenWidth >= 718 && screenWidth < 1036) {
@@ -94,14 +102,28 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: SystemContainerOverviewWidget(
-              containerName: 'System',
-              creationDate:
-                  DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now()),
+          Container(
+            margin: EdgeInsets.all(20),
+            child: ExpandedPanel(
+              left: false,
+              top: true,
+              vertical: false,
+              widgetMap: {
+                'Stats': ExpandedPanelStatSystem(
+                  Colors.black,
+                ),
+              },
+              panelDecoration: systemTopPanelDecoration,
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+          //   child: SystemContainerOverviewWidget(
+          //     containerName: 'System',
+          //     creationDate:
+          //         DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now()),
+          //   ),
+          // ),
           Expanded(
             child: Container(
               alignment: Alignment.center,

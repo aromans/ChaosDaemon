@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_front_end/widgets/expanded_panel.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
 import 'package:flutter_front_end/widgets/log_window.dart';
 import 'package:provider/provider.dart';
 
@@ -145,47 +147,90 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    BoxDecoration scenarioPanelBoxDecoration = BoxDecoration(
+      color: Color.fromARGB(255, 19, 21, 22),
+      shape: BoxShape.rectangle,
+      borderRadius: BorderRadius.all(Radius.circular(0)),
+    );
+
     return Scaffold(
+      backgroundColor: Color.fromARGB(255, 0, 0, 61),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             /* SCENARIO WINDOW (LEFT SIDE) */
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.2 - 7,
+            //   height: MediaQuery.of(context).size.height,
+            //   child: ScenarioWindow(),
+            //   /* SOA-ESB STATUS WINDOW (MIDDLE) */
+            // ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.2 - 7,
-              height: MediaQuery.of(context).size.height,
-              child: ScenarioWindow(),
-              /* SOA-ESB STATUS WINDOW (MIDDLE) */
+              margin: EdgeInsets.all(0),
+              alignment: Alignment.centerLeft,
+              child: ExpandedPanel(
+                left: true,
+                top: false,
+                vertical: true,
+                widgetMap: {
+                  'Stats': ExpandedPanelStatSystem(
+                    Colors.black,
+                  ),
+                },
+                panelDecoration: scenarioPanelBoxDecoration,
+              ),
             ),
-            VerticalDivider(
-              thickness: 5,
-              color: Colors.grey.shade900,
-              width: 5,
+            SizedBox(
+              width: 50,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: MediaQuery.of(context).size.height,
-              color: Colors.grey.shade200,
+            // VerticalDivider(
+            //   thickness: 5,
+            //   color: Colors.grey.shade900,
+            //   width: 5,
+            // ),
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.6,
+            //   height: MediaQuery.of(context).size.height,
+            //   color: Colors.grey.shade200,
+            //   child: SystemStatusWindow(),
+            // ),
+            Expanded(
               child: SystemStatusWindow(),
             ),
             /* LOG VIEW WINDOW (RIGHT SIDE) */
-            VerticalDivider(
-              thickness: 5,
-              color: Colors.grey.shade900,
-              width: 5,
-            ),
+            // VerticalDivider(
+            //   thickness: 5,
+            //   color: Colors.grey.shade900,
+            //   width: 5,
+            // ),
+            // Container(
+            //   width: MediaQuery.of(context).size.width * 0.2 - 7,
+            //   height: MediaQuery.of(context).size.height,
+            //   child: LogWindow(messages: messages),
+            //   // TextFormField(
+            //   //     onChanged: (String? value) {
+            //   //       this.command = value;
+            //   //     },
+            //   //     decoration: InputDecoration(
+            //   //       border: UnderlineInputBorder(),
+            //   //       labelText: 'Send your command!',
+            //   //     )),
+            // ),
             Container(
-              width: MediaQuery.of(context).size.width * 0.2 - 7,
-              height: MediaQuery.of(context).size.height,
-              child: LogWindow(messages: messages),
-              // TextFormField(
-              //     onChanged: (String? value) {
-              //       this.command = value;
-              //     },
-              //     decoration: InputDecoration(
-              //       border: UnderlineInputBorder(),
-              //       labelText: 'Send your command!',
-              //     )),
+              margin: EdgeInsets.all(0),
+              alignment: Alignment.centerLeft,
+              child: ExpandedPanel(
+                left: false,
+                top: false,
+                vertical: true,
+                widgetMap: {
+                  'Stats': ExpandedPanelStatSystem(
+                    Colors.black,
+                  ),
+                },
+                panelDecoration: scenarioPanelBoxDecoration,
+              ),
             ),
           ],
         ),
