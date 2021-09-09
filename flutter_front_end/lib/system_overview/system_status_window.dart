@@ -1,59 +1,37 @@
 import 'dart:ui';
-import 'package:flutter_front_end/widgets/expandable_panel_horz.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
-import 'package:intl/intl.dart';
-
-// import 'package:flutter/gestures.dart';
+import 'package:charts_flutter/flutter.dart' hide Color;
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_front_end/models/dark_mode_status.dart';
+import 'package:flutter_front_end/widgets/panel_icon_widget.dart';
 import 'package:provider/provider.dart';
-//import 'package:flutter/services.dart';
-//import 'package:touchable/touchable.dart';
 
-// import 'package:flutter_front_end/widgets/currentScenarioStat.dart';
-// import 'package:flutter_front_end/widgets/nextScenarioStat.dart';
-// import 'package:flutter_front_end/widgets/expandedPanelStatSystem.dart';
-//import '../widgets/expandedPanel.dart';
-
-// import '../widgets/Vector.dart';
-//import '../widgets/systemContainer.dart';
+/* OURS */
+import 'package:flutter_front_end/models/dark_mode_status.dart';
 import 'widgets/container_card/system_container_widget.dart';
-import 'widgets/container_card/system_container_overview_widget.dart';
 import 'models/system_container_set.dart';
+import 'package:flutter_front_end/widgets/expandable_panel_horz.dart';
 
-// Paint AnalyzeStatus(String value) {
-//   switch (value) {
-//     case "up":
-//       return green();
-//     case "scenario":
-//       return orange();
-//     case "down":
-//       return red();
-//     default:
-//       return black();
-//   }
-// }
+class DataPoint {
+  final int x;
+  final int y;
 
-// String SelectContainer(Offset screenPos) {
-//   for (int i = 0; i < containers.length; i++) {
-//     if (containers[i].Selected(screenPos)) {
-//       return containers[i].label;
-//     }
-//   }
-//   return "";
-// }
+  DataPoint(this.x, this.y);
+}
 
-// void hover(Offset pointerPos) {
-//   SystemContainer? container;
-//   for (int i = 0; i < containers.length; i++) {
-//     if (containers[i].Selected(pointerPos)) {
-//       container = containers[i];
-//     }
-//   }
-// }
+class TestLineChart extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return _TestLineChartState();
+  }
+}
+
+class _TestLineChartState extends State<TestLineChart> {
+  
+  
+  @override
+  Widget build(BuildContext context) {}
+}
 
 //ignore: must_be_immutable
 class SystemStatusWindow extends StatefulWidget {
@@ -81,6 +59,61 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
       borderRadius: BorderRadius.all(Radius.circular(15)),
     );
 
+    List<Series<DataPoint, int>> _createLineSampleData() {
+      final data = [
+        new DataPoint(0, 5),
+        new DataPoint(1, 25),
+        new DataPoint(2, 100),
+        new DataPoint(3, 75),
+      ];
+      return [
+        new Series<DataPoint, int>(
+          id: 'Random',
+          colorFn: (_, __) => MaterialPalette.blue.shadeDefault,
+          domainFn: (DataPoint point, _) => point.x,
+          measureFn: (DataPoint point, _) => point.y,
+          data: data,
+        )
+      ];
+    }
+
+    List<Series<DataPoint, String>> _createBarSampleData() {
+      final data = [
+        new DataPoint(0, 5),
+        new DataPoint(1, 25),
+        new DataPoint(2, 100),
+        new DataPoint(3, 75),
+      ];
+      return [
+        new Series<DataPoint, String>(
+          id: 'Random',
+          colorFn: (_, __) => MaterialPalette.red.shadeDefault,
+          domainFn: (DataPoint point, _) => point.x.toString(),
+          measureFn: (DataPoint point, _) => point.y,
+          data: data,
+        )
+      ];
+    }
+
+    LineChart testLineChart = LineChart(_createLineSampleData());
+    BarChart testBarChart = BarChart(_createBarSampleData());
+    Map<String, PanelIconWidget> testWidgetMap = {};
+
+    PanelIconWidget lineChart = PanelIconWidget(
+      name: 'Line Chart',
+      icon: Icon(CupertinoIcons.graph_circle),
+      widget: testLineChart,
+    );
+
+    PanelIconWidget barChart = PanelIconWidget(
+      name: 'Bar Chart',
+      icon: Icon(CupertinoIcons.chart_bar),
+      widget: testBarChart,
+    );
+
+    testWidgetMap['Line Chart'] = lineChart;
+    testWidgetMap['Bar Chart'] = barChart;
+
     // if (screenWidth < 718) {
     //   numOfCols = 1;
     // } else if (screenWidth >= 718 && screenWidth < 1036) {
@@ -97,7 +130,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
 
     // TODO: Add to UTILS class
     BoxDecoration ContainerBoxStyle(
-      Color color, double radius, double borderWidth) {
+        Color color, double radius, double borderWidth) {
       return BoxDecoration(
           color: color,
           shape: BoxShape.rectangle,
@@ -124,22 +157,22 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          /* TOP SYSTEM OVERVIEW */
           Container(
             margin: EdgeInsets.all(20),
             child: ExpandablePanelHorz(
-              true, 
-              300, 
-              ContainerBoxStyle(Color.fromARGB(255, 46, 40, 54), 30.0, 3.0),
+              topSide: true,
+              maxHeight: 300,
+              panelDecor: ContainerBoxStyle(
+                Color.fromARGB(255, 46, 40, 54),
+                30.0,
+                3.0,
+              ),
+              iconWidgets: testWidgetMap,
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-          //   child: SystemContainerOverviewWidget(
-          //     containerName: 'System',
-          //     creationDate:
-          //         DateFormat('yyyy-MM-dd, hh:mm').format(DateTime.now()),
-          //   ),
-          // ),
+
+          /* CONTAINER GRID */
           Expanded(
             child: Container(
               alignment: Alignment.center,

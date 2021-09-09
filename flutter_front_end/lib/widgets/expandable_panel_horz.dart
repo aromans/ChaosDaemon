@@ -3,39 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_front_end/components/dotted_decoration.dart';
 import 'package:flutter_front_end/system_overview/models/system_status.dart';
+import 'package:flutter_front_end/widgets/panel_icon_widget.dart';
 
 class ExpandablePanelHorz extends StatefulWidget {
-  ExpandablePanelHorz(this.topSide, this.maxHeight, this.panelDecor, {Key? key}) : super(key: key);
-
   final bool topSide;
-  final BoxDecoration panelDecor;
-
   double maxHeight;
+  final BoxDecoration panelDecor;
+  final Map<String, PanelIconWidget> iconWidgets;
+  ExpandablePanelHorz({
+    required this.topSide,
+    required this.maxHeight,
+    required this.panelDecor,
+    required this.iconWidgets,
+  });
 
   @override
   State<StatefulWidget> createState() => HorzPanelState(maxHeight);
 }
 
-class HorzPanelState extends State<ExpandablePanelHorz> with TickerProviderStateMixin {
-
+class HorzPanelState extends State<ExpandablePanelHorz>
+    with TickerProviderStateMixin {
   late AnimationController _controller;
 
   late Animation<double> _changeHeight;
   late Animation<double> _rotateArrow;
   late Animation<double> _widgetOpacity;
+  late Widget? selectedWidget = null;
 
   bool _isExpanded = false;
 
   HorzPanelState(double height) {
-    _controller = AnimationController(duration: Duration(seconds: 1), vsync: this);
+    _controller =
+        AnimationController(duration: Duration(seconds: 1), vsync: this);
 
     _changeHeight = Tween<double>(begin: 40, end: height).animate(
       CurvedAnimation(
-        parent: _controller, 
-        curve: Interval(
-          0.0, 
-          1.0, 
-          curve: Curves.easeInOutCubic),
+        parent: _controller,
+        curve: Interval(0.0, 1.0, curve: Curves.easeInOutCubic),
       ),
     );
 
@@ -96,14 +100,19 @@ class HorzPanelState extends State<ExpandablePanelHorz> with TickerProviderState
   }
 
   Icon _getArrowIcon() {
-    if (widget.topSide) 
-      return Icon(CupertinoIcons.arrowtriangle_down_fill, color: Colors.white,);
-    return Icon(CupertinoIcons.arrowtriangle_up_fill, color: Colors.white,);
+    if (widget.topSide)
+      return Icon(
+        CupertinoIcons.arrowtriangle_down_fill,
+        color: Colors.white,
+      );
+    return Icon(
+      CupertinoIcons.arrowtriangle_up_fill,
+      color: Colors.white,
+    );
   }
 
   Alignment _getAlignment() {
-    if (widget.topSide) 
-      return Alignment.topRight;
+    if (widget.topSide) return Alignment.topRight;
     return Alignment.topRight;
   }
 
@@ -113,48 +122,60 @@ class HorzPanelState extends State<ExpandablePanelHorz> with TickerProviderState
     } else {
       _controller.reverse();
     }
-    _isExpanded = !_isExpanded;
+    setState(() {
+      _isExpanded = !_isExpanded;
+    });
   }
 
   List<Widget> _builtWidgetButtons() {
-  
     List<Widget> wList = [
-      SizedBox(width: 10,),
+      SizedBox(
+        width: 10,
+      ),
       Container(
         alignment: Alignment.topLeft,
         padding: const EdgeInsets.only(top: 5.0),
         child: statusIcon(SystemStatus.healthy),
       ),
-      SizedBox(width: 30,),
+      SizedBox(
+        width: 30,
+      ),
       Container(
         alignment: Alignment.topLeft,
         padding: const EdgeInsets.only(top: 7.5),
         child: Text(
-          "Stuff",
+          "System",
           style: Theme.of(context).textTheme.headline1,
         ),
       ),
-      SizedBox(width: 30,),
+      SizedBox(
+        width: 30,
+      ),
     ];
 
-    for (int i = 0; i < 5; i++) {
+    widget.iconWidgets.forEach((key, value) {
       wList.add(Container(
         alignment: Alignment.topLeft,
         padding: const EdgeInsets.only(top: 5.0),
         margin: const EdgeInsets.only(right: 15.0),
-        child: IconButton(
-          alignment: Alignment.topCenter,
-          iconSize: 24,
-          color: Colors.amber,
-          padding: EdgeInsets.all(0.0),
-          onPressed: () {
-            print("Show something");
-            if (!_isExpanded) movePanel();
-          }, 
-          icon: Icon(CupertinoIcons.badge_plus_radiowaves_right),
+        child: Tooltip(
+          message: value.name,
+          child: IconButton(
+            alignment: Alignment.topCenter,
+            iconSize: 24,
+            color: Colors.amber,
+            padding: EdgeInsets.all(0.0),
+            onPressed: () {
+              setState(() {
+                this.selectedWidget = value.widget;
+              });
+              if (!_isExpanded) movePanel();
+            },
+            icon: value.icon,
+          ),
         ),
       ));
-    }
+    });
 
     return wList;
   }
@@ -189,12 +210,22 @@ class HorzPanelState extends State<ExpandablePanelHorz> with TickerProviderState
                     width: MediaQuery.of(context).size.width * 0.68,
                     height: widget.maxHeight * 0.8,
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(255, 0, 0, 25)
-                          .withOpacity(0.5),
+                      color: Color.fromARGB(255, 0, 0, 25).withOpacity(0.5),
                       shape: BoxShape.rectangle,
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
                   ),
+                  Container(
+                    margin: EdgeInsets.only(top: 20),
+                    width: MediaQuery.of(context).size.width * 0.68,
+                    height: widget.maxHeight * 0.8,
+                    alignment: Alignment.center,
+                    child: selectedWidget == null
+                        ? Text('Nothing selected')
+                        : Expanded(
+                            child: selectedWidget!,
+                          ),
+                  )
                 ],
               ),
             ),
@@ -210,7 +241,7 @@ class HorzPanelState extends State<ExpandablePanelHorz> with TickerProviderState
               child: IconButton(
                 padding: EdgeInsets.all(0.0),
                 onPressed: movePanel,
-                color: Color.fromARGB(255, 0, 0, 20), 
+                color: Color.fromARGB(255, 0, 0, 20),
                 icon: _getArrowIcon(),
               ),
             ),
@@ -220,10 +251,8 @@ class HorzPanelState extends State<ExpandablePanelHorz> with TickerProviderState
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(animation: _controller, builder: _buildPanel);
   }
-
 }

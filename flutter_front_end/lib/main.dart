@@ -160,38 +160,42 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
             /* SCENARIO WINDOW (LEFT SIDE) */
-            // Container(
-            //   width: MediaQuery.of(context).size.width * 0.2 - 7,
-            //   height: MediaQuery.of(context).size.height,
-            //   child: ScenarioWindow(),
-            //   /* SOA-ESB STATUS WINDOW (MIDDLE) */
-            // ),
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
               child: ExpandablePanelVert(true, 250, Color.fromARGB(255, 46, 40, 54)),
             ),
-            // VerticalDivider(
-            //   thickness: 5,
-            //   color: Colors.grey.shade900,
-            //   width: 5,
-            // ),
-            // Container(
-            //   width: MediaQuery.of(context).size.width * 0.6,
-            //   height: MediaQuery.of(context).size.height,
-            //   color: Colors.grey.shade200,
-            //   child: SystemStatusWindow(),
-            // ),
+
+            /* SYSTEM OVERVIEW (MIDDLE) */
             Expanded(
               child: SystemStatusWindow(),
             ),
+            
             /* LOG VIEW WINDOW (RIGHT SIDE) */
-            // VerticalDivider(
-            //   thickness: 5,
-            //   color: Colors.grey.shade900,
-            //   width: 5,
-            // ),
+            Container(
+              margin: EdgeInsets.all(0),
+              alignment: Alignment.centerLeft,
+              child: ExpandablePanelVert(false, 250, Color.fromARGB(255, 46, 40, 54)),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: StatusBar(serverConnection(), "OK"),
+    );
+  }
+
+
+
+  @override
+  void dispose() {
+    widget.channel?.close();
+    super.dispose();
+  }
+}
+
+
             // Container(
             //   width: MediaQuery.of(context).size.width * 0.2 - 7,
             //   height: MediaQuery.of(context).size.height,
@@ -205,48 +209,20 @@ class _MyHomePageState extends State<MyHomePage> {
             //   //       labelText: 'Send your command!',
             //   //     )),
             // ),
-            Container(
-              margin: EdgeInsets.all(0),
-              alignment: Alignment.centerLeft,
-              child: ExpandablePanelVert(false, 250, Color.fromARGB(255, 46, 40, 54)),
-            ),
-          ],
-        ),
-      ),
-      bottomNavigationBar: StatusBar(serverConnection(), "OK"),
-      // floatingActionButton: Row(
-      //   children: [
-      //     FloatingActionButton(
-      //       onPressed: _sendMessage,
-      //       tooltip: 'Send Message',
-      //       child: Icon(Icons.send),
-      //     ),
-      //     FloatingActionButton(
-      //       onPressed: () {
-      //         Navigator.push(
-      //           context,
-      //           new MaterialPageRoute(
-      //               builder: (context) => new SecondScreen()),
-      //         );
-      //       },
-      //       tooltip: 'Go to next screen',
-      //       child: Icon(Icons.access_alarm),
-      //     ),
-      //   ],
-      // ) // This trailing comma makes auto-formatting nicer for build methods.
-    );
-  }
 
-  // void _sendMessage() {
+              // void _sendMessage() {
   //   String message = this.command ?? "";
   //   print("Message: " + message);
   //   widget.channel?.write(message);
   //   this.command = "";
   // }
 
-  @override
-  void dispose() {
-    widget.channel?.close();
-    super.dispose();
-  }
-}
+        // floatingActionButton: Row(
+      //   children: [
+      //     FloatingActionButton(
+      //       onPressed: _sendMessage,
+      //       tooltip: 'Send Message',
+      //       child: Icon(Icons.send),
+      //     ),
+      //   ],
+      // ) // This trailing comma makes auto-formatting nicer for build methods.
