@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'dart:ui';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,24 @@ class SystemStatusWindow extends StatefulWidget {
 }
 
 class _SystemStatusWindowState extends State<SystemStatusWindow> {
+  Timer? timer;
+
+  StreamController<String> controller = StreamController<String>();
+
+  @override
+  void initState() {
+    super.initState();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
@@ -46,23 +65,31 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
 
     bool showAvg = false;
 
+    controller.onListen = () {
+      if (controller.hasListener) {
+        print("HELLO, ITSM E");
+      }
+    };
+
+    Widget obj = Container(
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(
+            Radius.circular(18),
+          ),
+          color: Color(0xff232d37)),
+      child: Padding(
+        padding:
+            const EdgeInsets.only(right: 18.0, left: 12.0, top: 24, bottom: 12),
+        child: LineChart(
+          mainData(),
+        ),
+      ),
+    );
+
     PanelIconWidget barChart = PanelIconWidget(
       name: 'Bar Chart',
       icon: Icon(CupertinoIcons.chart_bar),
-      widget: Container(
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(
-              Radius.circular(18),
-            ),
-            color: Color(0xff232d37)),
-        child: Padding(
-          padding: const EdgeInsets.only(
-              right: 18.0, left: 12.0, top: 24, bottom: 12),
-          child: LineChart(
-            mainData(),
-          ),
-        ),
-      ),
+      widget: obj,
     );
 
     PanelIconWidget barChart2 = PanelIconWidget(
@@ -187,6 +214,37 @@ List<Color> gradientColors = [
   const Color(0xff02d39a),
 ];
 
+List<FlSpot> spotListData = [
+  FlSpot(0, Random().nextDouble() * 3),
+  FlSpot(2.6, Random().nextDouble() * 2),
+  FlSpot(4.9, Random().nextDouble() * 5),
+  FlSpot(6.8, Random().nextDouble() * 3.1),
+  FlSpot(8, Random().nextDouble() * 4),
+  FlSpot(9.5, Random().nextDouble() * 3),
+  FlSpot(11, Random().nextDouble() * 4),
+];
+
+List<FlSpot> avgListData = [
+  FlSpot(0, 3.44),
+  FlSpot(2.6, 3.44),
+  FlSpot(4.9, 3.44),
+  FlSpot(6.8, 3.44),
+  FlSpot(8, 3.44),
+  FlSpot(9.5, 3.44),
+  FlSpot(11, 3.44),
+];
+
+double xPos = 11;
+
+List<FlSpot> addData() {
+  FlSpot chosen = spotListData[Random().nextInt(spotListData.length)];
+  xPos += 0.1 + Random().nextDouble() * 2;
+  spotListData.add(FlSpot(xPos, chosen.y));
+  avgListData.add(FlSpot(xPos, 3.44));
+
+  return spotListData;
+}
+
 LineChartData mainData() {
   return LineChartData(
     gridData: FlGridData(
@@ -218,14 +276,6 @@ LineChartData mainData() {
             fontWeight: FontWeight.bold,
             fontSize: 16),
         getTitles: (value) {
-          switch (value.toInt()) {
-            case 2:
-              return 'MAR';
-            case 5:
-              return 'JUN';
-            case 8:
-              return 'SEP';
-          }
           return '';
         },
         margin: 8,
@@ -257,20 +307,12 @@ LineChartData mainData() {
         show: true,
         border: Border.all(color: const Color(0xff37434d), width: 1)),
     minX: 0,
-    maxX: 11,
+    maxX: 75, //spotListData[spotListData.length - 1].x + 5,
     minY: 0,
     maxY: 6,
     lineBarsData: [
       LineChartBarData(
-        spots: [
-          FlSpot(0, 3),
-          FlSpot(2.6, 2),
-          FlSpot(4.9, 5),
-          FlSpot(6.8, 3.1),
-          FlSpot(8, 4),
-          FlSpot(9.5, 3),
-          FlSpot(11, 4),
-        ],
+        spots: addData(),
         isCurved: true,
         colors: gradientColors,
         barWidth: 5,
@@ -317,14 +359,6 @@ LineChartData avgData() {
             fontWeight: FontWeight.bold,
             fontSize: 16),
         getTitles: (value) {
-          switch (value.toInt()) {
-            case 2:
-              return 'MAR';
-            case 5:
-              return 'JUN';
-            case 8:
-              return 'SEP';
-          }
           return '';
         },
         margin: 8,
@@ -359,20 +393,12 @@ LineChartData avgData() {
         show: true,
         border: Border.all(color: const Color(0xff37434d), width: 1)),
     minX: 0,
-    maxX: 11,
+    maxX: 75, //spotListData[spotListData.length - 1].x + 5,
     minY: 0,
     maxY: 6,
     lineBarsData: [
       LineChartBarData(
-        spots: [
-          FlSpot(0, 3.44),
-          FlSpot(2.6, 3.44),
-          FlSpot(4.9, 3.44),
-          FlSpot(6.8, 3.44),
-          FlSpot(8, 3.44),
-          FlSpot(9.5, 3.44),
-          FlSpot(11, 3.44),
-        ],
+        spots: avgListData,
         isCurved: true,
         colors: [
           ColorTween(begin: gradientColors[0], end: gradientColors[1])
