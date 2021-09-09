@@ -116,6 +116,8 @@ class HorzPanelState extends State<ExpandablePanelHorz>
     return Alignment.topRight;
   }
 
+  Widget? _cachedWidget = null;
+
   void movePanel() {
     if (!_isExpanded) {
       _controller.forward();
@@ -166,9 +168,8 @@ class HorzPanelState extends State<ExpandablePanelHorz>
             color: Colors.amber,
             padding: EdgeInsets.all(0.0),
             onPressed: () {
-              setState(() {
-                this.selectedWidget = value.widget;
-              });
+              setState(() {});
+              this.selectedWidget = value.widget;
               if (!_isExpanded) movePanel();
             },
             icon: value.icon,
@@ -222,10 +223,8 @@ class HorzPanelState extends State<ExpandablePanelHorz>
                     alignment: Alignment.center,
                     child: selectedWidget == null
                         ? Text('Nothing selected')
-                        : Expanded(
-                            child: selectedWidget!,
-                          ),
-                  )
+                        : selectedWidget!,
+                  ),
                 ],
               ),
             ),
