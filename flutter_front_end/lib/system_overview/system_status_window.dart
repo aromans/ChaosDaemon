@@ -88,7 +88,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
 
     PanelIconWidget barChart = PanelIconWidget(
       name: 'Bar Chart',
-      icon: Icon(CupertinoIcons.chart_bar),
+      icon: Icon(CupertinoIcons.graph_circle),
       widget: obj,
     );
 

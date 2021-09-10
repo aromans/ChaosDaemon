@@ -23,14 +23,20 @@ class ScenarioQueue extends StatefulWidget {
 
 class ScenarioQueueState extends State<ScenarioQueue> {
 
-  ScenarioAnimController controller = ScenarioAnimController();
+  late ScenarioAnimController controller;
   List<Widget> the_children = [];
-  int counter = 0;
 
   StreamController<String> _refreshController = StreamController<String>();
 
+  @override
+  void initState() {
+    controller = ScenarioAnimController();
+    widget.container.scenarioQueue! + controller.addToQueue;
+    super.initState();
+  }
+
   void incrementCounter() {
-    if (widget.container.scenarioQueue!.length > 0 && counter < 2) {
+    if (widget.container.scenarioQueue!.length > 0 && widget.container.scenarioCounter < 2) {
       the_children.add(ScenarioWidget(
         widget.container.scenarioQueue!.removeFirst(), 
         controller
@@ -40,15 +46,15 @@ class ScenarioQueueState extends State<ScenarioQueue> {
       the_children.add(VerticalDivider(width: 3.0, color: Color.fromARGB(0, 0, 0, 0),));
 
       _refreshController.add("");
-      counter++;
+      widget.container.scenarioCounter++;
     }
   }
 
   void decrementCounter() {
-    if (counter > 0)
-      counter -= 1;
+    if (widget.container.scenarioCounter > 0)
+      widget.container.scenarioCounter -= 1;
 
-    if (counter <= 0)
+    if (widget.container.scenarioCounter <= 0)
       widget.container.eventNotifier();
   }
 
@@ -56,7 +62,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
     int queueLength = widget.container.scenarioQueue!.length;
     TextStyle extraStyle = Theme.of(context).textTheme.bodyText2!;
 
-    if (counter > 1 && queueLength > 0) {
+    if (queueLength > 0) {
       return RotatedBox(
         quarterTurns: 3, 
         child: Text(
@@ -79,7 +85,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
     controller.waitingIsDone + decrementCounter;
     controller.addToQueue + incrementCounter;
 
-    controller.addToQueue();
+    // controller.addToQueue();
 
     return 
       StreamBuilder(

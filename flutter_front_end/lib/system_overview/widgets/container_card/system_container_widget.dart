@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_front_end/components/dotted_decoration.dart';
 
 import 'package:flutter_front_end/models/dark_mode_status.dart';
+import 'package:flutter_front_end/models/event_list_queue.dart';
 import 'package:flutter_front_end/models/scenario.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 import 'package:flutter_front_end/system_overview/models/system_container.dart';
@@ -156,7 +157,7 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
   }
 
   String NoScenarioText(SystemContainer objectContainer) {
-    if (objectContainer.scenarioQueue!.length == 0) {
+    if (objectContainer.scenarioCounter == 0) {
       return "No Current Scenarios";
     }
     return "";

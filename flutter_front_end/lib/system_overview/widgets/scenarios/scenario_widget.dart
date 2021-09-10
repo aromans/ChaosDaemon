@@ -56,12 +56,7 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   }
 
   Future<void> idleAnimation() async {
-    animStatus.hasActiveScenario = false;
-    animStatus.activeScenarioLoading = false;
-    animStatus.hasNextScenario = false;
-
     AnimData idle = animator.idle();
-    // _colorAnimation = animator.idleColor();
     _progressAnimation = animator.idleProgressBar();
     _positionAnimation = idle.position;
     _fadeAnimation = idle.fade;
@@ -69,11 +64,9 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   }
 
   Future<void> arriveActiveAnimation() async {
-    animStatus.hasActiveScenario = true;
-    animStatus.activeScenarioLoading = true;
+    animStatus.hasActive = true;
 
     AnimData arriveActive = animator.arriveActive();
-    // _colorAnimation = animator.activeColor();
     _progressAnimation = animator.idleProgressBar();
     _positionAnimation = arriveActive.position;
     _fadeAnimation = arriveActive.fade;
@@ -82,21 +75,19 @@ class ScenarioWidgetState extends State<ScenarioWidget>
     animStatus.addToQueue();
 
     AnimData loadBarActive = animator.idleActive();
-    // _colorAnimation = animator.idleActiveColor();
     _progressAnimation = animator.loadingProgressBar();
     _positionAnimation = loadBarActive.position;
     _fadeAnimation = loadBarActive.fade;
     await _StartAnimation(value: widget.scenario.duration);
 
-    animStatus.activeScenarioLoading = false;
+    await animStatus.runLockedMethod(exitAnimation);
   }
 
   Future<void> singleQueuedAnimation() async {
-    animStatus.hasNextScenario = true;
+    animStatus.waitCount += 1;
     animStatus.waitingIsDone + ControlAnimations;
 
     AnimData queued = animator.singleQueued();
-    // _colorAnimation = animator.idleColor();
     _progressAnimation = animator.idleProgressBar();
     _positionAnimation = queued.position;
     _fadeAnimation = queued.fade;
@@ -105,36 +96,34 @@ class ScenarioWidgetState extends State<ScenarioWidget>
 
   Future<void> singleActiveAnimation() async {
     AnimData activated = animator.singleActive();
-    // _colorAnimation = animator.activeColor();
     _progressAnimation = animator.idleProgressBar();
     _positionAnimation = activated.position;
     _fadeAnimation = activated.fade;
     await _StartAnimation();
 
-    animStatus.hasActiveScenario = true;
-    animStatus.hasNextScenario = false;
-    animStatus.activeScenarioLoading = true;
+    if (animStatus.waitCount > 0) animStatus.waitCount -= 1;
+    animStatus.hasActive = true;
+
     animStatus.addToQueue();
+    animStatus.waitingIsDone - ControlAnimations;
 
     AnimData activeLoadBar = animator.idleActive();
-    // _colorAnimation = animator.idleActiveColor();
     _progressAnimation = animator.loadingProgressBar();
     _positionAnimation = activeLoadBar.position;
     _fadeAnimation = activeLoadBar.fade;
     await _StartAnimation(value: widget.scenario.duration);
 
-    animStatus.activeScenarioLoading = false;
+    await animStatus.runLockedMethod(exitAnimation);
   }
 
   Future<void> exitAnimation() async {
     AnimData exit = animator.exit();
-    // _colorAnimation = animator.idleActiveColor();
     _progressAnimation = animator.idleFillProgressBar();
     _positionAnimation = exit.position;
     _fadeAnimation = exit.fade;
     await _StartAnimation(value: 1);
 
-    animStatus.hasActiveScenario = false;
+    animStatus.hasActive = false;
     animStatus.waitingIsDone();
   }
 
@@ -244,21 +233,13 @@ class ScenarioWidgetState extends State<ScenarioWidget>
   }
 
   Future<void> ControlAnimations() async {
-    if (animStatus.hasActiveScenario && animStatus.hasNextScenario) return;
-
-    if (!animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
+    if (!animStatus.hasActive && animStatus.waitCount == 0) {
       await animStatus.runLockedMethod(arriveActiveAnimation);
-    } else if (!animStatus.hasActiveScenario && animStatus.hasNextScenario) {
+    } else if (animStatus.waitCount >= 1) {
       await animStatus.runLockedMethod(singleActiveAnimation);
-      animStatus.waitingIsDone - ControlAnimations;
-    } else if (animStatus.hasActiveScenario && !animStatus.hasNextScenario) {
+    } else {
       await animStatus.runLockedMethod(singleQueuedAnimation);
       return;
-    }
-
-    // If current visualization doesn't exit
-    if (animStatus.hasActiveScenario && !animStatus.activeScenarioLoading) {
-      await animStatus.runLockedMethod(exitAnimation);
     }
 
     await animStatus.runLockedMethod(idleAnimation);
