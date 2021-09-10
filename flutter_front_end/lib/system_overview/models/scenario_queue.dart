@@ -56,7 +56,7 @@ class ScenarioQueueState extends State<ScenarioQueue> {
     int queueLength = widget.container.scenarioQueue!.length;
     TextStyle extraStyle = Theme.of(context).textTheme.bodyText2!;
 
-    if (queueLength > 0) {
+    if (counter > 1 && queueLength > 0) {
       return RotatedBox(
         quarterTurns: 3, 
         child: Text(
