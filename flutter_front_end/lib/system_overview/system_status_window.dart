@@ -149,11 +149,11 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
           ]);
     }
 
-    return Scaffold(
-      backgroundColor: status.darkModeEnabled
+    return Container(
+      color: status.darkModeEnabled
           ? Color.fromARGB(255, 0, 0, 61)
           : Color.fromARGB(255, 238, 240, 235),
-      body: Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

@@ -65,8 +65,15 @@ class VertPanelState extends State<ExpandablePanelVert>
   }
 
   Icon _getArrowIcon() {
-    if (widget.leftSide) return Icon(CupertinoIcons.arrowtriangle_right_fill);
-    return Icon(CupertinoIcons.arrowtriangle_left_fill);
+    if (widget.leftSide)
+      return Icon(
+        CupertinoIcons.arrowtriangle_right_fill,
+        color: Colors.white,
+      );
+    return Icon(
+      CupertinoIcons.arrowtriangle_left_fill,
+      color: Colors.white,
+    );
   }
 
   Alignment _getAlignment() {
@@ -94,8 +101,8 @@ class VertPanelState extends State<ExpandablePanelVert>
       color: widget.panelColor,
       child: Stack(
         children: [
-          Opacity(
-            opacity: _widgetOpacity.value,
+          FadeTransition(
+            opacity: _widgetOpacity,
             child: Align(
               alignment: Alignment.center,
               child: Stack(

@@ -139,6 +139,24 @@ class _MyHomePageState extends State<MyHomePage> {
     ChatMessage(
         messageContent: "This is another short log #4", messageType: "HAProxy"),
     ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a second log #2", messageType: "Solr"),
+    ChatMessage(
+        messageContent:
+            "This is a very slightly ever so slightly longer log #3",
+        messageType: "FMV"),
+    ChatMessage(
+        messageContent: "This is another short log #4", messageType: "HAProxy"),
+    ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a second log #2", messageType: "Solr"),
+    ChatMessage(
+        messageContent:
+            "This is a very slightly ever so slightly longer log #3",
+        messageType: "FMV"),
+    ChatMessage(
+        messageContent: "This is another short log #4", messageType: "HAProxy"),
+    ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
   ];
 
   String serverConnection() {
@@ -159,13 +177,13 @@ class _MyHomePageState extends State<MyHomePage> {
     PanelIconWidget logWindow = PanelIconWidget(
       name: 'Log Window',
       icon: Icon(CupertinoIcons.tray_arrow_up),
-      widget: LogWindow(messages: messages),
+      widget: GestureDetector(child: LogWindow(messages: messages)),
     );
 
     PanelIconWidget scenarioWindow = PanelIconWidget(
       name: 'Scenario Window',
       icon: Icon(CupertinoIcons.tray_arrow_down),
-      widget: ScenarioWindow(),
+      widget: GestureDetector(child: ScenarioWindow()),
     );
 
     return Scaffold(
@@ -216,34 +234,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Container(
+//   width: MediaQuery.of(context).size.width * 0.2 - 7,
+//   height: MediaQuery.of(context).size.height,
+//   child: LogWindow(messages: messages),
+//   // TextFormField(
+//   //     onChanged: (String? value) {
+//   //       this.command = value;
+//   //     },
+//   //     decoration: InputDecoration(
+//   //       border: UnderlineInputBorder(),
+//   //       labelText: 'Send your command!',
+//   //     )),
+// ),
 
-            // Container(
-            //   width: MediaQuery.of(context).size.width * 0.2 - 7,
-            //   height: MediaQuery.of(context).size.height,
-            //   child: LogWindow(messages: messages),
-            //   // TextFormField(
-            //   //     onChanged: (String? value) {
-            //   //       this.command = value;
-            //   //     },
-            //   //     decoration: InputDecoration(
-            //   //       border: UnderlineInputBorder(),
-            //   //       labelText: 'Send your command!',
-            //   //     )),
-            // ),
+// void _sendMessage() {
+//   String message = this.command ?? "";
+//   print("Message: " + message);
+//   widget.channel?.write(message);
+//   this.command = "";
+// }
 
-              // void _sendMessage() {
-  //   String message = this.command ?? "";
-  //   print("Message: " + message);
-  //   widget.channel?.write(message);
-  //   this.command = "";
-  // }
-
-        // floatingActionButton: Row(
-      //   children: [
-      //     FloatingActionButton(
-      //       onPressed: _sendMessage,
-      //       tooltip: 'Send Message',
-      //       child: Icon(Icons.send),
-      //     ),
-      //   ],
-      // ) // This trailing comma makes auto-formatting nicer for build methods.
+// floatingActionButton: Row(
+//   children: [
+//     FloatingActionButton(
+//       onPressed: _sendMessage,
+//       tooltip: 'Send Message',
+//       child: Icon(Icons.send),
+//     ),
+//   ],
+// ) // This trailing comma makes auto-formatting nicer for build methods.

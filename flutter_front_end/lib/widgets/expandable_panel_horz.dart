@@ -188,8 +188,8 @@ class HorzPanelState extends State<ExpandablePanelHorz>
       decoration: widget.panelDecor,
       child: Stack(
         children: [
-          Opacity(
-            opacity: _widgetOpacity.value,
+          FadeTransition(
+            opacity: _widgetOpacity,
             child: Align(
               alignment: Alignment.center,
               child: Stack(
