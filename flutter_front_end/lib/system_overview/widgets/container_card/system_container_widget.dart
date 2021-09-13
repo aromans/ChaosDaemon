@@ -12,6 +12,7 @@ import 'package:flutter_front_end/models/scenario.dart';
 import 'package:flutter_front_end/system_overview/animation/scenario_anim_controller.dart';
 import 'package:flutter_front_end/system_overview/models/system_container.dart';
 import 'package:flutter_front_end/system_overview/models/system_container_set.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/container_information_screen.dart';
 import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
 
 import 'package:provider/provider.dart';
@@ -91,30 +92,35 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  decoration: ContainerBoxStyle(this.containerColor, this.borderRadius, this.borderWidth),
+                  decoration: ContainerBoxStyle(
+                    this.containerColor,
+                    this.borderRadius,
+                    this.borderWidth,
+                  ),
                   width: containerWidth,
                   height: containerHeight,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       StaticElement(
-                        containerName: widget.containerName, 
-                        creationDate: widget.creationDate, 
-                        containerColor: containerColor, 
-                        systemStatus: systemStatus
-                      ),      
+                          containerName: widget.containerName,
+                          creationDate: widget.creationDate,
+                          containerColor: containerColor,
+                          systemStatus: systemStatus),
                       Container(
                         decoration: DottedDecoration(
                           shape: Shape.box,
                           strokeWidth: 2,
-                          borderRadius: BorderRadius.circular(10), //remove this to get plane rectange
+                          borderRadius: BorderRadius.circular(
+                              10), //remove this to get plane rectange
                         ),
                         width: 120,
                         child: Stack(
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                color: Color.fromARGB(255, 0, 0, 25).withOpacity(0.5),
+                                color: Color.fromARGB(255, 0, 0, 25)
+                                    .withOpacity(0.5),
                                 shape: BoxShape.rectangle,
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15)),
@@ -123,12 +129,14 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
                               height: containerHeight,
                               child: StreamBuilder(
                                 stream: _refreshController.stream,
-                                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                                builder: (BuildContext context,
+                                    AsyncSnapshot snapshot) {
                                   return Center(
                                     child: Text(
-                                      NoScenarioText(objectContainer), 
-                                      textAlign: TextAlign.center, 
-                                      style: Theme.of(context).textTheme.bodyText2,
+                                      NoScenarioText(objectContainer),
+                                      textAlign: TextAlign.center,
+                                      style:
+                                          Theme.of(context).textTheme.bodyText2,
                                     ),
                                   );
                                 },
@@ -138,9 +146,7 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
                           ],
                         ),
                       ),
-                      SizedBox(
-                        width: 10
-                      ),
+                      SizedBox(width: 10),
                     ],
                   ),
                 ),
@@ -163,24 +169,24 @@ class _SystemContainerWidgetState extends State<SystemContainerWidget>
     return "";
   }
 
-  BoxDecoration ContainerBoxStyle(Color color, double radius, double borderWidth) {
+  BoxDecoration ContainerBoxStyle(
+      Color color, double radius, double borderWidth) {
     return BoxDecoration(
-      color: color,
-      shape: BoxShape.rectangle,
-      borderRadius:
-          BorderRadius.all(Radius.circular(radius)),
-      border: Border.all(
-        width: borderWidth,
         color: color,
-      ),
-      boxShadow: [
-        BoxShadow(
-          color: Color.fromARGB(255, 0, 0, 20).withOpacity(0.2),
-          spreadRadius: 5,
-          blurRadius: 5,
-          offset: Offset(0, 5),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.all(Radius.circular(radius)),
+        border: Border.all(
+          width: borderWidth,
+          color: color,
         ),
-    ]);
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(255, 0, 0, 20).withOpacity(0.2),
+            spreadRadius: 5,
+            blurRadius: 5,
+            offset: Offset(0, 5),
+          ),
+        ]);
   }
 }
 
@@ -253,7 +259,13 @@ class StaticElement extends StatelessWidget {
                         margin: EdgeInsets.all(8.0),
                       ),
                       IconButton(
-                        onPressed: () => {print("Graph Me!")},
+                        onPressed: () => {
+                          Navigator.pushNamed(
+                            context,
+                            ContainerInformationScreen.pageRoute,
+                            arguments: containerName,
+                          ),
+                        },
                         icon: Icon(CupertinoIcons.graph_square),
                         color: Colors.white,
                       ),
@@ -279,13 +291,11 @@ class StaticElement extends StatelessWidget {
                           children: [
                             Text(
                               containerName!,
-                              style:
-                                  Theme.of(context).textTheme.headline1,
+                              style: Theme.of(context).textTheme.headline1,
                             ),
                             Text(
                               creationDate!,
-                              style:
-                                  Theme.of(context).textTheme.bodyText2,
+                              style: Theme.of(context).textTheme.bodyText2,
                             )
                           ],
                         ),
