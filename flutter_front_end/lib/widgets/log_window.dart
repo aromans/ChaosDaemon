@@ -10,7 +10,7 @@ class LogWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Color.fromARGB(0, 0, 0, 0),
       body: ListView.builder(
           itemCount: messages.length,
           shrinkWrap: true,

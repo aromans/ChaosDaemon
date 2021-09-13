@@ -7,6 +7,7 @@ import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
 import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
 import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
 import 'package:flutter_front_end/widgets/log_window.dart';
+import 'package:flutter_front_end/widgets/panel_icon_widget.dart';
 import 'package:provider/provider.dart';
 
 // Custom files
@@ -123,6 +124,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? command = "";
+
   //Socket? serverSocket;
 
   //_MyHomePageState(this.serverSocket) {}
@@ -154,30 +156,51 @@ class _MyHomePageState extends State<MyHomePage> {
       borderRadius: BorderRadius.all(Radius.circular(0)),
     );
 
+    PanelIconWidget logWindow = PanelIconWidget(
+      name: 'Log Window',
+      icon: Icon(CupertinoIcons.tray_arrow_up),
+      widget: LogWindow(messages: messages),
+    );
+
+    PanelIconWidget scenarioWindow = PanelIconWidget(
+      name: 'Scenario Window',
+      icon: Icon(CupertinoIcons.tray_arrow_down),
+      widget: ScenarioWindow(),
+    );
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 0, 61),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             /* SCENARIO WINDOW (LEFT SIDE) */
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
-              child: ExpandablePanelVert(true, 250, Color.fromARGB(255, 46, 40, 54)),
+              child: ExpandablePanelVert(
+                leftSide: true,
+                maxWidth: 400,
+                panelColor: Color.fromARGB(255, 46, 40, 54),
+                mainWidget: scenarioWindow,
+              ),
             ),
 
             /* SYSTEM OVERVIEW (MIDDLE) */
             Expanded(
               child: SystemStatusWindow(),
             ),
-            
+
             /* LOG VIEW WINDOW (RIGHT SIDE) */
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
-              child: ExpandablePanelVert(false, 250, Color.fromARGB(255, 46, 40, 54)),
+              child: ExpandablePanelVert(
+                leftSide: false,
+                maxWidth: 400,
+                panelColor: Color.fromARGB(255, 46, 40, 54),
+                mainWidget: logWindow,
+              ),
             ),
           ],
         ),
@@ -185,8 +208,6 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: StatusBar(serverConnection(), "OK"),
     );
   }
-
-
 
   @override
   void dispose() {
