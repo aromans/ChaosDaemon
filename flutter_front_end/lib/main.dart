@@ -3,10 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
-import 'package:flutter_front_end/widgets/log_window.dart';
+import 'package:flutter_front_end/models/container_select.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/container_information_screen.dart';
 import 'package:provider/provider.dart';
 
 // Custom files
@@ -18,6 +16,10 @@ import 'package:flutter_front_end/models/dark_mode_status.dart';
 import 'package:flutter_front_end/widgets/scenario_window.dart';
 import 'system_overview/models/system_container_set.dart';
 import 'package:window_size/window_size.dart';
+import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
+import 'package:flutter_front_end/widgets/log_window.dart';
 
 void main() async {
   // modify with your true address/port
@@ -50,6 +52,9 @@ class DiagnosticLens extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => DarkModeStatus(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => SelectedContainer(),
         )
       ],
       child: MaterialApp(
@@ -83,6 +88,8 @@ class DiagnosticLens extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
           '/scenarioCreator': (context) => SecondScreen(),
+          ContainerInformationScreen.pageRoute: (context) =>
+              ContainerInformationScreen(),
         },
       ),
     );
@@ -160,24 +167,25 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             /* SCENARIO WINDOW (LEFT SIDE) */
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
-              child: ExpandablePanelVert(true, 250, Color.fromARGB(255, 46, 40, 54)),
+              child: ExpandablePanelVert(
+                  true, 250, Color.fromARGB(255, 46, 40, 54)),
             ),
 
             /* SYSTEM OVERVIEW (MIDDLE) */
             Expanded(
               child: SystemStatusWindow(),
             ),
-            
+
             /* LOG VIEW WINDOW (RIGHT SIDE) */
             Container(
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
-              child: ExpandablePanelVert(false, 250, Color.fromARGB(255, 46, 40, 54)),
+              child: ExpandablePanelVert(
+                  false, 250, Color.fromARGB(255, 46, 40, 54)),
             ),
           ],
         ),
@@ -185,8 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: StatusBar(serverConnection(), "OK"),
     );
   }
-
-
 
   @override
   void dispose() {
