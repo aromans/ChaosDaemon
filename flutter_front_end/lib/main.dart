@@ -3,7 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+<<<<<<< HEAD
 import 'package:flutter_front_end/system_overview/widgets/container_popup/container_information_screen.dart';
+=======
+import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
+import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
+import 'package:flutter_front_end/widgets/log_window.dart';
+import 'package:flutter_front_end/widgets/panel_icon_widget.dart';
+>>>>>>> origin/side_panels
 import 'package:provider/provider.dart';
 
 // Custom files
@@ -126,11 +134,30 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? command = "";
+
   //Socket? serverSocket;
 
   //_MyHomePageState(this.serverSocket) {}
 
   List<ChatMessage> messages = [
+    ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a second log #2", messageType: "Solr"),
+    ChatMessage(
+        messageContent:
+            "This is a very slightly ever so slightly longer log #3",
+        messageType: "FMV"),
+    ChatMessage(
+        messageContent: "This is another short log #4", messageType: "HAProxy"),
+    ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
+    ChatMessage(messageContent: "This is a second log #2", messageType: "Solr"),
+    ChatMessage(
+        messageContent:
+            "This is a very slightly ever so slightly longer log #3",
+        messageType: "FMV"),
+    ChatMessage(
+        messageContent: "This is another short log #4", messageType: "HAProxy"),
+    ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
     ChatMessage(messageContent: "This is a log #1", messageType: "HAProxy"),
     ChatMessage(messageContent: "This is a second log #2", messageType: "Solr"),
     ChatMessage(
@@ -157,6 +184,18 @@ class _MyHomePageState extends State<MyHomePage> {
       borderRadius: BorderRadius.all(Radius.circular(0)),
     );
 
+    PanelIconWidget logWindow = PanelIconWidget(
+      name: 'Log Window',
+      icon: Icon(CupertinoIcons.tray_arrow_up),
+      widget: GestureDetector(child: LogWindow(messages: messages)),
+    );
+
+    PanelIconWidget scenarioWindow = PanelIconWidget(
+      name: 'Scenario Window',
+      icon: Icon(CupertinoIcons.tray_arrow_down),
+      widget: GestureDetector(child: ScenarioWindow()),
+    );
+
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 0, 0, 61),
       body: Center(
@@ -168,7 +207,15 @@ class _MyHomePageState extends State<MyHomePage> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
               child: ExpandablePanelVert(
+<<<<<<< HEAD
                   true, 250, Color.fromARGB(255, 46, 40, 54)),
+=======
+                leftSide: true,
+                maxWidth: 400,
+                panelColor: Color.fromARGB(255, 46, 40, 54),
+                mainWidget: scenarioWindow,
+              ),
+>>>>>>> origin/side_panels
             ),
 
             /* SYSTEM OVERVIEW (MIDDLE) */
@@ -181,7 +228,15 @@ class _MyHomePageState extends State<MyHomePage> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
               child: ExpandablePanelVert(
+<<<<<<< HEAD
                   false, 250, Color.fromARGB(255, 46, 40, 54)),
+=======
+                leftSide: false,
+                maxWidth: 400,
+                panelColor: Color.fromARGB(255, 46, 40, 54),
+                mainWidget: logWindow,
+              ),
+>>>>>>> origin/side_panels
             ),
           ],
         ),
@@ -197,34 +252,33 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+// Container(
+//   width: MediaQuery.of(context).size.width * 0.2 - 7,
+//   height: MediaQuery.of(context).size.height,
+//   child: LogWindow(messages: messages),
+//   // TextFormField(
+//   //     onChanged: (String? value) {
+//   //       this.command = value;
+//   //     },
+//   //     decoration: InputDecoration(
+//   //       border: UnderlineInputBorder(),
+//   //       labelText: 'Send your command!',
+//   //     )),
+// ),
 
-            // Container(
-            //   width: MediaQuery.of(context).size.width * 0.2 - 7,
-            //   height: MediaQuery.of(context).size.height,
-            //   child: LogWindow(messages: messages),
-            //   // TextFormField(
-            //   //     onChanged: (String? value) {
-            //   //       this.command = value;
-            //   //     },
-            //   //     decoration: InputDecoration(
-            //   //       border: UnderlineInputBorder(),
-            //   //       labelText: 'Send your command!',
-            //   //     )),
-            // ),
+// void _sendMessage() {
+//   String message = this.command ?? "";
+//   print("Message: " + message);
+//   widget.channel?.write(message);
+//   this.command = "";
+// }
 
-              // void _sendMessage() {
-  //   String message = this.command ?? "";
-  //   print("Message: " + message);
-  //   widget.channel?.write(message);
-  //   this.command = "";
-  // }
-
-        // floatingActionButton: Row(
-      //   children: [
-      //     FloatingActionButton(
-      //       onPressed: _sendMessage,
-      //       tooltip: 'Send Message',
-      //       child: Icon(Icons.send),
-      //     ),
-      //   ],
-      // ) // This trailing comma makes auto-formatting nicer for build methods.
+// floatingActionButton: Row(
+//   children: [
+//     FloatingActionButton(
+//       onPressed: _sendMessage,
+//       tooltip: 'Send Message',
+//       child: Icon(Icons.send),
+//     ),
+//   ],
+// ) // This trailing comma makes auto-formatting nicer for build methods.

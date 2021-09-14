@@ -9,50 +9,47 @@ class LogWindow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      backgroundColor: Colors.black,
-      body: ListView.builder(
-          itemCount: messages.length,
-          shrinkWrap: true,
-          padding: EdgeInsets.only(top: 10, bottom: 10),
-          physics: const ScrollPhysics(),
-          itemBuilder: (context, index) {
-            return Container(
-              padding:
-                  EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        messages[index].messageType,
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(3),
-                          color: Colors.white,
-                        ),
-                        padding: EdgeInsets.only(
-                            top: 8, bottom: 8, right: 16, left: 6),
-                        child: Text(
-                          messages[index].messageContent,
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      ),
-                    ),
-                  ],
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      itemCount: messages.length,
+      shrinkWrap: true,
+      padding: EdgeInsets.only(top: 10, bottom: 10),
+      itemBuilder: (context, index) {
+        return Container(
+          padding: EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: Column(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    messages[index].messageType,
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    textAlign: TextAlign.left,
+                  ),
                 ),
-              ),
-            );
-          }),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.25,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(3),
+                      color: Color.fromARGB(255, 88, 176, 156),
+                    ),
+                    padding:
+                        EdgeInsets.only(top: 8, bottom: 8, right: 16, left: 6),
+                    child: Text(
+                      messages[index].messageContent,
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
