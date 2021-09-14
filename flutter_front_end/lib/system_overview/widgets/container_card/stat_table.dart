@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_front_end/system_overview/models/system_container.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/system_container_set.dart';
@@ -25,6 +26,7 @@ class StateTableState extends State<StatTable> {
   Widget build(BuildContext context) {
     // SystemContainerSet containers = Provider.of<SystemContainerSet>(context);
     SystemContainer container = SystemContainerSet.findById(widget.id!);
+    var f = NumberFormat("000", "en_US");
     return Container(
       height: 100,
       child: Align(
@@ -47,7 +49,7 @@ class StateTableState extends State<StatTable> {
               StatTableItem(
                 header: 'Packets S/R',
                 body:
-                    '${container.packetsTransmitted!.toStringAsFixed(2)}/${container.packetsReceived!.toStringAsFixed(2)}',
+                    '${f.format(container.packetsTransmitted!)}/${f.format(container.packetsReceived!)}',
                 trailer: '',
               ),
               StatTableItem(

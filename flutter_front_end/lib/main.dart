@@ -3,15 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-<<<<<<< HEAD
 import 'package:flutter_front_end/system_overview/widgets/container_popup/container_information_screen.dart';
-=======
 import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
 import 'package:flutter_front_end/widgets/log_window.dart';
 import 'package:flutter_front_end/widgets/panel_icon_widget.dart';
->>>>>>> origin/side_panels
 import 'package:provider/provider.dart';
 
 // Custom files
@@ -23,10 +18,6 @@ import 'package:flutter_front_end/models/dark_mode_status.dart';
 import 'package:flutter_front_end/widgets/scenario_window.dart';
 import 'system_overview/models/system_container_set.dart';
 import 'package:window_size/window_size.dart';
-import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_1.dart';
-import 'package:flutter_front_end/widgets/expanded_panel_stat_system.dart';
-import 'package:flutter_front_end/widgets/log_window.dart';
 
 void main() async {
   // modify with your true address/port
@@ -116,15 +107,6 @@ class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title, required this.channel})
       : super(key: key);
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
   final Socket? channel;
 
@@ -207,15 +189,11 @@ class _MyHomePageState extends State<MyHomePage> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
               child: ExpandablePanelVert(
-<<<<<<< HEAD
-                  true, 250, Color.fromARGB(255, 46, 40, 54)),
-=======
                 leftSide: true,
                 maxWidth: 400,
                 panelColor: Color.fromARGB(255, 46, 40, 54),
                 mainWidget: scenarioWindow,
               ),
->>>>>>> origin/side_panels
             ),
 
             /* SYSTEM OVERVIEW (MIDDLE) */
@@ -228,15 +206,11 @@ class _MyHomePageState extends State<MyHomePage> {
               margin: EdgeInsets.all(0),
               alignment: Alignment.centerLeft,
               child: ExpandablePanelVert(
-<<<<<<< HEAD
-                  false, 250, Color.fromARGB(255, 46, 40, 54)),
-=======
                 leftSide: false,
                 maxWidth: 400,
                 panelColor: Color.fromARGB(255, 46, 40, 54),
                 mainWidget: logWindow,
               ),
->>>>>>> origin/side_panels
             ),
           ],
         ),

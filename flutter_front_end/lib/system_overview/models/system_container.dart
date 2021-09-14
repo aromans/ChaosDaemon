@@ -22,8 +22,8 @@ class SystemContainer with ChangeNotifier {
   double? memoryFree;
   double? totalMemory;
   double? memoryUtil;
-  double? packetsReceived;
-  double? packetsTransmitted;
+  int? packetsReceived;
+  int? packetsTransmitted;
 
   String? stringStatus = "dead";
   SystemStatus containerStatus = SystemStatus.healthy;
