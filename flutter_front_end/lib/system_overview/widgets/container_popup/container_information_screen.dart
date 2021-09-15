@@ -22,11 +22,10 @@ class ContainerInformationScreen extends StatefulWidget {
 
 class ContainerInformationScreenState
     extends State<ContainerInformationScreen> {
-  
   late double _screenHeight, _screenWidth;
 
   late double _dependentWidth, _independentWidth, _dividerWidth, _maxHeight;
-  late double _variableWidth, _minWidth, _barHeight;
+  late double _variableWidth, _minWidth, _barHeight, _leftScreenBarWidth;
 
   late double _deltaBox1, _deltaBox2, _deltaBox3;
 
@@ -34,7 +33,6 @@ class ContainerInformationScreenState
 
   late double _sharedBy1 = 0.0;
   late double _sharedBy3 = 0.0;
-  
 
   late double topBox;
   late double middleBox;
@@ -44,13 +42,29 @@ class ContainerInformationScreenState
   bool _leftClosed = false, _rightClosed = false;
   Color _foregroundColor = Color.fromARGB(255, 0, 0, 139);
 
+  late Map<Icon, Widget> slidingWidgetMap = {};
+
+  void postInit() {
+    slidingWidgetMap[Icon(CupertinoIcons.airplane)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.circle_grid_hex)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.lab_flask)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.alarm)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.keyboard_chevron_compact_down)] =
+        Container();
+    slidingWidgetMap[Icon(CupertinoIcons.text_justify)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.dial)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.bin_xmark_fill)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.ear)] = Container();
+  }
+
   @override
   Widget build(BuildContext context) {
-
+    postInit();
     _screenHeight = MediaQuery.of(context).size.height;
     _screenWidth = MediaQuery.of(context).size.width;
 
     _dividerWidth = _screenWidth * 0.025;
+    _leftScreenBarWidth = _screenWidth * 0.03;
     _variableWidth = _screenWidth - _dividerWidth;
     _maxHeight = _screenHeight * 0.95;
     _minWidth = _screenWidth * 0;
@@ -58,7 +72,7 @@ class ContainerInformationScreenState
     _barHeight = _screenHeight - _maxHeight;
 
     _bottomOfScreen = _screenHeight - _barHeight - 2 * _dividerWidth;
-    
+
     if (_init) {
       _independentWidth = _variableWidth * 0.5;
       _dependentWidth = _variableWidth - _independentWidth;
@@ -92,8 +106,14 @@ class ContainerInformationScreenState
             children: [
               Container(
                 width: _independentWidth,
-                child: GestureDetector(child: 
-                  SlidingStack([Container(), Container(), Container(),Container(), Container(), Container(),Container(), Container()], _screenWidth, _screenHeight))),
+                child: GestureDetector(
+                  child: SlidingStack(
+                    widgetMap: slidingWidgetMap,
+                    width: _independentWidth,
+                    height: _screenHeight,
+                  ),
+                ),
+              ),
               GestureDetector(
                 onHorizontalDragUpdate: (details) {
                   setState(() {
@@ -114,20 +134,19 @@ class ContainerInformationScreenState
                     }
                   });
                 },
-                child: 
-                  Container(
-                    color: Color.fromARGB(0, 0, 0, 0),
-                    alignment: Alignment.center,
-                    width: _dividerWidth,
-                    height: _maxHeight,
-                    child: RotatedBox(
-                      quarterTurns: 3,
-                      child: Text(
-                        'Container Logs',
-                        style: Theme.of(context).textTheme.headline1,
-                      ),
+                child: Container(
+                  color: Color.fromARGB(0, 0, 0, 0),
+                  alignment: Alignment.center,
+                  width: _dividerWidth,
+                  height: _maxHeight,
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: Text(
+                      'Container Logs',
+                      style: Theme.of(context).textTheme.headline1,
                     ),
                   ),
+                ),
               ),
               Container(
                 height: _maxHeight,
