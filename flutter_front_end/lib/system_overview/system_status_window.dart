@@ -17,6 +17,7 @@ import 'widgets/container_card/system_container_widget.dart';
 import 'models/system_container_set.dart';
 import 'package:flutter_front_end/widgets/expandable_panel_horz.dart';
 
+
 //ignore: must_be_immutable
 class SystemStatusWindow extends StatefulWidget {
   SystemStatusWindow({Key? key}) : super(key: key);
@@ -33,6 +34,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
   Timer? timer;
 
   StreamController<String> controller = StreamController<String>();
+
 
   @override
   void initState() {

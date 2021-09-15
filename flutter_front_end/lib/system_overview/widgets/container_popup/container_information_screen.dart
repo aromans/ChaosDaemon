@@ -44,7 +44,7 @@ class ContainerInformationScreenState
 
   late Map<Icon, Widget> slidingWidgetMap = {};
 
-  void postInit() {
+  ContainerInformationScreenState() {
     slidingWidgetMap[Icon(CupertinoIcons.airplane)] = Container();
     slidingWidgetMap[Icon(CupertinoIcons.circle_grid_hex)] = Container();
     slidingWidgetMap[Icon(CupertinoIcons.lab_flask)] = Container();
@@ -59,7 +59,6 @@ class ContainerInformationScreenState
 
   @override
   Widget build(BuildContext context) {
-    postInit();
     _screenHeight = MediaQuery.of(context).size.height;
     _screenWidth = MediaQuery.of(context).size.width;
 
