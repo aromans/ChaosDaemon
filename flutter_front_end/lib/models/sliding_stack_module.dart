@@ -22,20 +22,27 @@ class SlidingStackModule extends StatefulWidget {
 
   late double totalComponentHeight;
 
-  late bool isLastElement;
-
   late ValueNotifier<bool> visible = ValueNotifier<bool>(true);
+
+  late ValueNotifier<bool> topVisible = ValueNotifier<bool>(true);
+  late ValueNotifier<bool> sliderVisible = ValueNotifier<bool>(true);
+  late ValueNotifier<bool> bottomVisible = ValueNotifier<bool>(true);
+
+  late SlidingStackModule? lowerNeighbor;
 
   static TypeDelegate<double> calculateDeltas = TypeDelegate();
 
   late Widget slider;
 
   SlidingStackModule(this.topContainer, this.bottomContainer, this.dividerWidth,
-      this._bottomOfScreen, this.isLastElement,
-      {Key? key})
-      : super(key: key) {
+      this._bottomOfScreen) {
     totalComponentHeight = topContainer.height + bottomContainer.height;
+    lowerNeighbor = null;
     updateBottomContainer(this.bottomContainer);
+  }
+
+  void updateWidget() {
+    visible.value = !visible.value;
   }
 
   void updateBottomContainer(SlidingContainer bottom) {
@@ -102,6 +109,10 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
   @override
   initState() {
     super.initState();
+
+    if (widget.lowerNeighbor != null) {
+      widget.bottomVisible.value = false;
+    }
   }
 
   @override
@@ -111,27 +122,22 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
     return ValueListenableBuilder<bool>(
         valueListenable: widget.visible,
         builder: (BuildContext context, bool value, Widget? child) {
-          if (widget.isLastElement) {
-            return Visibility(
-              key: ValueKey(widget.visible),
-              visible: widget.visible.value,
-              child: Column(
-                children: [
-                  widget.topContainer,
-                  widget.slider,
-                  widget.bottomContainer
-                ],
-              ),
-            );
-          } else {
-            return Visibility(
-              key: ValueKey(widget.visible),
-              visible: widget.visible.value,
-              child: Column(
-                children: [widget.topContainer, widget.slider],
-              ),
-            );
-          }
+          return Column(
+            children: [
+              Visibility(
+                  key: ValueKey(widget.topVisible),
+                  visible: widget.topVisible.value,
+                  child: widget.topContainer),
+              Visibility(
+                  key: ValueKey(widget.sliderVisible),
+                  visible: widget.sliderVisible.value,
+                  child: widget.slider),
+              Visibility(
+                  key: ValueKey(widget.bottomVisible),
+                  visible: widget.bottomVisible.value,
+                  child: widget.bottomContainer),
+            ],
+          );
         });
   }
 }

@@ -94,10 +94,6 @@ class SlidingStackState extends State<SlidingStack> {
     SlidingContainer? prevContainer = null;
 
     for (int i = 1; i < this.widgetDisplay.length; i++) {
-      bool lastElement = false;
-
-      if (i + 1 >= this.widgetDisplay.length) lastElement = true;
-
       Icon iconOne = this.widgetDisplay[i - 1];
       Icon iconTwo = this.widgetDisplay[i];
 
@@ -114,10 +110,14 @@ class SlidingStackState extends State<SlidingStack> {
       SlidingContainer bottomContainer =
           SlidingContainer(_widgetDeltas[i], iconTwo);
 
-      SlidingStackModule stackComponent = SlidingStackModule(topContainer,
-          bottomContainer, _dividerWidth, _bottomOfScreen, lastElement);
+      SlidingStackModule stackComponent = SlidingStackModule(
+          topContainer, bottomContainer, _dividerWidth, _bottomOfScreen);
 
       _slidingStacks.add(stackComponent);
+
+      if (i > 1) {
+        _slidingStacks[i - 2].lowerNeighbor = _slidingStacks[i - 1];
+      }
 
       prevContainer = bottomContainer;
     }
@@ -153,29 +153,38 @@ class SlidingStackState extends State<SlidingStack> {
 
     for (int i = 0; i < buttonsSelected.length; i++) {
       if (buttonsSelected[i]) {
-        if (i > 0 && i + 1 < _slidingStacks.length) {
+        if (i > 0 && i + 1 <= _slidingStacks.length) {
           _slidingStacks[i - 1]
               .updateBottomContainer(_slidingStacks[i].topContainer);
         }
 
         if (i + 1 >= _slidingStacks.length) {
-          _slidingStacks[i - 1].visible.value = true;
+          _slidingStacks[i - 1].bottomVisible.value = true;
+          _slidingStacks[i - 1].sliderVisible.value = true;
+          _slidingStacks[i - 1].updateWidget();
         } else {
-          _slidingStacks[i].visible.value = true;
+          _slidingStacks[i].topVisible.value = true;
+          _slidingStacks[i].sliderVisible.value = true;
+          _slidingStacks[i].updateWidget();
         }
 
         continue;
       }
 
-      if (i > 0 && i + 1 < _slidingStacks.length) {
+      if (i > 0 && i + 1 <= _slidingStacks.length) {
         _slidingStacks[i - 1]
             .updateBottomContainer(_slidingStacks[i].bottomContainer);
-      }
-
-      if (i + 1 >= _slidingStacks.length) {
-        _slidingStacks[i - 1].visible.value = false;
-      } else {
-        _slidingStacks[i].visible.value = false;
+        _slidingStacks[i].topVisible.value = false;
+        _slidingStacks[i].sliderVisible.value = false;
+        _slidingStacks[i].updateWidget();
+      } else if (i + 1 == _slidingStacks.length) {
+        _slidingStacks[i - 1].bottomVisible.value = false;
+        _slidingStacks[i - 1].sliderVisible.value = false;
+        _slidingStacks[i - 1].updateWidget();
+      } else if (i == 0) {
+        _slidingStacks[i].topVisible.value = false;
+        _slidingStacks[i].sliderVisible.value = false;
+        _slidingStacks[i].updateWidget();
       }
     }
   }
