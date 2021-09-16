@@ -307,9 +307,6 @@ class SlidingStackState extends State<SlidingStack> {
           _widgetDeltas[indexTwo]); 
     }
 
-    print(widget.widgetMap.keys.length);
-    print(buttonsSelected.length);
-
     iconList = ToggleButtons(
       direction: Axis.vertical,
       color: Colors.white,
