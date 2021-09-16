@@ -16,8 +16,6 @@ class DarkModeSwitchState extends State<DarkModeSwitch> {
   Widget build(BuildContext context) {
     DarkModeStatus status = Provider.of<DarkModeStatus>(context);
 
-    print("Switch BEFORE: " + status.darkModeEnabled.toString());
-
     return Container(
       child: Row(
         children: [
@@ -32,8 +30,6 @@ class DarkModeSwitchState extends State<DarkModeSwitch> {
                 setState(() {
                   status.toggle(val);
                 });
-
-                print("Switch AFTER: " + status.darkModeEnabled.toString());
               }),
           const SizedBox(
             width: 10,
