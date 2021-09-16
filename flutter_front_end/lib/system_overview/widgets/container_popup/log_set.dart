@@ -13,9 +13,9 @@ class LogSet {
     List<Log> retList = [];
 
     if (randomLen == 0) {
-      randomLen += 1;
+      randomLen = 1;
     }
-    
+
     for (int i = 0; i < 20; i++) {
       retList.add(
         Log(

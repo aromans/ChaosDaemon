@@ -51,7 +51,7 @@ class RandomLogMessageGenerator {
         }
       }
       //last element
-      else if (i == spaceList.length-1) {
+      else if (i == spaceList.length - 1) {
         l1Distance = (spaceList[i - 1] - spaceList[i]).abs();
         if (spaceList[i - 1] == spaceList[i] || l1Distance < 2) {
           _valid = false;
@@ -89,10 +89,13 @@ class RandomLogMessageGenerator {
     }
 
     int _numOfWords = Random().nextInt(_breakPoint);
+    if (_numOfWords == 0) {
+      _numOfWords = 1;
+    }
     List<int> _spaces = [];
     bool _validSpacePlacement;
     // last word has no space
-    for (int i = 0; i <= _numOfWords - 1; i++) {
+    for (int i = 0; i < _numOfWords; i++) {
       _validSpacePlacement = false;
       while (_validSpacePlacement == false) {
         _spaces.add(Random().nextInt(len));
@@ -104,10 +107,10 @@ class RandomLogMessageGenerator {
     }
 
     String sentence = getRandomString(len);
-    for (int i = 0; i < _spaces.length-1; i++) {
+    for (int i = 0; i < _spaces.length; i++) {
       sentence = replaceCharAt(sentence, _spaces[i], ' ');
     }
-      
+
     return sentence;
   }
 }
