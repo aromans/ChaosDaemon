@@ -28,9 +28,10 @@ class SlidingStackModule extends StatefulWidget {
 
   late ValueNotifier<bool> topVisible = ValueNotifier<bool>(true);
   late ValueNotifier<bool> sliderVisible = ValueNotifier<bool>(true);
-  late ValueNotifier<bool> bottomVisible = ValueNotifier<bool>(true);
+  late ValueNotifier<bool> bottomVisible = ValueNotifier<bool>(false);
 
-  late SlidingStackModule? lowerNeighbor;
+  late SlidingStackModule? prev;
+  late SlidingStackModule? next;
 
   static TypeDelegate<double> calculateDeltas = TypeDelegate();
 
@@ -38,10 +39,30 @@ class SlidingStackModule extends StatefulWidget {
 
   SlidingStackModule(this.topContainer, this.bottomContainer, this.dividerWidth,
       this._bottomOfScreen) {
-    totalComponentHeight = topContainer.height + bottomContainer.height;
-    lowerNeighbor = null;
+    totalComponentHeight = topContainer.height.value + bottomContainer.height.value;
     slider = generateSlider();
     originalBottom = this.bottomContainer;
+  }
+
+  void checkSliderValidity(int remainingCount) {
+
+    print("-------------------------");
+    print("CURR: ${this.topVisible.value} -- ${this.bottomVisible.value}");
+    print("NEXT: ${this.next!.topVisible.value} -- ${this.next!.bottomVisible.value}");
+    print("PREV: ${this.prev!.topVisible.value} -- ${this.prev!.bottomVisible.value}");
+    print("-------------------------");
+
+    var currCase = this.bottomVisible.value & this.topVisible.value;
+    var nextCase = this.next!.bottomVisible.value & this.next!.topVisible.value;
+    var prevCase = this.prev!.bottomVisible.value & this.prev!.topVisible.value;
+
+    List<bool> counter = [currCase, nextCase, prevCase];
+
+    int count = counter.where((element) => element == true).length;
+
+    print("COUNT: $count");
+
+    this.sliderVisible.value = !this.sliderVisible.value;
   }
 
   void updateWidget() {
@@ -61,26 +82,27 @@ class SlidingStackModule extends StatefulWidget {
   Widget generateSlider() {
     return GestureDetector(
       onVerticalDragUpdate: (details) {
-        // print(topContainer.height);
-        topContainer.height += details.delta.dy;
-        bottomContainer.height -= details.delta.dy;
-        if (topContainer.height <= 0.05) {
-          topContainer.height = 0;
-          bottomContainer.height = _bottomOfScreen -
+        double testTopHeight, testBottomHeight;
+
+        testTopHeight = topContainer.height.value + details.delta.dy;
+        testBottomHeight = bottomContainer.height.value - details.delta.dy;
+
+        if (testTopHeight <= 0.005) {
+          topContainer.height.value = 0;
+          bottomContainer.height.value = _bottomOfScreen -
               (SlidingStackModule.calculateDeltas()[0]! -
-                  topContainer.height -
-                  bottomContainer.height) -
-              details.delta.dy;
-        } else if (bottomContainer.height <= 0.05) {
-          bottomContainer.height = 0;
-          topContainer.height = _bottomOfScreen -
+                  topContainer.height.value -
+                  bottomContainer.height.value);
+        } else if (testBottomHeight <= 0.005) {
+          bottomContainer.height.value = 0;
+          topContainer.height.value = _bottomOfScreen -
               (SlidingStackModule.calculateDeltas()[0]! -
-                  topContainer.height -
-                  bottomContainer.height) -
-              details.delta.dy;
+                  topContainer.height.value -
+                  bottomContainer.height.value);
+        } else {
+          topContainer.height.value = testTopHeight;
+          bottomContainer.height.value = testBottomHeight;
         }
-        topContainer.updateHeight();
-        bottomContainer.updateHeight();
       },
       child: Container(
           color: Color.fromARGB(0, 0, 0, 0),
@@ -92,7 +114,7 @@ class SlidingStackModule extends StatefulWidget {
               children: [
                 WidgetSpan(
                     child: Icon(
-                  this.topContainer.icon,
+                  this.topContainer.icon.value,
                   color: Colors.white,
                 )),
                 TextSpan(
@@ -100,7 +122,7 @@ class SlidingStackModule extends StatefulWidget {
                 ),
                 WidgetSpan(
                   child: Icon(
-                    this.bottomContainer.icon,
+                    this.bottomContainer.icon.value,
                     color: Colors.white,
                   ),
                 ),
@@ -118,10 +140,6 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
   @override
   initState() {
     super.initState();
-
-    if (widget.lowerNeighbor != null) {
-      widget.bottomVisible.value = false;
-    }
   }
 
   @override
@@ -155,43 +173,34 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
 }
 
 class SlidingContainer extends StatelessWidget {
-  late double height;
+  late ValueNotifier<double> height;
   late Color color;
-  late IconData icon;
+  late ValueNotifier<IconData> icon;
 
-  SlidingContainer(this.height, this.icon, {Color? color = null}) {
+  SlidingContainer({required double height, required IconData icon, Color? color = null}) {
     if (color == null) {
       this.color = randomColor();
     } else {
       this.color = color;
     }
-    _controller.add(height);
-  }
 
-  StreamController<double> _controller = StreamController<double>();
-
-  void updateHeight() {
-    height = height.abs();
-    if (height < 0.1) height = 0;
-    _controller.add(height);
+    this.height = ValueNotifier(height);
+    this.icon = ValueNotifier(icon);
   }
 
   @override
   Widget build(BuildContext context) {
-    _controller.close();
-    _controller = StreamController<double>();
-
-    return StreamBuilder<Object>(
-      stream: _controller.stream,
-      builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+    return ValueListenableBuilder<double>(
+      valueListenable: height,
+      builder: (BuildContext context, double value, Widget? child) { 
         return Container(
-          height: snapshot.data,
-          width: double.infinity,
-          child: Container(
-            color: this.color,
-          ),
-        );
-      },
+            height: height.value,
+            width: double.infinity,
+            child: Container(
+              color: this.color,
+            ),
+          );
+        },
     );
   }
 }

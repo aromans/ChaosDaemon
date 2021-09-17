@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/sliding_stack_module.dart';
 
@@ -34,7 +35,9 @@ class SlidingStackState extends State<SlidingStack> {
   late List<SlidingStackModule> _slidingStacks = [];
   List<bool> buttonsSelected = [];
 
-  StreamController<List<Widget>> _controller = StreamController<List<Widget>>();
+  late int displayedStacks = 0;
+
+  StreamController<String> _controller = StreamController<String>();
 
   @override
   initState() {
@@ -55,6 +58,8 @@ class SlidingStackState extends State<SlidingStack> {
     _barHeight = _screenHeight - _maxHeight;
     _bottomOfScreen =
         _screenHeight - _barHeight - (widget.widgetMap.length) * _dividerWidth;
+
+    displayedStacks = widget.widgetMap.length;
 
     slidingStackHeight = 0;
 
@@ -88,6 +93,9 @@ class SlidingStackState extends State<SlidingStack> {
   void initWidgetSliders() {
     SlidingContainer? prevContainer = null;
 
+    SlidingStackModule? parent = null;
+    SlidingStackModule? child = null;
+
     for (int i = 1; i < this.widgetDisplay.length; i++) {
       Icon iconOne = this.widgetDisplay[i - 1];
       Icon iconTwo = this.widgetDisplay[i];
@@ -98,25 +106,33 @@ class SlidingStackState extends State<SlidingStack> {
       SlidingContainer topContainer;
 
       if (prevContainer == null) {
-        topContainer = SlidingContainer(_widgetDeltas[i - 1], iconOne.icon!);
+        topContainer = SlidingContainer(height:_widgetDeltas[i - 1], icon: iconOne.icon!);
       } else {
         topContainer = prevContainer;
       }
 
       SlidingContainer bottomContainer =
-          SlidingContainer(_widgetDeltas[i], iconTwo.icon!);
+          SlidingContainer(height: _widgetDeltas[i], icon: iconTwo.icon!);
 
       SlidingStackModule stackComponent = SlidingStackModule(
           topContainer, bottomContainer, _dividerWidth, _bottomOfScreen);
 
-      _slidingStacks.add(stackComponent);
-
-      if (i > 1) {
-        _slidingStacks[i - 2].lowerNeighbor = _slidingStacks[i - 1];
+      if (i + 1 >= this.widgetDisplay.length) {
+        stackComponent.bottomVisible.value = true;
       }
+
+      _slidingStacks.add(stackComponent);
 
       prevContainer = bottomContainer;
     }
+
+    for (int i = 1; i < _slidingStacks.length; i++) {
+      _slidingStacks[i-1].next = _slidingStacks[i];
+      _slidingStacks[i].prev = _slidingStacks[i-1];
+    }
+
+    _slidingStacks[0].prev = _slidingStacks[_slidingStacks.length - 1];
+    _slidingStacks[_slidingStacks.length - 1].next = _slidingStacks[0];
 
     SlidingStackModule.calculateDeltas + calculateDeltas;
   }
@@ -125,37 +141,29 @@ class SlidingStackState extends State<SlidingStack> {
     double total = 0;
 
     for (int i = 0; i < _slidingStacks.length; i++) {
-      total += _slidingStacks[i].topContainer.height;
+      if (buttonsSelected[i]) 
+        total += _slidingStacks[i].topContainer.height.value;
     }
 
-    total += _slidingStacks[_slidingStacks.length - 1].bottomContainer.height;
+    if (buttonsSelected[buttonsSelected.length - 1])
+      total += _slidingStacks[_slidingStacks.length - 1].bottomContainer.height.value;
 
     return total.floorToDouble();
   }
 
   void recalculateHeight() {
-    int totalVisible = 0;
-    buttonsSelected.forEach((element) {
-      if (element) totalVisible++;
-    });
-    double _height = _maxHeight / totalVisible - _dividerWidth;
+    double _height = _maxHeight / displayedStacks - _dividerWidth;
     slidingStackHeight = 0;
     for (int i = 0; i < buttonsSelected.length; i++) {
       if (buttonsSelected[i]) {
         slidingStackHeight += _height;
 
         if (i + 1 >= _slidingStacks.length) {
-          _slidingStacks[i - 1].topContainer.height = _height;
-          _slidingStacks[i - 1].bottomContainer.height = _height;
-
-          _slidingStacks[i - 1].topContainer.updateHeight();
-          _slidingStacks[i - 1].bottomContainer.updateHeight();
+          _slidingStacks[i - 1].topContainer.height.value = _height;
+          _slidingStacks[i - 1].bottomContainer.height.value = _height;
         } else {
-          _slidingStacks[i].topContainer.height = _height;
-          _slidingStacks[i].bottomContainer.height = _height;
-
-          _slidingStacks[i].topContainer.updateHeight();
-          _slidingStacks[i].bottomContainer.updateHeight();
+          _slidingStacks[i].topContainer.height.value = _height;
+          _slidingStacks[i].bottomContainer.height.value = _height;
         }
       }
     }
@@ -163,21 +171,20 @@ class SlidingStackState extends State<SlidingStack> {
 
   void setStackVisibility(int i, bool value) {
     if (i > 0 && i + 1 <= _slidingStacks.length) {
-      
       if (!value)
         _slidingStacks[i - 1]
             .updateBottomContainer(_slidingStacks[i]);
-      else
+      else {
         _slidingStacks[i - 1].resetBottomContainer();
-
-      // _slidingStacks[i].topContainer = _slidingStacks[i-1].topContainer;
+      }
     }
     if (i >= _slidingStacks.length) {
       _slidingStacks[i - 1].bottomVisible.value = value;
+      _slidingStacks[i - 1].checkSliderValidity(displayedStacks);
       _slidingStacks[i - 1].updateWidget();
     } else {
       _slidingStacks[i].topVisible.value = value;
-      _slidingStacks[i].sliderVisible.value = value;
+      _slidingStacks[i].checkSliderValidity(displayedStacks);
       _slidingStacks[i].updateWidget();
     }
   }
@@ -194,11 +201,25 @@ class SlidingStackState extends State<SlidingStack> {
           buttonsSelected[index] = !buttonsSelected[index];
 
           if (buttonsSelected[index]) {
+            displayedStacks++;
             setStackVisibility(index, true);
           } else {
+            displayedStacks--;
             setStackVisibility(index, false);
           }
           recalculateHeight();
+
+          // if (displayedStacks == 1) {
+          //   int index = buttonsSelected.indexWhere((element) => element == true);
+            
+          //   if (index >= _slidingStacks.length) {
+          //     _slidingStacks[index - 1].checkSliderValidity();
+          //     _slidingStacks[index - 1].updateWidget();
+          //   } else {
+          //     _slidingStacks[index].checkSliderValidity();
+          //     _slidingStacks[index].updateWidget();
+          //   }
+          // }
         });
       },
     );
@@ -208,10 +229,13 @@ class SlidingStackState extends State<SlidingStack> {
   void didUpdateWidget(covariant SlidingStack oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    for (int index = 0; index < buttonsSelected.length; index++) {
-      setStackVisibility(index, buttonsSelected[index]);
-      recalculateHeight();
-    }
+    _slidingStacks.clear();
+    initWidgetSliders();
+
+    // for (int index = 0; index < buttonsSelected.length; index++) {
+    //   setStackVisibility(index, buttonsSelected[index]);
+    //   recalculateHeight();
+    // }
   }
 
   @override

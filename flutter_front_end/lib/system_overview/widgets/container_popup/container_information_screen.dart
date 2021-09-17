@@ -49,12 +49,12 @@ class ContainerInformationScreenState
     slidingWidgetMap[Icon(CupertinoIcons.circle_grid_hex)] = Container();
     slidingWidgetMap[Icon(CupertinoIcons.lab_flask)] = Container();
     slidingWidgetMap[Icon(CupertinoIcons.alarm)] = Container();
-    // slidingWidgetMap[Icon(CupertinoIcons.keyboard_chevron_compact_down)] =
-    //     Container();
-    // slidingWidgetMap[Icon(CupertinoIcons.text_justify)] = Container();
-    // slidingWidgetMap[Icon(CupertinoIcons.dial)] = Container();
-    // slidingWidgetMap[Icon(CupertinoIcons.bin_xmark_fill)] = Container();
-    // slidingWidgetMap[Icon(CupertinoIcons.ear)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.keyboard_chevron_compact_down)] =
+        Container();
+    slidingWidgetMap[Icon(CupertinoIcons.text_justify)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.dial)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.bin_xmark_fill)] = Container();
+    slidingWidgetMap[Icon(CupertinoIcons.ear)] = Container();
   }
 
   @override
