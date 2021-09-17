@@ -17,6 +17,8 @@ class SlidingStackModule extends StatefulWidget {
   late SlidingContainer topContainer;
   late SlidingContainer bottomContainer;
 
+  late final SlidingContainer originalBottom;
+
   late double dividerWidth;
   late double _bottomOfScreen;
 
@@ -38,21 +40,28 @@ class SlidingStackModule extends StatefulWidget {
       this._bottomOfScreen) {
     totalComponentHeight = topContainer.height + bottomContainer.height;
     lowerNeighbor = null;
-    updateBottomContainer(this.bottomContainer);
+    slider = generateSlider();
+    originalBottom = this.bottomContainer;
   }
 
   void updateWidget() {
     visible.value = !visible.value;
   }
 
-  void updateBottomContainer(SlidingContainer bottom) {
-    this.bottomContainer = bottom;
+  void resetBottomContainer() {
+    this.bottomContainer = this.originalBottom;
+    slider = generateSlider();
+  }
+
+  void updateBottomContainer(SlidingStackModule module) {
+    this.bottomContainer = module.bottomContainer;
     slider = generateSlider();
   }
 
   Widget generateSlider() {
     return GestureDetector(
       onVerticalDragUpdate: (details) {
+        // print(topContainer.height);
         topContainer.height += details.delta.dy;
         bottomContainer.height -= details.delta.dy;
         if (topContainer.height <= 0.05) {
@@ -83,7 +92,7 @@ class SlidingStackModule extends StatefulWidget {
               children: [
                 WidgetSpan(
                     child: Icon(
-                  topContainer.icon.icon,
+                  this.topContainer.icon,
                   color: Colors.white,
                 )),
                 TextSpan(
@@ -91,7 +100,7 @@ class SlidingStackModule extends StatefulWidget {
                 ),
                 WidgetSpan(
                   child: Icon(
-                    bottomContainer.icon.icon,
+                    this.bottomContainer.icon,
                     color: Colors.white,
                   ),
                 ),
@@ -148,7 +157,7 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
 class SlidingContainer extends StatelessWidget {
   late double height;
   late Color color;
-  late Icon icon;
+  late IconData icon;
 
   SlidingContainer(this.height, this.icon, {Color? color = null}) {
     if (color == null) {

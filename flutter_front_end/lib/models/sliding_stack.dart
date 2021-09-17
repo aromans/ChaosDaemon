@@ -98,13 +98,13 @@ class SlidingStackState extends State<SlidingStack> {
       SlidingContainer topContainer;
 
       if (prevContainer == null) {
-        topContainer = SlidingContainer(_widgetDeltas[i - 1], iconOne);
+        topContainer = SlidingContainer(_widgetDeltas[i - 1], iconOne.icon!);
       } else {
         topContainer = prevContainer;
       }
 
       SlidingContainer bottomContainer =
-          SlidingContainer(_widgetDeltas[i], iconTwo);
+          SlidingContainer(_widgetDeltas[i], iconTwo.icon!);
 
       SlidingStackModule stackComponent = SlidingStackModule(
           topContainer, bottomContainer, _dividerWidth, _bottomOfScreen);
@@ -163,8 +163,14 @@ class SlidingStackState extends State<SlidingStack> {
 
   void setStackVisibility(int i, bool value) {
     if (i > 0 && i + 1 <= _slidingStacks.length) {
-      _slidingStacks[i - 1]
-          .updateBottomContainer(_slidingStacks[i].topContainer);
+      
+      if (!value)
+        _slidingStacks[i - 1]
+            .updateBottomContainer(_slidingStacks[i]);
+      else
+        _slidingStacks[i - 1].resetBottomContainer();
+
+      // _slidingStacks[i].topContainer = _slidingStacks[i-1].topContainer;
     }
     if (i >= _slidingStacks.length) {
       _slidingStacks[i - 1].bottomVisible.value = value;
@@ -186,18 +192,26 @@ class SlidingStackState extends State<SlidingStack> {
       onPressed: (int index) {
         setState(() {
           buttonsSelected[index] = !buttonsSelected[index];
+
+          if (buttonsSelected[index]) {
+            setStackVisibility(index, true);
+          } else {
+            setStackVisibility(index, false);
+          }
+          recalculateHeight();
         });
       },
     );
+  }
 
-    for (int i = 0; i < buttonsSelected.length; i++) {
-      if (buttonsSelected[i]) {
-        setStackVisibility(i, true);
-        continue;
-      }
-      setStackVisibility(i, false);
+  @override
+  void didUpdateWidget(covariant SlidingStack oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    for (int index = 0; index < buttonsSelected.length; index++) {
+      setStackVisibility(index, buttonsSelected[index]);
+      recalculateHeight();
     }
-    recalculateHeight();
   }
 
   @override
