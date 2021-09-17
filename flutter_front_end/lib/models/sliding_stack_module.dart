@@ -125,14 +125,17 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
           return Column(
             children: [
               Visibility(
+                  maintainState: true,
                   key: ValueKey(widget.topVisible),
                   visible: widget.topVisible.value,
                   child: widget.topContainer),
               Visibility(
+                  maintainState: true,
                   key: ValueKey(widget.sliderVisible),
                   visible: widget.sliderVisible.value,
                   child: widget.slider),
               Visibility(
+                  maintainState: true,
                   key: ValueKey(widget.bottomVisible),
                   visible: widget.bottomVisible.value,
                   child: widget.bottomContainer),
