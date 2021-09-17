@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/container_information_screen.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/log_model.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/log_set.dart';
 import 'package:flutter_front_end/widgets/expandable_panel_vert.dart';
 import 'package:flutter_front_end/widgets/log_window.dart';
 import 'package:flutter_front_end/widgets/panel_icon_widget.dart';

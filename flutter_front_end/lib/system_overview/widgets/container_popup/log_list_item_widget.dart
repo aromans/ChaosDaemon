@@ -29,32 +29,23 @@ class LogListItem extends StatelessWidget {
   // }
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: EdgeInsets.all(1.0),
-      elevation: 1.0,
-      color: Color.fromARGB(255, 0, 0, 61),
-      shadowColor: Colors.black,
-      child: ListTile(
-        hoverColor: Colors.black,
-        leading: Icon(
-          CupertinoIcons.info,
-          color: Color.fromARGB(255, 88, 176, 156),
+    return Row(
+      children: [
+        Container(
+          color: Colors.blue.shade900,
+          child: Text(log.timeStamp),
         ),
-        title: Text(
-          log.timeStamp.toString(),
-          style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                color: Colors.grey.shade400,
-              ),
+        Container(
+          color: Colors.blue.shade800,
+          child: RichText(
+            overflow: TextOverflow.ellipsis,
+            text: TextSpan(
+              text: log.body,
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
+          ),
         ),
-        subtitle: Text(
-          log.body,
-          style: Theme.of(context).textTheme.bodyText1,
-        ),
-        trailing: Text(
-          log.level.toString(),
-          style: Theme.of(context).textTheme.headline2,
-        ),
-      ),
+      ],
     );
   }
 }

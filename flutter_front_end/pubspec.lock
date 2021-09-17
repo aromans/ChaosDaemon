@@ -330,11 +330,7 @@ packages:
       name: test_api
       url: "https://pub.dartlang.org"
     source: hosted
-<<<<<<< HEAD
     version: "0.4.3"
-=======
-    version: "0.4.2"
->>>>>>> origin/side_panels
   threading:
     dependency: "direct main"
     description:

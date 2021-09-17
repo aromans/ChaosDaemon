@@ -132,12 +132,15 @@ class SlidingStackState extends State<SlidingStack> {
       total += _slidingStacks[i].topContainer.height;
     }
 
+<<<<<<< HEAD
     total += _slidingStacks[_slidingStacks.length - 1].bottomContainer.height;
 
     return total.floorToDouble();
   }
 
   void removedPanelsCheck() {
+=======
+>>>>>>> origin/log_window_improvements
     iconList = ToggleButtons(
       direction: Axis.vertical,
       color: Colors.white,
