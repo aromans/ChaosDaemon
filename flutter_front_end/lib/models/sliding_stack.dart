@@ -132,15 +132,12 @@ class SlidingStackState extends State<SlidingStack> {
       total += _slidingStacks[i].topContainer.height;
     }
 
-<<<<<<< HEAD
     total += _slidingStacks[_slidingStacks.length - 1].bottomContainer.height;
 
     return total.floorToDouble();
   }
 
   void removedPanelsCheck() {
-=======
->>>>>>> origin/log_window_improvements
     iconList = ToggleButtons(
       direction: Axis.vertical,
       color: Colors.white,
@@ -161,9 +158,8 @@ class SlidingStackState extends State<SlidingStack> {
               .updateBottomContainer(_slidingStacks[i].topContainer);
         }
 
-        if (i + 1 >= _slidingStacks.length) {
+        if (i >= _slidingStacks.length) {
           _slidingStacks[i - 1].bottomVisible.value = true;
-          _slidingStacks[i - 1].sliderVisible.value = true;
           _slidingStacks[i - 1].updateWidget();
         } else {
           _slidingStacks[i].topVisible.value = true;
@@ -177,14 +173,13 @@ class SlidingStackState extends State<SlidingStack> {
       if (i > 0 && i + 1 <= _slidingStacks.length) {
         _slidingStacks[i - 1]
             .updateBottomContainer(_slidingStacks[i].bottomContainer);
-        _slidingStacks[i].topVisible.value = false;
-        _slidingStacks[i].sliderVisible.value = false;
-        _slidingStacks[i].updateWidget();
-      } else if (i + 1 == _slidingStacks.length) {
+      } 
+      
+      if (i == _slidingStacks.length) {
+        print("${i + 1} == ${_slidingStacks.length}");
         _slidingStacks[i - 1].bottomVisible.value = false;
-        _slidingStacks[i - 1].sliderVisible.value = false;
         _slidingStacks[i - 1].updateWidget();
-      } else if (i == 0) {
+      } else {
         _slidingStacks[i].topVisible.value = false;
         _slidingStacks[i].sliderVisible.value = false;
         _slidingStacks[i].updateWidget();
