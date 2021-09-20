@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/delegate.dart';
+import 'package:collection/collection.dart';
 
 Color randomColor() {
   return Color.fromARGB(
@@ -35,34 +36,20 @@ class SlidingStackModule extends StatefulWidget {
 
   static TypeDelegate<double> calculateDeltas = TypeDelegate();
 
+  /// The front most element is the closest to the last element in the stack.
+  /// Sorted by (LastElement - ElementIndex)
+  static PriorityQueue<int> elementStack = PriorityQueue();
+
   late Widget slider;
+
+  static int nearEndElementIndex() => elementStack.first;
 
   SlidingStackModule(this.topContainer, this.bottomContainer, this.dividerWidth,
       this._bottomOfScreen) {
-    totalComponentHeight = topContainer.height.value + bottomContainer.height.value;
+    totalComponentHeight =
+        topContainer.height.value + bottomContainer.height.value;
     slider = generateSlider();
     originalBottom = this.bottomContainer;
-  }
-
-  void checkSliderValidity(int remainingCount) {
-
-    print("-------------------------");
-    print("CURR: ${this.topVisible.value} -- ${this.bottomVisible.value}");
-    print("NEXT: ${this.next!.topVisible.value} -- ${this.next!.bottomVisible.value}");
-    print("PREV: ${this.prev!.topVisible.value} -- ${this.prev!.bottomVisible.value}");
-    print("-------------------------");
-
-    var currCase = this.bottomVisible.value & this.topVisible.value;
-    var nextCase = this.next!.bottomVisible.value & this.next!.topVisible.value;
-    var prevCase = this.prev!.bottomVisible.value & this.prev!.topVisible.value;
-
-    List<bool> counter = [currCase, nextCase, prevCase];
-
-    int count = counter.where((element) => element == true).length;
-
-    print("COUNT: $count");
-
-    this.sliderVisible.value = !this.sliderVisible.value;
   }
 
   void updateWidget() {
@@ -177,7 +164,8 @@ class SlidingContainer extends StatelessWidget {
   late Color color;
   late ValueNotifier<IconData> icon;
 
-  SlidingContainer({required double height, required IconData icon, Color? color = null}) {
+  SlidingContainer(
+      {required double height, required IconData icon, Color? color = null}) {
     if (color == null) {
       this.color = randomColor();
     } else {
@@ -192,15 +180,15 @@ class SlidingContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder<double>(
       valueListenable: height,
-      builder: (BuildContext context, double value, Widget? child) { 
+      builder: (BuildContext context, double value, Widget? child) {
         return Container(
-            height: height.value,
-            width: double.infinity,
-            child: Container(
-              color: this.color,
-            ),
-          );
-        },
+          height: height.value,
+          width: double.infinity,
+          child: Container(
+            color: this.color,
+          ),
+        );
+      },
     );
   }
 }

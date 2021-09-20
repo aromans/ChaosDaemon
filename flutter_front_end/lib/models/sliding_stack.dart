@@ -106,7 +106,8 @@ class SlidingStackState extends State<SlidingStack> {
       SlidingContainer topContainer;
 
       if (prevContainer == null) {
-        topContainer = SlidingContainer(height:_widgetDeltas[i - 1], icon: iconOne.icon!);
+        topContainer =
+            SlidingContainer(height: _widgetDeltas[i - 1], icon: iconOne.icon!);
       } else {
         topContainer = prevContainer;
       }
@@ -126,9 +127,17 @@ class SlidingStackState extends State<SlidingStack> {
       prevContainer = bottomContainer;
     }
 
+    int lastElement = _slidingStacks.length;
+
+    SlidingStackModule.elementStack.add(lastElement - 0);
+
     for (int i = 1; i < _slidingStacks.length; i++) {
-      _slidingStacks[i-1].next = _slidingStacks[i];
-      _slidingStacks[i].prev = _slidingStacks[i-1];
+      _slidingStacks[i - 1].next = _slidingStacks[i];
+      _slidingStacks[i].prev = _slidingStacks[i - 1];
+
+      if (i != lastElement) {
+        SlidingStackModule.elementStack.add(lastElement - i);
+      }
     }
 
     _slidingStacks[0].prev = _slidingStacks[_slidingStacks.length - 1];
@@ -141,12 +150,15 @@ class SlidingStackState extends State<SlidingStack> {
     double total = 0;
 
     for (int i = 0; i < _slidingStacks.length; i++) {
-      if (buttonsSelected[i]) 
+      if (buttonsSelected[i])
         total += _slidingStacks[i].topContainer.height.value;
     }
 
     if (buttonsSelected[buttonsSelected.length - 1])
-      total += _slidingStacks[_slidingStacks.length - 1].bottomContainer.height.value;
+      total += _slidingStacks[_slidingStacks.length - 1]
+          .bottomContainer
+          .height
+          .value;
 
     return total.floorToDouble();
   }
@@ -172,20 +184,80 @@ class SlidingStackState extends State<SlidingStack> {
   void setStackVisibility(int i, bool value) {
     if (i > 0 && i + 1 <= _slidingStacks.length) {
       if (!value)
-        _slidingStacks[i - 1]
-            .updateBottomContainer(_slidingStacks[i]);
+        _slidingStacks[i - 1].updateBottomContainer(_slidingStacks[i]);
       else {
         _slidingStacks[i - 1].resetBottomContainer();
       }
     }
     if (i >= _slidingStacks.length) {
       _slidingStacks[i - 1].bottomVisible.value = value;
-      _slidingStacks[i - 1].checkSliderValidity(displayedStacks);
       _slidingStacks[i - 1].updateWidget();
     } else {
       _slidingStacks[i].topVisible.value = value;
-      _slidingStacks[i].checkSliderValidity(displayedStacks);
       _slidingStacks[i].updateWidget();
+    }
+  }
+
+  void validateSliderVisibility(int index) {
+    // If the element selected was the last element in the stack
+    if (index >= _slidingStacks.length) {
+      _slidingStacks[index - 1].sliderVisible.value =
+          _slidingStacks[index - 1].bottomVisible.value &&
+              _slidingStacks[index - 1].topVisible.value;
+
+      // Grab the element closest to the last element
+      int lastIndex =
+          _slidingStacks.length - SlidingStackModule.nearEndElementIndex();
+
+      // Determine if this last element needs its slider value disabled or enabled
+      bool checkTwo = (_slidingStacks[lastIndex].topVisible.value &&
+          !_slidingStacks[index - 1].bottomVisible.value);
+
+      if (checkTwo) {
+        _slidingStacks[lastIndex].sliderVisible.value = false;
+        _slidingStacks[lastIndex].updateWidget();
+      } else if (_slidingStacks[lastIndex].topVisible.value) {
+        _slidingStacks[lastIndex].sliderVisible.value = true;
+        _slidingStacks[lastIndex].updateWidget();
+      }
+
+      return;
+    }
+    // If the element is the first element in the stack
+    else if (index == 0) {
+      _slidingStacks[index].sliderVisible.value =
+          _slidingStacks[index].topVisible.value;
+
+      bool checkTwo = (!_slidingStacks[index].bottomVisible.value ||
+          !_slidingStacks[index + 1].topVisible.value);
+
+      if (checkTwo) {
+        _slidingStacks[index].sliderVisible.value = false;
+      }
+
+      if (_slidingStacks[index].topVisible.value) {
+        _slidingStacks[index].sliderVisible.value = true;
+      }
+      return;
+    }
+
+    // For all other elements in the stack
+    bool checkTwo = (!_slidingStacks[index - 1].bottomVisible.value ||
+        !_slidingStacks[index - 1].topVisible.value);
+
+    if (checkTwo) {
+      _slidingStacks[index].sliderVisible.value = false;
+      // If this element was in the stack, remove it
+      if (SlidingStackModule.elementStack
+          .contains((_slidingStacks.length - index))) {
+        SlidingStackModule.elementStack.remove((_slidingStacks.length - index));
+      }
+    }
+
+    if (_slidingStacks[index].topVisible.value) {
+      _slidingStacks[index].sliderVisible.value = true;
+      // Re-add the element to the stack
+      SlidingStackModule.elementStack.add((_slidingStacks.length - index));
     }
   }
 
@@ -207,19 +279,8 @@ class SlidingStackState extends State<SlidingStack> {
             displayedStacks--;
             setStackVisibility(index, false);
           }
+          validateSliderVisibility(index);
           recalculateHeight();
-
-          // if (displayedStacks == 1) {
-          //   int index = buttonsSelected.indexWhere((element) => element == true);
-            
-          //   if (index >= _slidingStacks.length) {
-          //     _slidingStacks[index - 1].checkSliderValidity();
-          //     _slidingStacks[index - 1].updateWidget();
-          //   } else {
-          //     _slidingStacks[index].checkSliderValidity();
-          //     _slidingStacks[index].updateWidget();
-          //   }
-          // }
         });
       },
     );
@@ -231,11 +292,6 @@ class SlidingStackState extends State<SlidingStack> {
 
     _slidingStacks.clear();
     initWidgetSliders();
-
-    // for (int index = 0; index < buttonsSelected.length; index++) {
-    //   setStackVisibility(index, buttonsSelected[index]);
-    //   recalculateHeight();
-    // }
   }
 
   @override
