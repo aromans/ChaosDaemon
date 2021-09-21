@@ -179,7 +179,7 @@ class _SystemStatusWindowState extends State<SystemStatusWindow> {
               alignment: Alignment.center,
               child: ContainerGrid(numOfCols: numOfCols),
             ),
-          ),
+          ), 
         ],
       ),
     );

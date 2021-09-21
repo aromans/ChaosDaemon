@@ -85,8 +85,6 @@ class DiagnosticLens extends StatelessWidget {
         routes: <String, WidgetBuilder>{
           '/': (context) => MyHomePage(title: "Flutter Home", channel: socket),
           '/scenarioCreator': (context) => SecondScreen(),
-          ContainerInformationScreen.pageRoute: (_) =>
-              ContainerInformationScreen(containerName: ''),
         },
       ),
     );
@@ -115,7 +113,6 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
-
 
 class _MyHomePageState extends State<MyHomePage> {
   String? command = "";

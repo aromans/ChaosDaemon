@@ -260,10 +260,9 @@ class StaticElement extends StatelessWidget {
                       ),
                       IconButton(
                         onPressed: () => {
-                          Navigator.pushNamed(
+                          Navigator.push(
                             context,
-                            ContainerInformationScreen.pageRoute,
-                            arguments: containerName,
+                            MaterialPageRoute(builder: (context) => ContainerInformationScreen(containerName: containerName!),),
                           ),
                         },
                         icon: Icon(CupertinoIcons.graph_square),

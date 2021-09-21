@@ -11,7 +11,6 @@ import 'package:flutter_front_end/system_overview/models/system_status.dart';
 
 import 'package:flutter_front_end/system_overview/widgets/scenarios/scenario_widget.dart';
 
-
 class SystemContainer with ChangeNotifier {
   final String id;
 
@@ -75,11 +74,33 @@ class SystemContainer with ChangeNotifier {
     this.scenarioQueue = EventListQueue();
     this.animStatus = ScenarioAnimController();
 
-    if (stringStatus == null)
-      this.stringStatus = "Dead";
+    if (stringStatus == null) this.stringStatus = "Dead";
 
     this.containerStatus = stringToStatus(stringStatus);
-    
+
     eventNotifier = Delegate();
+  }
+
+  Map<String, String> getStats() {
+    Map<String, String> retStats = {};
+    retStats['CPU'] = '${this.cpuUtil!.toStringAsFixed(2)} %';
+    retStats['Memory Total'] = '${this.totalMemory!} GB';
+    retStats['Memory'] = '${this.memoryUtil!.toStringAsFixed(2)} %';
+    retStats['Packets Received'] = '${this.packetsReceived!}';
+    retStats['Packets Transmitted'] = '${this.packetsTransmitted!}';
+    retStats['Uptime'] = '${this.uptime!.toStringAsFixed(2)} hrs';
+    return retStats;
+  }
+
+  Map<String, String> getScenarioHistory() {
+    Map<String, String> retScenarioHistory = {};
+    retScenarioHistory['2021-09-21 17:52:23'] = 'pass';
+    retScenarioHistory['2021-09-21 17:55:07'] = 'heal';
+    retScenarioHistory['2021-09-21 18:01:47'] = 'fail';
+    retScenarioHistory['2021-09-21 18:04:36'] = 'heal';
+    retScenarioHistory['2021-09-21 18:08:51'] = 'pass';
+    retScenarioHistory['2021-09-21 19:00:01'] = 'heal';
+
+    return retScenarioHistory;
   }
 }

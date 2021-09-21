@@ -1,12 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_front_end/models/sliding_stack.dart';
+import 'package:flutter_front_end/system_overview/models/system_container.dart';
+import 'package:flutter_front_end/system_overview/models/system_container_set.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/log_widget.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/panel_scenario_history.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/panel_stat_widget.dart';
 
 @immutable
 class ContainerInformationScreen extends StatefulWidget {
-  static const String pageRoute = '/ContainerInformationScreen';
-  final String containerName;
+  late String containerName;
   ContainerInformationScreen({required this.containerName});
 
   @override
@@ -30,10 +33,29 @@ class ContainerInformationScreenState
   late Map<Icon, Widget> slidingWidgetMap = {};
 
   ContainerInformationScreenState() {
-    slidingWidgetMap[Icon(CupertinoIcons.airplane)] = Container(color: Colors.red,);
-    slidingWidgetMap[Icon(CupertinoIcons.circle_grid_hex)] = Container(color: Colors.lightGreen);
-    slidingWidgetMap[Icon(CupertinoIcons.lab_flask)] = Container(color: Colors.blueGrey);
-    slidingWidgetMap[Icon(CupertinoIcons.alarm)] = Container(color: Colors.deepOrange);
+    // slidingWidgetMap[Icon(CupertinoIcons.airplane)] = Container(
+    //   color: Colors.red,
+    // );
+    // slidingWidgetMap[Icon(CupertinoIcons.circle_grid_hex)] =
+    //     Container(color: Colors.lightGreen);
+    // slidingWidgetMap[Icon(CupertinoIcons.lab_flask)] =
+    //     Container(color: Colors.blueGrey);
+  }
+
+  @override
+  void initState() {
+    SystemContainer container =
+        SystemContainerSet.findById(widget.containerName);
+    slidingWidgetMap[Icon(
+      CupertinoIcons.flame,
+      color: Colors.red,
+    )] = PanelScenarioHistory(containerName: widget.containerName);
+    slidingWidgetMap[Icon(
+      CupertinoIcons.rectangle_split_3x3_fill,
+      color: Colors.yellow.shade700,
+    )] = PanelStatWidget(containerName: widget.containerName);
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -70,6 +92,13 @@ class ContainerInformationScreenState
                   ),
                 ),
               ),
+              SizedBox(
+                width: 25,
+              ),
+              Text(
+                widget.containerName,
+                style: Theme.of(context).textTheme.headline1,
+              )
             ],
           ),
           Row(
