@@ -162,18 +162,20 @@ class _SlidingStackModuleState extends State<SlidingStackModule> {
 class SlidingContainer extends StatelessWidget {
   late ValueNotifier<double> height;
   late Color color;
+  late Widget widget;
   late ValueNotifier<IconData> icon;
 
   SlidingContainer(
-      {required double height, required IconData icon, Color? color = null}) {
-    if (color == null) {
-      this.color = randomColor();
-    } else {
-      this.color = color;
-    }
+      {required double height, required IconData icon, required Widget widget}) {
+    // if (color == null) {
+    //   this.color = randomColor();
+    // } else {
+    //   this.color = color;
+    // }
 
     this.height = ValueNotifier(height);
     this.icon = ValueNotifier(icon);
+    this.widget = widget;
   }
 
   @override
@@ -185,7 +187,7 @@ class SlidingContainer extends StatelessWidget {
           height: height.value,
           width: double.infinity,
           child: Container(
-            color: this.color,
+            child: this.widget,
           ),
         );
       },

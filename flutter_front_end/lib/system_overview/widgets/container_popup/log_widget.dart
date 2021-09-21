@@ -22,16 +22,16 @@ class _LogWidgetState extends State<LogWidget> {
     filteredLogList = logList;
   }
 
-  void filterLogList(String keyValue) {
+  void filterLogList(String key) {
     setState(() {
-      if (keyValue.isEmpty) {
+      if (key.isEmpty) {
         filteredLogList = logList;
         filteredLogList.forEach((element) {element.highlightedSection = null;});
         return;
       }
       
-      var newList = logList.where((element) => element.body.contains(keyValue)).toList();
-      newList.forEach((element) {element.highlightedSection = keyValue;});
+      var newList = logList.where((element) => element.body.contains(key)).toList();
+      newList.forEach((element) {element.highlightedSection = key;});
       filteredLogList = newList;  
     });
   }

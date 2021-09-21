@@ -107,13 +107,13 @@ class SlidingStackState extends State<SlidingStack> {
 
       if (prevContainer == null) {
         topContainer =
-            SlidingContainer(height: _widgetDeltas[i - 1], icon: iconOne.icon!);
+            SlidingContainer(height: _widgetDeltas[i - 1], icon: iconOne.icon!, widget: widgetOne,);
       } else {
         topContainer = prevContainer;
       }
 
       SlidingContainer bottomContainer =
-          SlidingContainer(height: _widgetDeltas[i], icon: iconTwo.icon!);
+          SlidingContainer(height: _widgetDeltas[i], icon: iconTwo.icon!, widget: widgetTwo);
 
       SlidingStackModule stackComponent = SlidingStackModule(
           topContainer, bottomContainer, _dividerWidth, _bottomOfScreen);
