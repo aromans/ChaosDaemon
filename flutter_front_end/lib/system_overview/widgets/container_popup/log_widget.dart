@@ -4,8 +4,19 @@ import 'package:flutter_front_end/system_overview/widgets/container_popup/log_li
 import 'package:flutter_front_end/system_overview/widgets/container_popup/log_model.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/log_set.dart';
 
-class LogWidget extends StatelessWidget {
-  List<Log> logList = LogSet.generate();
+class LogWidget extends StatefulWidget {
+  @override
+  _LogWidgetState createState() => _LogWidgetState();
+}
+
+class _LogWidgetState extends State<LogWidget> {
+  late List<Log> logList = [];
+
+  @override
+  initState() {
+    super.initState();
+    logList = LogSet.generate();
+  }
 
   @override
   Widget build(BuildContext context) {
