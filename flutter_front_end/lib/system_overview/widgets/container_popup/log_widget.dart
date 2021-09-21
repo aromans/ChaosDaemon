@@ -12,10 +12,28 @@ class LogWidget extends StatefulWidget {
 class _LogWidgetState extends State<LogWidget> {
   late List<Log> logList = [];
 
+  late List<Log> filteredLogList = [];
+
   @override
   initState() {
     super.initState();
     logList = LogSet.generate();
+
+    filteredLogList = logList;
+  }
+
+  void filterLogList(String keyValue) {
+    setState(() {
+      if (keyValue.isEmpty) {
+        filteredLogList = logList;
+        filteredLogList.forEach((element) {element.highlightedSection = null;});
+        return;
+      }
+      
+      var newList = logList.where((element) => element.body.contains(keyValue)).toList();
+      newList.forEach((element) {element.highlightedSection = keyValue;});
+      filteredLogList = newList;  
+    });
   }
 
   @override
@@ -33,6 +51,8 @@ class _LogWidgetState extends State<LogWidget> {
                 height: MediaQuery.of(context).size.height * 0.060,
                 width: MediaQuery.of(context).size.width * 0.2,
                 child: TextField(
+                  onChanged: filterLogList,
+                  textAlign: TextAlign.left,
                   textAlignVertical: TextAlignVertical.center,
                   cursorColor: Color.fromARGB(255, 88, 176, 156),
                   cursorWidth: 3.0,
@@ -43,6 +63,7 @@ class _LogWidgetState extends State<LogWidget> {
                     fillColor: Colors.white,
                     filled: true,
                     border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.never,
                     enabledBorder: OutlineInputBorder(
                       borderSide: const BorderSide(
                         color: Colors.black,
@@ -73,9 +94,9 @@ class _LogWidgetState extends State<LogWidget> {
                 left: 1.0,
                 right: 1.0,
               ),
-              itemCount: 250,
+              itemCount: filteredLogList.length,
               itemBuilder: (ctx, i) => LogListItem(
-                log: logList[i],
+                log: filteredLogList[i],
               ),
             ),
           ),
