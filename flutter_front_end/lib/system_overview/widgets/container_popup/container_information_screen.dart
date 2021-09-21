@@ -147,14 +147,14 @@ class ContainerInformationScreenState
                   ),
                 ),
               ),
-              // Container(
-              //   height: _maxHeight,
-              //   width: _dependentWidth,
-              //   decoration: BoxDecoration(
-              //     color: _foregroundColor,
-              //   ),
-              //   child: LogWidget(),
-              // ),
+              Container(
+                height: _maxHeight,
+                width: _dependentWidth,
+                decoration: BoxDecoration(
+                  color: _foregroundColor,
+                ),
+                child: LogWidget(),
+              ),
             ],
           ),
         ],

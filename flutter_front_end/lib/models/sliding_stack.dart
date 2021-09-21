@@ -287,14 +287,6 @@ class SlidingStackState extends State<SlidingStack> {
   }
 
   @override
-  void didUpdateWidget(covariant SlidingStack oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    _slidingStacks.clear();
-    initWidgetSliders();
-  }
-
-  @override
   Widget build(BuildContext context) {
     removedPanelsCheck();
 
