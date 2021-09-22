@@ -44,11 +44,13 @@ class PanelScenarioHistory extends StatelessWidget {
         child: GridView.builder(
           scrollDirection: Axis.vertical,
           reverse: true,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+              mainAxisExtent: 200,
+              maxCrossAxisExtent: 110,
               mainAxisSpacing: 1,
               crossAxisSpacing: 1,
-              childAspectRatio: 1),
+              childAspectRatio: 0.5,),
           itemCount: timeStamps.length,
           itemBuilder: (_, i) => RotatedBox(
             quarterTurns: 3,
@@ -56,25 +58,31 @@ class PanelScenarioHistory extends StatelessWidget {
               elevation: 5.0,
               shadowColor: Colors.black,
               color: Color.fromARGB(255, 0, 0, 139),
-              child: GridTile(
-                header: Container(
+              child: Container(
                   padding: EdgeInsets.only(top: 10.0),
-                  alignment: Alignment.topCenter,
-                  child: Text(
-                    timeStamps[i],
-                    textAlign: TextAlign.center,
-                    style: textTheme.headline1!.copyWith(
-                      color: Colors.white.withOpacity(0.75),
-                      fontSize: 16,
-                    ),
+                  width: 100,
+                  height: 200,
+                  // alignment: Alignment.topCenter,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: 
+                      [
+                        Text(
+                          timeStamps[i],
+                          textAlign: TextAlign.center,
+                          style: textTheme.headline1!.copyWith(
+                            color: Colors.white.withOpacity(0.75),
+                            fontSize: 16,
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(top: 2),
+                          alignment: Alignment.bottomCenter,
+                          child: getScenarioIcon(scenarioVals[i]),
+                        ),
+                    ],
                   ),
                 ),
-                child: Container(
-                  padding: EdgeInsets.only(bottom: 7.5),
-                  alignment: Alignment.bottomCenter,
-                  child: getScenarioIcon(scenarioVals[i]),
-                ),
-              ),
             ),
           ),
         ),

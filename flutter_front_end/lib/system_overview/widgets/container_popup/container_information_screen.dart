@@ -139,7 +139,10 @@ class ContainerInformationScreenState
                   });
                 },
                 child: Container(
-                  color: Color.fromARGB(0, 0, 0, 0),
+                  decoration: BoxDecoration(
+                    boxShadow: [BoxShadow(offset: Offset(-1, 0), blurRadius: 10, color: Colors.black.withAlpha(125))],
+                    color: Color.fromARGB(255, 0, 0, 91),
+                  ),
                   alignment: Alignment.center,
                   width: _dividerWidth,
                   height: _maxHeight,

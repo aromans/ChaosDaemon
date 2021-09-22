@@ -24,8 +24,9 @@ class PanelStatWidget extends StatelessWidget {
     TextTheme textTheme = Theme.of(context).textTheme;
     return Container(
       child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: calcNumOfCols(context),
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            mainAxisExtent: 100,
+            maxCrossAxisExtent: 200,
             mainAxisSpacing: 1,
             crossAxisSpacing: 1,
             childAspectRatio: 2),
@@ -34,25 +35,31 @@ class PanelStatWidget extends StatelessWidget {
           elevation: 5.0,
           shadowColor: Colors.black,
           color: Color.fromARGB(255, 0, 0, 139),
-          child: GridTile(
-            header: Container(
+          child: Container(
               padding: EdgeInsets.only(top: 10.0),
-              alignment: Alignment.topCenter,
-              child: Text(
-                statKeys[i],
-                style: textTheme.headline1!
-                    .copyWith(color: Colors.white.withOpacity(0.75)),
+              width: 100,
+              height: 200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: 
+                  [
+                    Text(
+                      statKeys[i],
+                      style: textTheme.headline1!
+                          .copyWith(color: Colors.white.withOpacity(0.75)),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(bottom: 7.5),
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        statVals[i],
+                        style: textTheme.headline1!.copyWith(fontSize: 36),
+                      ),
+                    ),
+                ],
               ),
             ),
-            child: Container(
-              padding: EdgeInsets.only(bottom: 7.5),
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                statVals[i],
-                style: textTheme.headline1!.copyWith(fontSize: 36),
-              ),
-            ),
-          ),
+
         ),
       ),
     );
