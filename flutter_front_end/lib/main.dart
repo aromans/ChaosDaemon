@@ -11,6 +11,10 @@ import 'package:flutter_front_end/widgets/log_window.dart';
 import 'package:flutter_front_end/widgets/panel_icon_widget.dart';
 import 'package:provider/provider.dart';
 
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+
 // Custom files
 import 'package:flutter_front_end/screens/second_screen.dart';
 import 'package:flutter_front_end/widgets/chat_message.dart';
@@ -117,6 +121,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   String? command = "";
 
+  Map<String, Map> existingContainers = Map<String, Map>();
+
   //Socket? serverSocket;
 
   //_MyHomePageState(this.serverSocket) {}
@@ -151,6 +157,59 @@ class _MyHomePageState extends State<MyHomePage> {
     ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
   ];
 
+  void idkDoStuff() async {
+    var client = http.Client();
+
+    Map clientResponse;
+
+    try {
+      var response = await client.post(
+          Uri.http("127.0.0.1:8080", "/api/v1.0/containers/docker"));
+
+      print("--- IDK DO STUFF");
+      // print(response.body);
+      clientResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+    } finally {
+    }
+
+
+    if (clientResponse.containsKey("subcontainers")) {
+      var subContainerList = clientResponse["subcontainers"].toList();
+
+      for (int i = 0; i < (subContainerList as List).length; ++i) {
+        try {
+
+          String suffix = subContainerList[i]["name"].toString();
+
+          var response = await client.post(
+            Uri.http("127.0.0.1:8080", "/api/v1.0/containers$suffix"));
+
+          Map postResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+          String key = postResponse["aliases"][0];
+
+          existingContainers[key] = postResponse;
+
+        } finally {
+        }
+      }
+    }
+
+    client.close();
+
+    List<String> containerNames = existingContainers.keys.toList();
+    
+
+    containerNames.forEach((element) { SystemContainerSet.createContainer(element, existingContainers[element]!["stats"]);});
+  }
+
+  @override
+  void initState() {
+    idkDoStuff();
+    super.initState();
+  }
+
   String serverConnection() {
     // if (serverSocket?.isEmpty == false) {
     return "OK";
@@ -160,6 +219,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    print(SystemContainerSet.itemCount);
+
     BoxDecoration scenarioPanelBoxDecoration = BoxDecoration(
       color: Color.fromARGB(255, 19, 21, 22),
       shape: BoxShape.rectangle,
