@@ -4,8 +4,10 @@ import 'package:flutter_front_end/models/sliding_stack.dart';
 import 'package:flutter_front_end/system_overview/models/system_container.dart';
 import 'package:flutter_front_end/system_overview/models/system_container_set.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/log_widget.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/panel_graph.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/panel_scenario_history.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/panel_stat_widget.dart';
+import 'package:flutter_front_end/system_overview/widgets/container_popup/panel_test_widget.dart';
 
 @immutable
 class ContainerInformationScreen extends StatefulWidget {
@@ -46,6 +48,11 @@ class ContainerInformationScreenState
   void initState() {
     SystemContainer container =
         SystemContainerSet.findById(widget.containerName);
+    slidingWidgetMap[Icon(
+      CupertinoIcons.graph_circle,
+      color: Colors.pink.shade400,
+    )] = PanelGraph();
+
     slidingWidgetMap[Icon(
       CupertinoIcons.flame,
       color: Colors.red,

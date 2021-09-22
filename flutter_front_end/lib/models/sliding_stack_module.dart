@@ -187,6 +187,7 @@ class SlidingContainer extends StatelessWidget {
           height: height.value,
           width: double.infinity,
           child: Container(
+            height: 100,
             child: this.widget,
           ),
         );

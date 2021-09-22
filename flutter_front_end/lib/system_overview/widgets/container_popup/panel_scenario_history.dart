@@ -38,34 +38,43 @@ class PanelScenarioHistory extends StatelessWidget {
     List<String> timeStamps = container.getScenarioHistory().keys.toList();
     List<String> scenarioVals = container.getScenarioHistory().values.toList();
     TextTheme textTheme = Theme.of(context).textTheme;
-    return Container(
-      child: GridView.builder(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 1,
-            crossAxisSpacing: 1,
-            childAspectRatio: 2),
-        itemCount: timeStamps.length,
-        itemBuilder: (_, i) => Card(
-          elevation: 5.0,
-          shadowColor: Colors.black,
-          color: Color.fromARGB(255, 0, 0, 139),
-          child: GridTile(
-            header: Container(
-              padding: EdgeInsets.only(top: 10.0),
-              alignment: Alignment.topCenter,
-              child: Text(
-                timeStamps[i],
-                style: textTheme.headline1!.copyWith(
-                  color: Colors.white.withOpacity(0.75),
-                  fontSize: 16,
+    return RotatedBox(
+      quarterTurns: 1,
+      child: Container(
+        child: GridView.builder(
+          scrollDirection: Axis.vertical,
+          reverse: true,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              mainAxisSpacing: 1,
+              crossAxisSpacing: 1,
+              childAspectRatio: 1),
+          itemCount: timeStamps.length,
+          itemBuilder: (_, i) => RotatedBox(
+            quarterTurns: 3,
+            child: Card(
+              elevation: 5.0,
+              shadowColor: Colors.black,
+              color: Color.fromARGB(255, 0, 0, 139),
+              child: GridTile(
+                header: Container(
+                  padding: EdgeInsets.only(top: 10.0),
+                  alignment: Alignment.topCenter,
+                  child: Text(
+                    timeStamps[i],
+                    textAlign: TextAlign.center,
+                    style: textTheme.headline1!.copyWith(
+                      color: Colors.white.withOpacity(0.75),
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                child: Container(
+                  padding: EdgeInsets.only(bottom: 7.5),
+                  alignment: Alignment.bottomCenter,
+                  child: getScenarioIcon(scenarioVals[i]),
                 ),
               ),
-            ),
-            child: Container(
-              padding: EdgeInsets.only(bottom: 7.5),
-              alignment: Alignment.bottomCenter,
-              child: getScenarioIcon(scenarioVals[i]),
             ),
           ),
         ),
