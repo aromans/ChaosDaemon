@@ -24,8 +24,21 @@ class SystemContainer with ChangeNotifier {
   int? packetsReceived;
   int? packetsTransmitted;
 
-  String? stringStatus = "dead";
+  // String? stringStatus = "dead";
   SystemStatus containerStatus = SystemStatus.healthy;
+
+  String statusToString() {
+    switch (containerStatus) {
+      case SystemStatus.healthy:
+        return "Healthy";
+      case SystemStatus.unhealthy:
+        return "Unhealthy";
+      case SystemStatus.dead:
+        return "Out of Service";
+      default:
+        return "Out of Service";
+    }
+  }
 
   // expanded metrics
   String? root_dir;
@@ -63,7 +76,6 @@ class SystemContainer with ChangeNotifier {
     this.role,
     this.engine,
     this.currentScenario,
-    this.stringStatus,
   }) {
     if (this.memoryFree != null && this.memoryUtil != null) {
       this.memoryFree = this.totalMemory! - this.memoryUtil!;
@@ -74,9 +86,9 @@ class SystemContainer with ChangeNotifier {
     this.scenarioQueue = EventListQueue();
     this.animStatus = ScenarioAnimController();
 
-    if (stringStatus == null) this.stringStatus = "Dead";
+    // if (stringStatus == null) this.stringStatus = "Dead";
 
-    this.containerStatus = stringToStatus(stringStatus);
+    this.containerStatus = SystemStatus.healthy;
 
     eventNotifier = Delegate();
   }
@@ -84,7 +96,7 @@ class SystemContainer with ChangeNotifier {
   Map<String, String> getStats() {
     Map<String, String> retStats = {};
     retStats['CPU'] = '${this.cpuUtil!.toStringAsFixed(2)} %';
-    retStats['Memory Total'] = '${this.totalMemory!} GB';
+    retStats['Memory Total'] = '${this.totalMemory!.toStringAsFixed(2)} MB';
     retStats['Memory'] = '${this.memoryUtil!.toStringAsFixed(2)} %';
     retStats['Packets Received'] = '${this.packetsReceived!}';
     retStats['Packets Transmitted'] = '${this.packetsTransmitted!}';

@@ -288,9 +288,17 @@ class StaticElement extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              containerName!,
-                              style: Theme.of(context).textTheme.headline1,
+                            SizedBox(
+                              width: 150,
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  containerName!,
+                                  softWrap: false,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: Theme.of(context).textTheme.headline1,
+                                ),
+                              ),
                             ),
                             Text(
                               creationDate!,

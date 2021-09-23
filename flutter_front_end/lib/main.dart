@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_front_end/system_overview/models/system_container.dart';
+import 'package:flutter_front_end/system_overview/models/system_status.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/container_information_screen.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/log_model.dart';
 import 'package:flutter_front_end/system_overview/widgets/container_popup/log_set.dart';
@@ -120,6 +123,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   String? command = "";
+  Timer? timer;
 
   Map<String, Map> existingContainers = Map<String, Map>();
 
@@ -157,22 +161,21 @@ class _MyHomePageState extends State<MyHomePage> {
     ChatMessage(messageContent: "Shorter log #5", messageType: "HAProxy"),
   ];
 
-  void idkDoStuff() async {
+  void collectContainerInformation() async {
     var client = http.Client();
 
     Map clientResponse;
+
+    Map<String, Map> gatheredContainers = Map<String, Map>();
 
     try {
       var response = await client.post(
           Uri.http("127.0.0.1:8080", "/api/v1.0/containers/docker"));
 
-      print("--- IDK DO STUFF");
-      // print(response.body);
       clientResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
     } finally {
     }
-
 
     if (clientResponse.containsKey("subcontainers")) {
       var subContainerList = clientResponse["subcontainers"].toList();
@@ -189,24 +192,46 @@ class _MyHomePageState extends State<MyHomePage> {
 
           String key = postResponse["aliases"][0];
 
-          existingContainers[key] = postResponse;
+          gatheredContainers[key] = postResponse;
 
-        } finally {
+        } catch (e) {
+          continue;
         }
       }
     }
 
     client.close();
 
+    existingContainers.forEach((key, value) {
+      int index = SystemContainerSet.getIndexOf(key);
+      if (!gatheredContainers.containsKey(key)) {
+        SystemContainer c = SystemContainerSet.items[index];
+        c.containerStatus = SystemStatus.dead;
+        SystemContainerSet.items[index] = c;
+      } else {
+        if (SystemContainerSet.items[index].containerStatus == SystemStatus.dead) {
+          SystemContainer c = SystemContainerSet.items[index];
+          c.containerStatus = SystemStatus.healthy;
+          SystemContainerSet.items[index] = c;
+        }
+      }
+    });
+
+    existingContainers.addAll(gatheredContainers);
+
     List<String> containerNames = existingContainers.keys.toList();
     
-
     containerNames.forEach((element) { SystemContainerSet.createContainer(element, existingContainers[element]!["stats"]);});
   }
 
   @override
   void initState() {
-    idkDoStuff();
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        collectContainerInformation();
+        SystemContainerSet.updateAllListeners();
+      });
+    });
     super.initState();
   }
 
@@ -219,9 +244,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    print(SystemContainerSet.itemCount);
-
     BoxDecoration scenarioPanelBoxDecoration = BoxDecoration(
       color: Color.fromARGB(255, 19, 21, 22),
       shape: BoxShape.rectangle,

@@ -38,7 +38,7 @@ class StateTableState extends State<StatTable> {
             children: [
               StatTableItem(
                 header: 'Status',
-                body: '${container.stringStatus?.toLowerCase().toString()}',
+                body: '${container.statusToString()}',
                 trailer: '',
               ),
               StatTableItem(
@@ -55,7 +55,7 @@ class StateTableState extends State<StatTable> {
               StatTableItem(
                 header: 'CPU',
                 body: '${container.cpuUtil!.toStringAsFixed(2)}',
-                trailer: 'ghz',
+                trailer: '%',
               )
             ],
           ),
