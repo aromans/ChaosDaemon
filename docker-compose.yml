@@ -30,3 +30,43 @@ services:
     - 6379:6379
   number_gen:
     build: ./random_number_generator/
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    container_name: es01
+    environment:
+        - discovery.type=single-node
+    ports:
+      - 9200:9200
+    networks:
+      - elastic
+    volumes:
+        - elasticsearch_data:/usr/share/elasticsearch/data
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.15.0
+    container_name: kib01
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+    ports:
+      - 5601:5601
+    networks:
+      - elastic
+  filebeat:
+    user: root
+    image: docker.elastic.co/beats/filebeat:7.15.0
+    environment:
+      - setup.kibana,host=kibana:5601
+      - output.elasticsearch.hosts=["localhost:9200"]
+    volumes:
+        - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - /var/lib/docker:/var/lib/docker:ro
+        - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - elastic
+
+volumes:
+  elasticsearch_data:
+  filebeat:
+
+networks:
+  elastic:
+    driver: bridge
