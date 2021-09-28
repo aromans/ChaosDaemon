@@ -1,37 +1,47 @@
 version: '3.2'
 services:
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    ports:
-    - 9090:9090
-    command:
-    - --config.file=/etc/prometheus/prometheus.yml
-    volumes:
-    - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
-    depends_on:
-    - cadvisor
-  cadvisor:
-    image: gcr.io/google-containers/cadvisor:latest
-    container_name: cadvisor
-    ports:
-    - 8080:8080
-    volumes:
-    - /:/rootfs:ro
-    - /var/run:/var/run:rw
-    - /sys:/sys:ro
-    - /var/lib/docker/:/var/lib/docker:ro
-    depends_on:
-    - redis
-  redis:
-    image: redis:latest
-    container_name: redis
-    ports:
-    - 6379:6379
-  number_gen:
-    build: ./random_number_generator/
+  # prometheus:
+  #   build: 
+  #     context: ./dockerfiles
+  #     dockerfile: Dockerfile-prometheus
+  #   container_name: prometheus
+  #   ports:
+  #   - 9090:9090
+  #   command:
+  #   - --config.file=/etc/prometheus/prometheus.yml
+  #   volumes:
+  #   - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+  #   depends_on:
+  #   - cadvisor
+
+  # cadvisor:
+  #   image: gcr.io/google-containers/cadvisor:latest
+  #   container_name: cadvisor
+  #   ports:
+  #   - 8080:8080
+  #   volumes:
+  #   - /:/rootfs:ro
+  #   - /var/run:/var/run:rw
+  #   - /sys:/sys:ro
+  #   - /var/lib/docker/:/var/lib/docker:ro
+  #   depends_on:
+  #   - redis
+
+  # redis:
+  #   image: redis:latest
+  #   container_name: redis
+  #   ports:
+  #   - 6379:6379
+
+  # number_gen:
+  #   build: 
+  #     context: .
+  #     dockerfile: ./dockerfiles/Dockerfile-rand_num_gen
+
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.15.0
+    build: 
+      context: ./dockerfiles
+      dockerfile: Dockerfile-elasticsearch
     container_name: es01
     environment:
         - discovery.type=single-node
@@ -41,27 +51,48 @@ services:
       - elastic
     volumes:
         - elasticsearch_data:/usr/share/elasticsearch/data
+
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.15.0
+    build: 
+      context: ./dockerfiles
+      dockerfile: Dockerfile-kibana
     container_name: kib01
     environment:
-      - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_HOSTS=http://localhost:9200
     ports:
       - 5601:5601
     networks:
       - elastic
+
   filebeat:
+    container_name: fb01
     user: root
-    image: docker.elastic.co/beats/filebeat:7.15.0
+    build: 
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-filebeat
+    environment:
+      - LOGSTASH_HOST=http://localhost
+      - LOGSTASH_PUBLIC_PORT=5044
+      - KIBANA_HOST=http://localhost
+      - KIBANA_PORT=5601
+
     environment:
       - setup.kibana,host=kibana:5601
       - output.elasticsearch.hosts=["localhost:9200"]
     volumes:
-        - ./filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+        - ./filebeat/files/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
         - /var/lib/docker:/var/lib/docker:ro
         - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - elastic
+  
+  # logstash:
+  #   build: 
+  #     context: ./dockerfiles
+  #     dockerfile: Dockerfile-logstash
+  #   environment:
+  #     - ELASTICSEARCH_HOSTS=http://localhost:9200
+
 
 volumes:
   elasticsearch_data:
