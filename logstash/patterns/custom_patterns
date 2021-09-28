@@ -1,7 +1,0 @@
-THREAD_ID [a-zA-Z0-9\s\t\r]+
-LOGGING_CATEGORY [a-zA-Z0-9\s\t\r]+
-BUNDLE_NAME [[:graph:]]+
-BUNDLE_ID [[:digit:]]+
-BUNDLE_VERSION [[:graph:]]+
-FULL_CLASS_PATH [[:graph:]]+
-LINE_NUMBER [[:digit:]]+

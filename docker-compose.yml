@@ -44,6 +44,7 @@ services:
       dockerfile: Dockerfile-elasticsearch
     container_name: es01
     environment:
+        - xpack.security.enabled=false
         - discovery.type=single-node
     ports:
       - 9200:9200
@@ -58,7 +59,7 @@ services:
       dockerfile: Dockerfile-kibana
     container_name: kib01
     environment:
-      - ELASTICSEARCH_HOSTS=http://localhost:9200
+      - ELASTICSEARCH_HOSTS=http://es01:9200
     ports:
       - 5601:5601
     networks:
@@ -71,27 +72,30 @@ services:
       context: .
       dockerfile: ./dockerfiles/Dockerfile-filebeat
     environment:
-      - LOGSTASH_HOST=http://localhost
+      - LOGSTASH_HOST=http://ls01
       - LOGSTASH_PUBLIC_PORT=5044
-      - KIBANA_HOST=http://localhost
+      - KIBANA_HOST=http://kb01
       - KIBANA_PORT=5601
 
     environment:
       - setup.kibana,host=kibana:5601
-      - output.elasticsearch.hosts=["localhost:9200"]
+      - output.elasticsearch.hosts=["http://es01:9200"]
     volumes:
-        - ./filebeat/files/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
-        - /var/lib/docker:/var/lib/docker:ro
+        - ./filebeat/files/filebeat.yml:/usr/share/filebeat/filebeat.yml
+        - /var/lib/docker:/var/lib/docker
         - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - elastic
   
-  # logstash:
-  #   build: 
-  #     context: ./dockerfiles
-  #     dockerfile: Dockerfile-logstash
-  #   environment:
-  #     - ELASTICSEARCH_HOSTS=http://localhost:9200
+  logstash:
+    build: 
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-logstash
+    container_name: ls01
+    environment:
+      - ELASTICSEARCH_HOSTS=http://es01:9200
+    volumes:
+      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
 
 
 volumes:
