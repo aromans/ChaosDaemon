@@ -1,10 +1,17 @@
-input: 
-  - paths: 
-    - /var/lib/docker/containers/*/*.log
-    document_type: syslog
-  
-output: 
-  logstash:
-    enabled: true
-    hosts: http://ls01:5044
+# filebeat.modules:
+# - module: elasticsearch
+#   server:
+#     enabled: true
+
+# - module: logstash
+#   log:
+#     enabled: true
+
+filebeat.inputs:
+- type: container
+  paths:
+    - '/var/lib/docker/containers/*/*.log'
+
+output.logstash:  
+   hosts: ["localhost:5000"]
     
