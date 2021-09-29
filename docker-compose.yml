@@ -58,14 +58,14 @@ services:
       context: .
       dockerfile: ./dockerfiles/Dockerfile-logstash
     container_name: ls01
+    environment:
+      LS_OPTS: "--config.reload.automatic --config.reload.interval 20"
     ports:
       - "5000:5000/tcp"
       - "5000:5000/udp"
       - "9600:9600"
     networks:
       - elastic
-    volumes:
-      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
     depends_on:
       - elasticsearch
 
@@ -104,8 +104,6 @@ services:
       - logstash
       - elasticsearch
       - kibana
-    depends_on:
-      - elasticsearch
 
 volumes:
   elasticsearch_data:
