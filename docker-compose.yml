@@ -61,7 +61,7 @@ services:
     ports:
       - "5000:5000/tcp"
       - "5000:5000/udp"
-      - 9600:9600
+      - "9600:9600"
     networks:
       - elastic
     volumes:
@@ -89,6 +89,8 @@ services:
     build: 
       context: .
       dockerfile: ./dockerfiles/Dockerfile-filebeat
+    restart: "no"
+    command: "filebeat -e -d *"
     volumes:
         - /var/lib/docker/containers:/var/lib/docker/containers:rw
         - ./filebeat/files/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
@@ -96,8 +98,12 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - elastic
-    deploy:
-      mode: global
+    links:
+      - "logstash:logstash"
+    depends_on:
+      - logstash
+      - elasticsearch
+      - kibana
     depends_on:
       - elasticsearch
 
@@ -106,4 +112,3 @@ volumes:
 
 networks:
   elastic:
-    driver: bridge

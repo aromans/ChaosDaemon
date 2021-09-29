@@ -1,17 +1,18 @@
-# filebeat.modules:
-# - module: elasticsearch
-#   server:
-#     enabled: true
+filebeat.modules:
+- module: elasticsearch
+  server:
+    enabled: true
 
-# - module: logstash
-#   log:
-#     enabled: true
+- module: logstash
+  log:
+    enabled: true
 
 filebeat.inputs:
-- type: container
-  paths:
-    - '/var/lib/docker/containers/*/*.log'
+- type: docker
+  containers.ids: '*'
 
-output.logstash:  
-   hosts: ["localhost:5000"]
+output.logstash:
+  hosts: ["0.0.0.0:5044"]
+
+logging.level: info
     
