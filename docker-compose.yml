@@ -33,10 +33,11 @@ services:
   #   ports:
   #   - 6379:6379
 
-  # number_gen:
-  #   build: 
-  #     context: .
-  #     dockerfile: ./dockerfiles/Dockerfile-rand_num_gen
+  number_gen:
+    build: 
+      context: .
+      dockerfile: ./dockerfiles/Dockerfile-rand_num_gen
+    container_name: rng
 
   elasticsearch:
     build: 
