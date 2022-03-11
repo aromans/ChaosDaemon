@@ -4,11 +4,15 @@ filebeat.modules:
   - module: logstash
 
 
-output.elasticsearch:
-  hosts: ["localhost:5044"]
+# output.elasticsearch:
+#   hosts: ["localhost:5044"]
   # index: "filebeat-%{+yyyy.MM.dd}"
-# output.logstash:
-#   hosts: ["0.0.0.0:5044"]
+
+setup.kibana:
+  host: "http://kb01:5601"
+
+output.logstash:
+  hosts: ["ls01:5044"]
   # indices:
   #   - index: "%{+yyyy:MM.dd}"  
   
