@@ -7,45 +7,49 @@ import 'system_container.dart';
 //import './scenarios.dart';
 
 class SystemContainerSet {
-
   static List<String> _containerNameHistory = [];
   static List<SystemContainer> _systemContainers = [];
 
   static Delegate updateAllListeners = Delegate();
 
-  static void createContainer(String name, List stats) {
+  static void createContainer(String name, Map stats) {
     if (doesExist(name)) {
       updateExistingContainer(name, stats);
     } else {
-      Duration uptime = DateTime.now().difference(DateTime.parse(stats.first["timestamp"]));
+      Duration uptime =
+          DateTime.now().difference(DateTime.parse(stats["read"]));
       var container = SystemContainer(
         id: name,
         uptime: uptime.inHours.toDouble(),
-        cpuUtil: stats.last["cpu"]!["usage"]!["total"] / stats.last["cpu"]!["usage"]!["system"],
-        memoryUtil: (stats.last["memory"]!["usage"] / 1000000) / (stats.last["memory"]!["max_usage"] / 1000000),
-        totalMemory: stats.last["memory"]!["max_usage"].toDouble() / 1000000,
-        packetsReceived: stats.last["network"]!["rx_packets"],
-        packetsTransmitted: stats.last["network"]!["tx_packets"],);
-      
+        cpuUtil: (stats["cpu_stats"]!["cpu_usage"]!["total_usage"] /
+            stats["cpu_stats"]!["system_cpu_usage"]),
+        memoryUtil: (stats["memory_stats"]!["usage"]) /
+            (stats["memory_stats"]!["limit"]),
+        totalMemory: stats["memory_stats"]!["limit"].toDouble() / 1e9,
+        packetsReceived: stats["networks"]!["eth0"]!["rx_packets"],
+        packetsTransmitted: stats["networks"]!["eth0"]!["tx_packets"],
+      );
+
       _containerNameHistory.add(name);
       addContainer(container);
     }
   }
 
-  static void updateExistingContainer(String name, List stats) {
+  static void updateExistingContainer(String name, Map stats) {
     int index = getIndexOf(name);
     SystemContainer container = _systemContainers[index];
 
-    Duration uptime = DateTime.now().difference(DateTime.parse(stats.first["timestamp"]));
-
+    Duration uptime = DateTime.now().difference(DateTime.parse(stats["read"]));
 
     container.uptime = uptime.inHours.toDouble();
-    container.cpuUtil = stats.last["cpu"]!["usage"]!["total"] / stats.last["cpu"]!["usage"]!["system"];
-    container.memoryUtil = (stats.last["memory"]!["usage"] / 1000000) / (stats.last["memory"]!["max_usage"] / 1000000);
-    container.totalMemory = stats.last["memory"]!["usage"].toDouble() / 1000000;
-    container.packetsReceived = stats.last["network"]!["rx_packets"];
-    container.packetsTransmitted = stats.last["network"]!["tx_packets"];
-    
+    container.cpuUtil = stats["cpu_stats"]!["cpu_usage"]!["total_usage"] /
+        stats["cpu_stats"]!["system_cpu_usage"];
+    container.memoryUtil =
+        (stats["memory_stats"]!["usage"]) / (stats["memory_stats"]!["limit"]);
+    container.totalMemory = stats["memory_stats"]!["limit"].toDouble() / 1e9;
+    container.packetsReceived = stats["networks"]!["eth0"]!["rx_packets"];
+    container.packetsTransmitted = stats["networks"]!["eth0"]!["tx_packets"];
+
     _systemContainers[index] = container;
   }
 

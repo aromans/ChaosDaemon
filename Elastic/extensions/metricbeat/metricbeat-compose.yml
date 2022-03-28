@@ -10,7 +10,7 @@ services:
       - --strict.perms=false
       - --system.hostfs=/hostfs
     volumes:
-      - ./extensions/metricbeat/config/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro,Z
+      - ./extensions/metricbeat/config/metricbeat.yml:/usr/share/metricbeat/metricbeat.yml:ro
       - type: bind
         source: /
         target: /hostfs

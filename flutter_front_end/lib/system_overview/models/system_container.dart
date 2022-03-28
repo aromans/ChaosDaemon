@@ -96,7 +96,7 @@ class SystemContainer with ChangeNotifier {
   Map<String, String> getStats() {
     Map<String, String> retStats = {};
     retStats['CPU'] = '${this.cpuUtil!.toStringAsFixed(2)} %';
-    retStats['Memory Total'] = '${this.totalMemory!.toStringAsFixed(2)} MB';
+    retStats['Memory Total'] = '${this.totalMemory!.toStringAsFixed(2)} GB';
     retStats['Memory'] = '${this.memoryUtil!.toStringAsFixed(2)} %';
     retStats['Packets Received'] = '${this.packetsReceived!}';
     retStats['Packets Transmitted'] = '${this.packetsTransmitted!}';

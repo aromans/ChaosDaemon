@@ -164,36 +164,35 @@ class _MyHomePageState extends State<MyHomePage> {
   void collectContainerInformation() async {
     var client = http.Client();
 
-    Map clientResponse;
+    List clientResponse;
 
     Map<String, Map> gatheredContainers = Map<String, Map>();
 
     try {
-      var response = await client.post(
-          Uri.http("127.0.0.1:8080", "/api/v1.0/containers/docker"));
+      var response =
+          await client.get(Uri.http("127.0.0.1:2376", "/containers/json"));
+      // .post(Uri.http("127.0.0.1:8080", "/api/v1.0/containers/docker"));
 
-      clientResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+      clientResponse = jsonDecode(utf8.decode(response.bodyBytes)) as List;
+    } finally {}
 
-    } finally {
-    }
+    final queryParams = {"stream": "false", "one-shot": "true"};
 
-    if (clientResponse.containsKey("subcontainers")) {
-      var subContainerList = clientResponse["subcontainers"].toList();
+    if (clientResponse.length > 0) {
+      var subContainerList = clientResponse;
 
-      for (int i = 0; i < (subContainerList as List).length; ++i) {
+      for (int i = 0; i < subContainerList.length; ++i) {
         try {
+          String key =
+              subContainerList[i]["Names"][0].toString().replaceAll("/", "");
+          // String id = subContainerList[i]["Id"].toString();
 
-          String suffix = subContainerList[i]["name"].toString();
-
-          var response = await client.post(
-            Uri.http("127.0.0.1:8080", "/api/v1.0/containers$suffix"));
+          var response = await client.get(
+              Uri.http("127.0.0.1:2376", "containers/$key/stats", queryParams));
 
           Map postResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
 
-          String key = postResponse["aliases"][0];
-
           gatheredContainers[key] = postResponse;
-
         } catch (e) {
           continue;
         }
@@ -209,7 +208,8 @@ class _MyHomePageState extends State<MyHomePage> {
         c.containerStatus = SystemStatus.dead;
         SystemContainerSet.items[index] = c;
       } else {
-        if (SystemContainerSet.items[index].containerStatus == SystemStatus.dead) {
+        if (SystemContainerSet.items[index].containerStatus ==
+            SystemStatus.dead) {
           SystemContainer c = SystemContainerSet.items[index];
           c.containerStatus = SystemStatus.healthy;
           SystemContainerSet.items[index] = c;
@@ -219,9 +219,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     existingContainers.addAll(gatheredContainers);
 
-    List<String> containerNames = existingContainers.keys.toList();
-    
-    containerNames.forEach((element) { SystemContainerSet.createContainer(element, existingContainers[element]!["stats"]);});
+    // List<String> containerNames = existingContainers.keys.toList();
+
+    existingContainers.forEach((element, stats) {
+      SystemContainerSet.createContainer(element, stats);
+    });
   }
 
   @override

@@ -31,6 +31,9 @@ metricbeat.modules:
 processors:
   - add_cloud_metadata: ~
 
+setup.kibana:
+  host: 'http://kb01:5601'
+
 output.elasticsearch:
   hosts: ['http://elasticsearch:9200']
   username: elastic
