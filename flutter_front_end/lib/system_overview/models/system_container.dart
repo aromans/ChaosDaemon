@@ -98,8 +98,10 @@ class SystemContainer with ChangeNotifier {
     retStats['CPU'] = '${this.cpuUtil!.toStringAsFixed(2)} %';
     retStats['Memory Total'] = '${this.totalMemory!.toStringAsFixed(2)} GB';
     retStats['Memory'] = '${this.memoryUtil!.toStringAsFixed(2)} %';
-    retStats['Packets Received'] = '${this.packetsReceived!}';
-    retStats['Packets Transmitted'] = '${this.packetsTransmitted!}';
+    retStats['Packets Received'] =
+        '${NumberFormat.compact().format(this.packetsReceived!)}';
+    retStats['Packets Transmitted'] =
+        '${NumberFormat.compact().format(this.packetsTransmitted!)}';
     retStats['Uptime'] = '${this.uptime!.toStringAsFixed(2)} hrs';
     return retStats;
   }

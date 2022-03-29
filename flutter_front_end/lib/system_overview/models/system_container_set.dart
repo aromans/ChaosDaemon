@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_front_end/system_overview/models/system_status.dart';
 import 'package:flutter_front_end/models/delegate.dart';
+import 'package:flutter_front_end/main.dart';
+import 'package:flutter/services.dart';
 import 'dart:math';
 
 import 'system_container.dart';
@@ -16,8 +18,9 @@ class SystemContainerSet {
     if (doesExist(name)) {
       updateExistingContainer(name, stats);
     } else {
-      Duration uptime =
-          DateTime.now().difference(DateTime.parse(stats["read"]));
+      var Now = DateTime.now();
+      Duration uptime = Now.difference(AppTime.upTime[name]!);
+
       var container = SystemContainer(
         id: name,
         uptime: uptime.inHours.toDouble(),
@@ -39,7 +42,9 @@ class SystemContainerSet {
     int index = getIndexOf(name);
     SystemContainer container = _systemContainers[index];
 
-    Duration uptime = DateTime.now().difference(DateTime.parse(stats["read"]));
+    // var _lastConso = DateTime.now().subtract();
+    var Now = DateTime.now();
+    Duration uptime = Now.difference(AppTime.upTime[name]!);
 
     container.uptime = uptime.inHours.toDouble();
     container.cpuUtil = stats["cpu_stats"]!["cpu_usage"]!["total_usage"] /

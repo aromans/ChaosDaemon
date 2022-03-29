@@ -28,6 +28,10 @@ import 'package:flutter_front_end/widgets/scenario_window.dart';
 import 'system_overview/models/system_container_set.dart';
 import 'package:window_size/window_size.dart';
 
+class AppTime {
+  static Map<String, DateTime> upTime = Map<String, DateTime>();
+}
+
 void main() async {
   // modify with your true address/port
   WidgetsFlutterBinding.ensureInitialized();
@@ -191,6 +195,24 @@ class _MyHomePageState extends State<MyHomePage> {
               Uri.http("127.0.0.1:2376", "containers/$key/stats", queryParams));
 
           Map postResponse = jsonDecode(utf8.decode(response.bodyBytes)) as Map;
+
+          var upTimeResponse = await client
+              .get(Uri.http("127.0.0.1:2376", "containers/$key/json"));
+
+          Map statResponse =
+              jsonDecode(utf8.decode(upTimeResponse.bodyBytes)) as Map;
+
+          // Container startup time is in UTC and needs to be converted to EDT.
+          var curr = DateTime.parse(statResponse['Created']);
+          AppTime.upTime[key] = DateTime(
+              curr.year,
+              curr.month,
+              curr.day,
+              curr.hour - 4,
+              curr.minute,
+              curr.second,
+              curr.millisecond,
+              curr.microsecond);
 
           gatheredContainers[key] = postResponse;
         } catch (e) {

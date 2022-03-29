@@ -49,7 +49,7 @@ class StateTableState extends State<StatTable> {
               StatTableItem(
                 header: 'Packets S/R',
                 body:
-                    '${f.format(container.packetsTransmitted!)}/${f.format(container.packetsReceived!)}',
+                    '${NumberFormat.compact().format(container.packetsTransmitted!)}/${NumberFormat.compact().format(container.packetsReceived!)}',
                 trailer: '',
               ),
               StatTableItem(
